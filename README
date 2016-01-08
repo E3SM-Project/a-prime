@@ -1,0 +1,30 @@
+python based scripts to generate plots of the coupled ACME model 
+
+To use on OLCF: 
+1. execute "csh install_basemap.csh" to put basemap software onto your system.
+(if your system has this already you can skip this step) Check pointers to 
+directories to make sure your machines uses the macros
+2. Where marked, set variables in the ACME_coupled_diags.csh, or its parallel cousin,
+ACME_coupled_diags_parallel.csh, point to the right data and output locations.
+3. execute "csh ACME_coupled_diags.csh" ot create the png files in the output directory.
+4 in output directory, execute "display file.png" to view the plot.
+
+To use on LLNL AIMS: 
+1. Where marked, set variables in the run_AIMS.csh. to point to the right data and output locations.
+That file is the driver and calls the atm and ocn diags files
+The scripts should make sure you are pointing to the correct uvcdat based python, numpy etc.
+but if not, then alter this path:
+source /usr/local/uvcdat/latest/bin/setup_runtime.sh
+4. make sure you have set the path for NCL in your .bashrc
+export NCARG_ROOT=/user/local/src/NCL-6.3.0
+and set your PATH:
+export PATH=/usr/local/src/NCL-6.3.0:$PATH
+
+Jan 2016, added Precip plots with placeholders to add ocean and radiation plots
+March 2016, added Radiation plots
+
+To do:
+
+1. Improve aesthetics of line plots
+2. Generate comprehensible log files
+ 
