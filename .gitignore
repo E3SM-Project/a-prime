@@ -1,4 +1,4 @@
-config.driver
+config.ocnice
 run_EDISON_*.csh
 run_EDISON.*.csh
 run_RHEA_*.csh
