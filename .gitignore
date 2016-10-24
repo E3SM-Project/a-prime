@@ -1,1 +1,7 @@
 config.driver
+run_EDISON_*.csh
+run_EDISON.*.csh
+run_RHEA_*.csh
+run_RHEA.*.csh
+run_AIMS_*.csh
+run_AIMS.*.csh

@@ -1,9 +1,12 @@
 #!/bin/csh
 
-#Driver script to generate coupled diagnostics on rhea
+#
+# Template driver script to generate coupled diagnostics on rhea
+#
 #Basic usage:
-#       1. set user defined case specific variables below
-#       2. execute: csh run_edison.csh
+#       1. copy this template to something like run_EDISON_$user.csh
+#       2. open run_EDISON_$user.csh and set user defined, case-specific variables
+#       3. execute: csh run_EDISON_$user.csh
 
 #Meaning of acronyms/words used in variable names below:
 #	test:		Test case
@@ -39,7 +42,7 @@ setenv test_begin_yr_ts			1
 setenv test_end_yr_ts			10
 >>>>>>> 84fe243... Some more minor updates of the ocn/ice plotting routines.
 
-#Switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
+#Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #If no pre-processing is done (climatology, remapping), all the switches below should be 1
 setenv test_compute_climo		1
 setenv test_remap_climo			1
@@ -55,6 +58,12 @@ setenv ref_archive_dir 			/scratch1/scratchdirs/golaz/ACME_simulations
 #setenv ref_case			obs
 #setenv ref_archive_dir 		$projdir/obs_for_diagnostics
 
+#ACMEv0 ref_case info for ocn/ice diags
+# IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
+setenv ref_case_v0                   B1850C5_ne30_v0.4
+setenv ref_archive_v0_ocndir         $projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+setenv ref_archive_v0_seaicedir      $projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+
 #The following are ignored if ref_case is obs
 setenv ref_native_res             	ne30
 setenv ref_short_term_archive     	0
@@ -69,14 +78,24 @@ setenv ref_compute_climo        	1
 setenv ref_remap_climo          	1
 setenv ref_remap_ts			1
 
-#ACMEv0 ref_case info for oceans
-setenv casename_model_tocompare   	B1850C5_ne30_v0.4
-setenv ocndir_model_tocompare     	$projdir/ACMEv0_lowres/${casename_model_tocompare}/ocn/postprocessing
-setenv seaicedir_model_tocompare  	$projdir/ACMEv0_lowres/${casename_model_tocompare}/ice/postprocessing
-
-#set yr_offset for ocean time series plots
+#Set yr_offset for ocn/ice time series plots
 #setenv yr_offset 1999    # for 2000 time slices
 setenv yr_offset 1849   # for 1850 time slices
+
+#Set ocn/ice specific paths to mapping files locations
+# IMPORTANT: user will need to change mpas_meshfile and mpas_remapfile *if* MPAS grid varies.
+#     EXAMPLES of MPAS meshfiles:
+#      $projdir/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc  for the EC60to30 grid
+#      $projdir/milena/MPAS-grids/ocn/gridfile.oRRS30to10.nc for the RRS30to10 grid
+#     EXAMPLES of MPAS remap files:
+#      $projdir/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc  remap from EC60to30 to regular 0.5degx0.5deg grid
+#      $projdir/mapping/maps/map_oRRS30to10_TO_0.5x0.5degree_blin.160412.nc remap from RRS30to10 to regular 0.5degx0.5deg grid
+#      $projdir/mapping/maps/map_oRRS15to5_TO_0.5x0.5degree_blin.160412.nc  remap from RRS15to5 to regular 0.5degx0.5deg grid
+#
+#     Finally, note that pop_remapfile is not currently used
+setenv mpas_meshfile              $projdir/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc
+setenv mpas_remapfile             $projdir/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
+setenv pop_remapfile              $projdir/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
 
 #Select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_atm_diags 		1
@@ -130,10 +149,7 @@ setenv GPCP_regrid_wgt_file 	  $projdir/mapping/maps/$test_native_res-to-GPCP.co
 setenv CERES_EBAF_regrid_wgt_file $projdir/mapping/maps/$test_native_res-to-CERES-EBAF.conservative.wgts.nc
 setenv ERS_regrid_wgt_file        $projdir/mapping/maps/$test_native_res-to-ERS.conservative.wgts.nc
 
-#Set ocn/ice specific paths to mapping and data files locations
-setenv mpas_meshfile              $projdir/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc
-setenv mpas_remapfile             $projdir/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
-setenv model_tocompare_remapfile  $projdir/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
+#Set ocn/ice specific paths to data file names and locations
 setenv mpas_climodir              $test_scratch_dir
 
 setenv obs_ocndir                 $projdir/observations/Ocean
