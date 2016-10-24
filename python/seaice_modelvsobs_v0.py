@@ -1,13 +1,13 @@
 
 import os
 import subprocess
-from netCDF4 import Dataset as netcdf_dataset
+import matplotlib as mpl
+mpl.use('Agg')
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 from matplotlib.colors import BoundaryNorm
 from matplotlib.colors import from_levels_and_colors
-import matplotlib as mpl
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 #from mpas_xarray import preprocess_mpas, preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import numpy as np
@@ -16,10 +16,8 @@ import random as rd
 import sys, math
 import xarray as xr
 import pandas as pd
-#from pylab import rcParams
+from netCDF4 import Dataset as netcdf_dataset
 #import calendar
-#rcParams['figure.figsize'] = (20.0, 10.0)
-#rcParams['savefig.dpi'] = 600
 
 try:
     get_ipython()

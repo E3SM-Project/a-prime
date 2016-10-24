@@ -1,7 +1,8 @@
 
 import os
 import subprocess
-from netCDF4 import Dataset as netcdf_dataset
+import matplotlib as mpl
+mpl.use('Agg')
 from matplotlib.colors import LogNorm
 from mpas_xarray import preprocess_mpas, preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import matplotlib.pyplot as plt
@@ -13,9 +14,6 @@ import xarray as xr
 import pandas as pd
 import datetime
 from netCDF4 import Dataset as netcdf_dataset
-#from pylab import rcParams
-#rcParams['figure.figsize'] = (20.0, 15.0)
-#rcParams['savefig.dpi'] = 600
 
 try:
     get_ipython()
@@ -130,9 +128,7 @@ kbtm = len(depth)-1
 
 # Load data
 print "  Load ocean data..."
-#infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.????-??*nc'])
-infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.00[0-3]?-??*nc'])
-#infiles = "".join([indir,'/am.mpas-o.layerVolumeWeightedAverage.????-??*nc'])
+infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.????-??*nc'])
 
 # Load data:
 ds = xr.open_mfdataset(infiles,preprocess=lambda x: preprocess_mpas_timeSeriesStats(x, yearoffset=yr_offset,                         timestr='time_avg_daysSinceStartOfSim',                                                         onlyvars=['time_avg_avgValueWithinOceanLayerRegion_avgLayerTemperature',                                  'time_avg_avgValueWithinOceanLayerRegion_sumLayerMaskValue',                                    'time_avg_avgValueWithinOceanLayerRegion_avgLayerArea',                                         'time_avg_avgValueWithinOceanLayerRegion_avgLayerThickness']))
@@ -204,7 +200,6 @@ time_end   = datetime.datetime(year_end,12,31)
 
 
 # Load data and make plot for every region
-print "  Compute OHC and make plots..."
 if compare_with_obs == "true":
     regions = ["global65N-65S","atl","pac","ind","so"]
     plot_title = ["Global Ocean (65N-65S)","Atlantic Ocean","Pacific Ocean","Indian Ocean","Southern Ocean"]
@@ -213,6 +208,7 @@ else:
     #plot_title = ["Global Ocean","Atlantic Ocean","Pacific Ocean","Indian Ocean","Southern Ocean"]
     regions = ["global"]
     plot_title = ["Global Ocean"]
+print "  Compute OHC..."
 #iregions =
 iregions = [6] # current 'global'
 for iregion in range(len(iregions)):
@@ -266,6 +262,7 @@ for iregion in range(len(iregions)):
 ##            timeseries_analysis_plot(ohc_700m,ohc_2000m,ohc_btm,N_movavg,title,xlabel,ylabel,figname)
     
     if compare_with_model == "true":
+        print "  Load OHC for model_to_compare and make plots..."
         # load in other model run data
         #infiles_model_tocompare = "".join([indir_model_tocompare,'OHC',regions[iregion],'.',casename_model_tocompare,'.year*.nc'])
         infiles_model_tocompare = "".join([indir_model_tocompare,'/OHC.',casename_model_tocompare,'.year*.nc'])

@@ -1,13 +1,13 @@
 
 import os
 import subprocess
-from netCDF4 import Dataset as netcdf_dataset
+import matplotlib as mpl
+mpl.use('Agg')   
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 from matplotlib.colors import BoundaryNorm
 from matplotlib.colors import from_levels_and_colors
-import matplotlib as mpl
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpas_xarray import preprocess_mpas, preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import numpy as np
@@ -17,10 +17,8 @@ import sys, math
 import xarray as xr
 import pandas as pd
 import datetime
-#from pylab import rcParams
 #import calendar
-#rcParams['figure.figsize'] = (20.0, 10.0)
-#rcParams['savefig.dpi'] = 600
+from netCDF4 import Dataset as netcdf_dataset
 
 try:
     get_ipython()
@@ -148,9 +146,8 @@ title_font = {'size':'20', 'color':'black', 'weight':'normal'}
 
 # Load data
 print "  Load sea-ice data..."
-#infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.????-*.nc"])
-infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.00[0-3]?-*.nc"])
-#print infiles
+infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.????-*.nc"])
+#infiles = "".join([indir,"/am.mpas-cice.timeSeriesStatsMonthly.001[5-6]-*.nc"])
 ds = xr.open_mfdataset(infiles,preprocess=lambda x: preprocess_mpas_timeSeriesStats(x, yearoffset=yr_offset,                         timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',                                                  onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',                                                                  'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
 ds = remove_repeated_time_index(ds)
 
