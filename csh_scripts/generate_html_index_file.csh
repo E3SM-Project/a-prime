@@ -11,6 +11,10 @@ else
         set www_dir  = $argv[3]
 endif
 
+set case_compare = B1850C5_ne30_v0.4
+set begin_yr = 0021
+set end_yr = 0030
+
 cd $plots_dir
 
 cat > index.html << EOF
@@ -25,23 +29,44 @@ ${casename} <br>and<br> OBS data
 <p>
 </b></font>
 <font color=orange size=+2><b> 
-Priority Metrics</b></font>
+ACME Coupled Priority Metrics</b></font>
 <p>
-<font color=red size=+1><b>Time Series Plots: Global and Zonal-band means</b></font>
+<font color=red size=+1><b>Time Series Plots: Global and Zonal-band means (ATM)</b></font>
 <hr noshade size=2 size="100%">
 </b></font>
 <TABLE>
 <TR>
-  <TH><BR>
   <TH ALIGN=LEFT><A HREF="${casename}_RESTOM_ANN_reg_ts.png">RESTOM</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_FLNT_ANN_reg_ts.png">FLNT</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_FSNT_ANN_reg_ts.png">FSNT</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_PRECT_ANN_reg_ts.png">PRECT</a>
-  <TH>
+<TR>
 </TABLE>
 <hr noshade size=2 size="100%">
 <p>
-<font color=red size=+1><b>Climatology Plots</b></font>
+<font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
+<hr noshade size=2 size="100%">
+</b></font>
+<TABLE>
+<TR>
+  <TH ALIGN=LEFT><A HREF="sst_global_${casename}_$case_compare.png">Global SST</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="ohc_global_${casename}_$case_compare.png">Global OHC</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellNH_${casename}_$case_compare.png">NH Ice Area</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellSH_${casename}_$case_compare.png">SH Ice Area</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}_$case_compare.png">NH Ice Volume</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}_$case_compare.png">SH Ice Volume</a>
+</TABLE>
+<hr noshade size=2 size="100%">
+<p>
+<font color=red size=+1><b>Climatology Plots (ATM)</b></font>
 <hr noshade size=2 size="100%">
 <TABLE>
 <TR>
@@ -103,6 +128,88 @@ Priority Metrics</b></font>
 </TABLE>
 
 <hr noshade size=2 size="100%">
+<p>
+<font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
+<hr noshade size=2 size="100%">
+<TABLE>
+<TR>
+  <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere</font>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
+  <TH>JFM
+  <TH>JAS
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
+  <TH>JFM
+  <TH>JAS
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
+  <TH>FM
+  <TH>ON
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Thick. 
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+<TR>
+  <TH><BR>
+<TR>
+<TR>
+  <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere</font>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
+  <TH>DJF
+  <TH>JJA
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
+  <TH>JFM
+  <TH>JAS
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
+  <TH>FM
+  <TH>ON
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Thick. 
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+</TABLE>
+
+<hr noshade size=2 size="100%">
 </BODY>
 </HTML>
 
@@ -114,9 +221,15 @@ echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
 cp -r $plots_dir $www_dir/.
+chmod -R a+rx $www_dir/coupled_diagnostics_$casename
 
 echo Moved plots and index.html to the website directory: $www_dir
+echo
 echo On rhea, viewable at:
 echo http://users.nccs.gov/~$USER/coupled_diagnostics_${casename}-$ref_case
+echo
+echo On edison, viewable at:
+echo http://portal.nersc.gov/project/acme/$USER/coupled_diagnostics_$casename
+echo
 echo
 cd -

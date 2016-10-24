@@ -3,15 +3,22 @@
 module load nco
 module load ncl
 
-module load python
-module load numpy
-module load scipy
-module load matplotlib
-module load netcdf4-python
-module load basemap
+#Load the anaconda-2.7-climate env which loads all required python modules
+module unload python
+module unload python_base
+module use /global/project/projectdirs/acme/software/modulefiles/all
+module load python/anaconda-2.7-climate
+
+#Do the following module loads if not using anaconda-2.7-climate environment
+#module load python
+#module load numpy
+#module load scipy
+#module load matplotlib
+#module load netcdf4-python
+#module load basemap
 
 # variables to specify
-setenv casename 		  20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_00 
+setenv casename 		  20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_01 
 setenv native_res		  ne30
 
 setenv short_term_archive	  0
@@ -27,12 +34,12 @@ setenv log_dir 			  /global/project/projectdirs/acme/$USER/$casename.test.pp/log
 
 
 #select sets of diagnostics to generate (False = 0, True = 1)
-setenv generate_prect 1
-setenv generate_rad 1
-setenv generate_wind_stress 1
+setenv generate_prect 0
+setenv generate_rad 0
+setenv generate_wind_stress 0
 
 #generate standalone html file to view plots on a browser, if required
-setenv generate_html 0
+setenv generate_html 1
 #location of website directory to host the webpage
 setenv www_dir /global/project/projectdirs/acme/www/$USER
 
