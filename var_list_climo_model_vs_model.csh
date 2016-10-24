@@ -99,7 +99,7 @@ set source_interp_method_set 	= ($source_interp_method_set $var_interp_method)
 #Wind stress set
 set var_interp_grid		= ERS
 set var_interp_method   	= conservative_mapping
-set var_group			= "Wind Stress"
+set var_group			= Wind Stress
 
 set var_set 			= ($var_set TAU)
 set interp_grid_set 		= ($interp_grid_set $var_interp_grid)

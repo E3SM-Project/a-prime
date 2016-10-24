@@ -25,6 +25,7 @@ echo "scratch_dir = $test_scratch_dir" >> $configFile
 echo "plots_dir = $plots_dir" >> $configFile
 echo "log_dir = $log_dir" >> $configFile
 echo "obs_ocndir = $obs_ocndir" >> $configFile
+echo "obs_sstdir = $obs_sstdir" >> $configFile
 echo "obs_seaicedir = $obs_seaicedir" >> $configFile
 echo "ocndir_model_tocompare = $ocndir_model_tocompare" >> $configFile
 echo "seaicedir_model_tocompare = $seaicedir_model_tocompare" >> $configFile
@@ -61,12 +62,13 @@ echo "" >> $configFile
 echo "[moc_timeseries]" >> $configFile
 echo "generate = $generate_moc" >> $configFile
 echo "" >> $configFile
+echo "[sst_modelvsobs]" >> $configFile
+echo "generate = $generate_sst_climo" >> $configFile
+echo "" >> $configFile
 echo "[seaice_timeseries]" >> $configFile
 echo "generate = $generate_seaice_trends" >> $configFile
 echo "" >> $configFile
 echo "[seaice_modelvsobs]" >> $configFile
 echo "generate = $generate_seaice_climo" >> $configFile
 
-python python/ocnice_analysis_driver.py config.ocnice $configFile
-
-
+python python/MPAS-Analysis/run_analysis.py config.ocnice $configFile
