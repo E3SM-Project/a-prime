@@ -20,36 +20,8 @@ echo Generating atmospheric climatology diagnostics...
 echo
 
 
-# Condense fields into individual files
 
-foreach j (`seq 1 $n_cases`)
-	set casename 		= $case_set[$j]
-	set archive_dir 	= $archive_dir_set[$j]
-	set scratch_dir 	= $scratch_dir_set[$j]
-	set short_term_archive 	= $short_term_archive_set[$j]
-	set begin_yr 		= $begin_yr_set[$j]
-	set end_yr   		= $end_yr_set[$j]
-
-	set condense_field_ts      	= $condense_field_ts_set[$j]
-	set condense_field_climo      	= $condense_field_climo_set[$j]
-	set compute_climo       	= $compute_climo_set[$j]
-
-	csh_scripts/condense_field_bundle.csh	$archive_dir \
-						$scratch_dir \
-						$short_term_archive \
-						$casename \
-						$begin_yr \
-						$end_yr \
-						$condense_field_ts \
-						$condense_field_climo \
-						$compute_climo \
-						$ref_case
-
-end
-
-
-
-#Compute climatology
+#CLIMATOLOGY
 
 #Ensuring a unique set of fields to compute climatology to reduce redundancy in climatology computations
 if ($ref_case == obs) then
@@ -64,20 +36,105 @@ csh_scripts/generate_unique_field_list.csh $var_list_file \
 					   $compute_climo_var_list_file
 
 
-foreach j (`seq 1 $n_cases`)
-	set casename      = $case_set[$j]
-	set scratch_dir   = $scratch_dir_set[$j]
-	set compute_climo = $compute_climo_set[$j]
 
+# Condense climatology fields into individual files
+foreach j (`seq 1 $n_cases`)
+	set casename 		= $case_set[$j]
+	set archive_dir 	= $archive_dir_set[$j]
+	set scratch_dir 	= $scratch_dir_set[$j]
+	set short_term_archive 	= $short_term_archive_set[$j]
+	set begin_yr_climo 	= $begin_yr_climo_set[$j]
+	set end_yr_climo   	= $end_yr_climo_set[$j]
+
+	set condense_field_climo      	= $condense_field_climo_set[$j]
+	set compute_climo       	= $compute_climo_set[$j]
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+	csh_scripts/condense_field_bundle.csh	$archive_dir \
+=======
+	foreach var ($var_set)
+		echo $var
+		csh_scripts/condense_field.csh  $archive_dir_atm \
+>>>>>>> 97fc415... merging milena/new_diags into kevans32/new_diags to merge atm and ocn/ice scripts
+=======
+	set archive_dir_atm = $archive_dir/$casename/run
+
+	if ($short_term_archive == 1) then
+		echo Using ACME short term archiving directory structure!
+		set archive_dir_atm = $archive_dir/$casename/atm/hist
+	endif
+
+<<<<<<< HEAD
+	csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
+>>>>>>> 7d08fad... debugging after merge
+						$scratch_dir \
+						$casename \
+						$begin_yr_climo \
+						$end_yr_climo \
+						$condense_field_ts \
+						$condense_field_climo \
+						$compute_climo \
+						$ref_case
+=======
+	if ($condense_field_climo == 1 && $compute_climo == 1) then
+		csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
+							$scratch_dir \
+							$casename \
+							$begin_yr_climo \
+							$end_yr_climo \
+							$compute_climo_var_list_file
+	else
+>>>>>>> 09dc28c... Adding info on years analyzed to the html page and cleaning generate_html_index_file.csh script in coupled_diags
+
+		echo condense_field set to 0 or casename is obs and compute_climo set to 0. 
+		echo Not condensing for climo variables for $casename!
+
+	endif
+end
+
+
+
+#Compute climatology
+foreach j (`seq 1 $n_cases`)
+	set casename       = $case_set[$j]
+	set scratch_dir    = $scratch_dir_set[$j]
+	set compute_climo  = $compute_climo_set[$j]
+	set begin_yr_climo = $begin_yr_climo_set[$j]
+	set end_yr_climo   = $end_yr_climo_set[$j]
+
+<<<<<<< HEAD
 	if ($compute_climo == 1) then
 		echo
 		echo Submitting jobs to compute seasonal climatology for $casename
 		echo Log files in $log_dir/climo_$casename...
 		echo
 		csh_scripts/compute_climo.csh 	$scratch_dir \
+=======
+	# Condense radiation fields
+	
+	echo "set var_set = (FSNTOA FLUT FSNT FLNT SWCF LWCF)" > $log_dir/var_list_rad.temp
+	source $log_dir/var_list_rad.temp
+
+	echo
+	echo Submitting jobs to condense radiation fields: $var_set
+	echo Log files in $log_dir/
+	echo
+
+	foreach var ($var_set)
+		echo $var
+		csh_scripts/condense_field.csh  $archive_dir_atm \
+						$scratch_dir \
+>>>>>>> 97fc415... merging milena/new_diags into kevans32/new_diags to merge atm and ocn/ice scripts
 						$casename \
 <<<<<<< HEAD
+<<<<<<< HEAD
 						$compute_climo_var_list_file
+=======
+						$compute_climo_var_list_file \
+						$begin_yr_climo \
+						$end_yr_climo
+>>>>>>> 09dc28c... Adding info on years analyzed to the html page and cleaning generate_html_index_file.csh script in coupled_diags
 	else
 		echo compute_climo set to $compute_climo or casename is obs. Not computing climatology for $casename!
 	endif
@@ -109,12 +166,13 @@ echo
 
 
 #Remap climatology
-
 foreach j (`seq 1 $n_cases`)
 	set casename    = $case_set[$j]
 	set scratch_dir = $scratch_dir_set[$j]
 	set native_res  = $native_res_set[$j]
 	set remap_climo = $remap_climo_set[$j]
+	set begin_yr_climo = $begin_yr_climo_set[$j]
+	set end_yr_climo = $end_yr_climo_set[$j]
 
 	if ($remap_climo == 1) then
 		echo
@@ -124,7 +182,7 @@ foreach j (`seq 1 $n_cases`)
 		csh_scripts/remap_climo_nco.csh $scratch_dir \
 						$casename \
 						$native_res \
-						$compute_climo_var_list_file 
+						$compute_climo_var_list_file
 	else
 		echo remap_climo set to $remap_climo or casename is obs. Not remapping climatology for $casename!
 	endif
@@ -134,7 +192,6 @@ echo
 
 
 #Plot climatologies and differences
-
 echo
 echo Submitting jobs to plot seasonal climatology and differences
 echo Log files in $log_dir/plot_climo...
@@ -160,27 +217,99 @@ end
 
 
 
+
+
 # TIME TRENDS        
 
-# Interpolate time series of fields
-
-#Ensuring a unique set of fields to remap
-
+#Ensuring a unique set of fields to condense for time series
 if ($ref_case == obs) then
         set var_list_file = var_list_time_series_model_vs_obs.csh
 else
         set var_list_file = var_list_time_series_model_vs_model.csh
 endif
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 set ts_remap_var_list_file = $log_dir/ts_remap_var_list.csh
+=======
+#wind stress
+
+if ($generate_wind_stress == 1) then
+
+	# WIND STRESS
+	echo
+	echo Generating wind stress diagnostics...
+
+
+	# Condense TAUX, TAUXY
+        set var_set = (TAUX TAUY OCNFRAC)
+
+        echo
+        echo Submitting jobs to condense fields: $var_set
+        echo Log files in $log_dir/
+        echo
+
+        foreach var ($var_set)
+                echo $var
+                csh_scripts/condense_field.csh  $archive_dir_atm \
+                                                $scratch_dir \
+                                                $casename \
+                                                $var >& $log_dir/condense_field_$var.log; \
+                echo "set condense_status = $status" > status_$var.temp &
+        end
+
+        wait
+>>>>>>> 97fc415... merging milena/new_diags into kevans32/new_diags to merge atm and ocn/ice scripts
+=======
+set ts_var_list_file = $log_dir/ts_var_list.csh
+>>>>>>> 09dc28c... Adding info on years analyzed to the html page and cleaning generate_html_index_file.csh script in coupled_diags
 
 csh_scripts/generate_unique_field_list.csh $var_list_file \
-					   $ts_remap_var_list_file
+					   $ts_var_list_file
 
 
+
+#Condense time series variables into individual files
+foreach j (`seq 1 $n_cases`)
+	set casename 		= $case_set[$j]
+	set archive_dir 	= $archive_dir_set[$j]
+	set scratch_dir 	= $scratch_dir_set[$j]
+	set short_term_archive 	= $short_term_archive_set[$j]
+	set begin_yr_ts 	= $begin_yr_ts_set[$j]
+	set end_yr_ts   	= $end_yr_ts_set[$j]
+
+	set condense_field_ts      	= $condense_field_ts_set[$j]
+
+	set archive_dir_atm = $archive_dir/$casename/run
+
+	if ($short_term_archive == 1) then
+		echo Using ACME short term archiving directory structure!
+		set archive_dir_atm = $archive_dir/$casename/atm/hist
+	endif
+
+	if ($condense_field_ts == 1) then
+		csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
+							$scratch_dir \
+							$casename \
+							$begin_yr_ts \
+							$end_yr_ts \
+							$ts_var_list_file
+	else
+		echo condense_field_ts set to 0 or casename is obs. 
+		echo Not condensing for time series variables for $casename!
+
+	endif
+
+end
+
+
+
+# Interpolate time series of fields to obs grids
 foreach j (`seq 1 $n_cases`)
 	set casename    = $case_set[$j]
 	set scratch_dir = $scratch_dir_set[$j]
+	set begin_yr_ts = $begin_yr_ts_set[$j]
+	set end_yr_ts	= $end_yr_ts_set[$j]
 	set native_res  = $native_res_set[$j]
 	set remap_ts    = $remap_ts_set[$j]
 
@@ -191,8 +320,10 @@ foreach j (`seq 1 $n_cases`)
 		echo
 		csh_scripts/remap_time_series_nco.csh 	$scratch_dir \
 							$casename \
+							$begin_yr_ts \
+							$end_yr_ts \
 							$native_res \
-							$ts_remap_var_list_file 
+							$ts_var_list_file 
 	endif
 end
 
@@ -214,9 +345,11 @@ echo
 foreach j (`seq 1 $n_test_cases`)
 	set casename    = $case_set[$j]
 	set scratch_dir = $scratch_dir_set[$j]
+	set begin_yr_ts = $begin_yr_ts_set[$j]
 
 	csh_scripts/plot_time_series.csh $scratch_dir \
 					 $casename \
+					 $begin_yr_ts \
 					 $ref_scratch_dir \
 					 $ref_case
 end
@@ -227,14 +360,28 @@ echo
 echo Plots in $plots_dir
 echo
 
+<<<<<<< HEAD
 
 
+<<<<<<< HEAD
 if ($generate_html == 1) then
+<<<<<<< HEAD
 <<<<<<< HEAD
 	csh csh_scripts/generate_html_index_file.csh $case_set[1] $plots_dir $www_dir
 =======
 	if ( ! -d $www_dir ) mkdir $www_dir
 	csh csh_scripts/generate_html_index_file.csh $casename $plots_dir $www_dir
 >>>>>>> e7754e1... Added ocean and sea-ice diagnostic scripts.
+=======
+	csh csh_scripts/generate_html_index_file.csh 	$case_set[1] \
+							$plots_dir \
+							$www_dir \
+							$begin_yr_climo_set[1] \
+							$end_yr_climo_set[1]
+>>>>>>> 7d08fad... debugging after merge
 endif
 
+=======
+>>>>>>> 97fc415... merging milena/new_diags into kevans32/new_diags to merge atm and ocn/ice scripts
+=======
+>>>>>>> 5702fbb... cleaning up plot_climo_vector.py for model to model comparisons

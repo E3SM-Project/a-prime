@@ -86,90 +86,111 @@ plots_dir               = options.plots_dir
 season = get_season_name(begin_month, end_month)
 
 if field_name == 'TAU':
+	field_X_name    = 'TAUX'
+	field_Y_name    = 'TAUY'
+	field_mask_name = 'OCNFRAC'
 
-	#Read Variables TAUX, TAUY and OCNFRAC
-    	#Reading OCNFRAC
-	field_OCNFRAC, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
-						 season = season, \
-						 field_name = 'OCNFRAC', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
-						 reg = 'global')
+#Read x and y components of vector field and mask field
+#Reading mask field
+field_mask, lat, lon, units = read_climo_file(indir = indir, \
+					 casename = casename, \
+					 season = season, \
+					 field_name = field_mask_name, \
+					 interp_grid = interp_grid, \
+					 interp_method = interp_method, \
+					 reg = 'global')
 
-    	#Reading TAUX and masking non-ocn grid boxes
-	field_TAUX, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
-						 season = season, \
-						 field_name = 'TAUX', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
-						 reg = 'global')
-
-
-	field_TAUX_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
-	field_TAUX_plot[:,:] = field_TAUX[:,:]
-	field_TAUX_plot.mask = numpy.where(field_OCNFRAC[:,:] < 0.5, 1, 0)
-
-    	#Reading TAUY and masking non-ocn grid boxes
-	field_TAUY, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
-						 season = season, \
-						 field_name = 'TAUY', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
-						 reg = 'global')
+#Reading X component and masking grid boxes
+field_X, lat, lon, units = read_climo_file(indir = indir, \
+					 casename = casename, \
+					 season = season, \
+					 field_name = field_X_name, \
+					 interp_grid = interp_grid, \
+					 interp_method = interp_method, \
+					 reg = 'global')
 
 
-	field_TAUY_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
-	field_TAUY_plot[:,:] = field_TAUY[:,:]
-	field_TAUY_plot.mask = numpy.where(field_OCNFRAC[:,:] < 0.5, 1, 0)
+field_X_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
+field_X_plot[:,:] = field_X[:,:]
+field_X_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
 
-	#Computing an approximation of wind stress magnitude from monthly averages	
-	field_TAU = numpy.ma.sqrt(numpy.ma.power(field_TAUX_plot, 2.0) + numpy.ma.power(field_TAUY_plot, 2.0))
-
-
-	print
-	print 'Reading climo file for case: ', ref_case
-	print
-
-	field_ref_case_TAUX, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
-						 season = season, \
-						 field_name = 'TAUX', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
-						 reg = 'global')
-
-	field_ref_case_TAUY, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
-						 season = season, \
-						 field_name = 'TAUY', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
-						 reg = 'global')
-
-	#Computing an approximation of wind stress magnitude
-	field_ref_case_TAU = numpy.ma.sqrt(numpy.ma.power(field_ref_case_TAUX, 2.0) + numpy.ma.power(field_ref_case_TAUY, 2.0))
+#Reading Y component and masking grid boxes
+field_Y, lat, lon, units = read_climo_file(indir = indir, \
+					 casename = casename, \
+					 season = season, \
+					 field_name = field_Y_name, \
+					 interp_grid = interp_grid, \
+					 interp_method = interp_method, \
+					 reg = 'global')
 
 
+field_Y_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
+field_Y_plot[:,:] = field_Y[:,:]
+field_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
+
+#Computing an approximation of field magnitude from monthly averages	
+field_XY = numpy.ma.sqrt(numpy.ma.power(field_X_plot, 2.0) + numpy.ma.power(field_Y_plot, 2.0))
+
+if casename != 'ERS':
+	field_X_plot = -field_X_plot
+	field_Y_plot = -field_Y_plot
+
+print
+print 'Reading climo file for case: ', ref_case
+print
+
+field_ref_case_X, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+					 casename = ref_case, \
+					 season = season, \
+					 field_name = field_X_name, \
+					 interp_grid = ref_interp_grid, \
+					 interp_method = ref_interp_method, \
+					 reg = 'global')
+
+field_ref_case_Y, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+					 casename = ref_case, \
+					 season = season, \
+					 field_name = field_Y_name, \
+					 interp_grid = ref_interp_grid, \
+					 interp_method = ref_interp_method, \
+					 reg = 'global')
+
+
+
+field_ref_case_X_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
+field_ref_case_Y_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
+
+field_ref_case_X_plot[:,:] = field_ref_case_X[:,:]
+field_ref_case_Y_plot[:,:] = field_ref_case_Y[:,:]
+
+#Masking if the ref_case is also a model output
+if ref_case != 'ERS':
+	field_ref_case_X_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
+	field_ref_case_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
+
+	field_ref_case_X_plot = -field_ref_case_X_plot
+	field_ref_case_Y_plot = -field_ref_case_Y_plot
+	
+#Computing an approximation of field magnitude
+field_ref_case_XY = numpy.ma.sqrt(numpy.ma.power(field_ref_case_X_plot, 2.0) + numpy.ma.power(field_ref_case_Y_plot, 2.0))
 
 #Computing levels using mean and standard deviation
 num = 11
 
-max_plot = round_to_first(numpy.ma.mean(field_TAU) + \
-			  3.0 * numpy.ma.std(field_TAU))
+max_plot = round_to_first(numpy.ma.mean(field_XY) + \
+			  3.0 * numpy.ma.std(field_XY))
 min_plot = 0.0
 
 levels = numpy.linspace(min_plot, max_plot, num = num)
 
-field_max_TAU = numpy.ma.max(field_TAU)
-field_min_TAU = numpy.ma.min(field_TAU)
-field_max_ERS_TAU = numpy.ma.max(field_ref_case_TAU)
-field_min_ERS_TAU = numpy.ma.min(field_ref_case_TAU)
+field_max_TAU 	  = numpy.ma.max(field_XY)
+field_min_TAU 	  = numpy.ma.min(field_XY)
+
+field_max_ERS_TAU = numpy.ma.max(field_ref_case_XY)
+field_min_ERS_TAU = numpy.ma.min(field_ref_case_XY)
 
 print 'mean, stddev, min_plot, max_plot: ', \
-	numpy.ma.mean(field_TAU), numpy.ma.std(field_TAU), min_plot, max_plot
+	numpy.ma.mean(field_XY), numpy.ma.std(field_XY), min_plot, max_plot
 print 'min, max: ', field_min_TAU, field_max_TAU
 print 'levels:', levels
 
@@ -192,7 +213,7 @@ m.drawcoastlines()
 lons, lats = numpy.meshgrid(lon,lat)
 x, y       = m(lons,lats)
 
-c = m.contourf(	x, y, field_TAU, \
+c = m.contourf(	x, y, field_XY, \
 	   	cmap = 'gnuplot2_r', \
 		levels = levels, \
 		extend = 'both')
@@ -200,13 +221,15 @@ c = m.contourf(	x, y, field_TAU, \
 cb = m.colorbar(c)
 
 q = m.quiver(	x[::3,::3], y[::3,::3], \
-		-field_TAUX_plot[::3, ::3], -field_TAUY_plot[::3, ::3], \
+		field_X_plot[::3, ::3], field_Y_plot[::3, ::3], \
 		scale = 3.0)
 
 text_data = 'min = '  + str(round(field_min_TAU, 2)) + ', ' + \
             'max = '  + str(round(field_max_TAU, 2))
 
 ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
+
+
 
 #PLOT REF CASE DATA
 ax = f.add_subplot(3,1,2)
@@ -218,7 +241,7 @@ m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
 
 m.drawcoastlines()
 
-c  = m.contourf(	x, y, field_ref_case_TAU, \
+c  = m.contourf(	x, y, field_ref_case_XY, \
 		cmap = 'gnuplot2_r', \
 		levels = levels, \
 		extend = 'both')
@@ -226,7 +249,7 @@ c  = m.contourf(	x, y, field_ref_case_TAU, \
 cb = m.colorbar(c)
 
 q  = m.quiver(	x[::3,::3], y[::3,::3], \
-		field_ref_case_TAUX[::3, ::3], field_ref_case_TAUY[::3, ::3], \
+		field_ref_case_X_plot[::3, ::3], field_ref_case_Y_plot[::3, ::3], \
 		scale = 3.0)
 
 text_data = 'min = '  + str(round(field_min_ERS_TAU, 2)) + ', ' + \
@@ -234,38 +257,41 @@ text_data = 'min = '  + str(round(field_min_ERS_TAU, 2)) + ', ' + \
 
 ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 
+
+
 #PLOT DIFFERENCE
 ax = f.add_subplot(3,1,3)
 
-ax.set_title(casename + ' - ERS')
+#ax.set_title(casename + ' - ' + ref_case)
+ax.set_title('Difference')
 
-field_diff_TAU = field_TAU - field_ref_case_TAU
+field_diff_XY = field_XY - field_ref_case_XY
 
-field_diff_max_TAU = numpy.ma.max(field_diff_TAU)
-field_diff_min_TAU = numpy.ma.min(field_diff_TAU)
+field_diff_max_TAU = numpy.ma.max(field_diff_XY)
+field_diff_min_TAU = numpy.ma.min(field_diff_XY)
 
 
 #Computing levels using mean and standard deviation
 num         = 11
-max_plot    = round_to_first(3.0 * numpy.ma.std(field_diff_TAU))
+max_plot    = round_to_first(3.0 * numpy.ma.std(field_diff_XY))
 levels_diff = numpy.linspace(-max_plot, max_plot, num = num)
 
 print 'For difference plot: '
 print 'mean, stddev, max_plot: ', \
-	numpy.ma.mean(field_diff_TAU), numpy.ma.std(field_diff_TAU), max_plot
-print 'min, max: ', numpy.ma.min(field_diff_TAU), numpy.ma.max(field_diff_TAU)
+	numpy.ma.mean(field_diff_XY), numpy.ma.std(field_diff_XY), max_plot
+print 'min, max: ', numpy.ma.min(field_diff_XY), numpy.ma.max(field_diff_XY)
 print 'contour levels: ', levels
 
 #Computing difference vectors
-field_diff_TAUX = -field_TAUX_plot - field_ref_case_TAUX
-field_diff_TAUY = -field_TAUY_plot - field_ref_case_TAUY
+field_diff_X = field_X_plot - field_ref_case_X_plot
+field_diff_Y = field_Y_plot - field_ref_case_Y_plot
 
 m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=0,urcrnrlon=360,resolution='c')
 
 m.drawcoastlines()
 
-c  = m.contourf(x, y, field_diff_TAU, \
+c  = m.contourf(x, y, field_diff_XY, \
 		cmap = 'seismic', \
 		levels = levels_diff, \
 		extend = 'both')
@@ -273,7 +299,7 @@ c  = m.contourf(x, y, field_diff_TAU, \
 cb = m.colorbar(c)
 
 q  = m.quiver(	x[::3,::3], y[::3,::3], \
-		field_diff_TAUX[::3, ::3], field_diff_TAUY[::3, ::3], \
+		field_diff_X[::3, ::3], field_diff_Y[::3, ::3], \
 		scale = 1.0)
 
 text_data = 'min = '  + str(round(field_diff_min_TAU, 2)) + ', ' + \
@@ -281,7 +307,7 @@ text_data = 'min = '  + str(round(field_diff_min_TAU, 2)) + ', ' + \
 
 ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 
-#saving plot
+#SAVING PLOT
 mpl.rcParams['savefig.dpi']=300
 
 outfile = plots_dir + '/' + casename + '-' + ref_case + '_' \
