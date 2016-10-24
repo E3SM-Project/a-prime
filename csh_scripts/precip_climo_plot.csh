@@ -12,15 +12,43 @@ set plots_dir = $argv[7]
 
 # Create Climatology of precipitation fields
 
-python python/create_climatology.py --indir $scratch_dir -c $casename -f PRECC --begin_month $begin_month --end_month $end_month
-python python/create_climatology.py --indir $scratch_dir -c $casename -f PRECL --begin_month $begin_month --end_month $end_month
+python python/create_climatology.py 	--indir $scratch_dir \
+					-c $casename \
+					-f PRECC \
+					--begin_month $begin_month \
+					--end_month $end_month
+
+python python/create_climatology.py 	--indir $scratch_dir \
+					-c $casename \
+					-f PRECL --begin_month \
+					$begin_month --end_month \
+					$end_month
 
 # Interpolate climatology to GPCP grid
 
-ncl indir=\"{$scratch_dir}\" field_name=\"PRECC\" casename=\"{$casename}\" wgt_file=\"{$GPCP_regrid_wgt_file}\" begin_month=$begin_month  end_month=$end_month ncl/esmf_regrid_ne120_GPCP_conservative_mapping_climo.ncl
-ncl indir=\"{$scratch_dir}\" field_name=\"PRECL\" casename=\"{$casename}\" wgt_file=\"{$GPCP_regrid_wgt_file}\" begin_month=$begin_month  end_month=$end_month ncl/esmf_regrid_ne120_GPCP_conservative_mapping_climo.ncl
+ncl 	indir=\"{$scratch_dir}\" \
+	field_name=\"PRECC\" \
+	casename=\"{$casename}\" \
+	wgt_file=\"{$GPCP_regrid_wgt_file}\" \
+	begin_month=$begin_month  \
+	end_month=$end_month \
+	ncl/esmf_regrid_ne120_GPCP_conservative_mapping_climo.ncl
+
+ncl 	indir=\"{$scratch_dir}\" \
+	field_name=\"PRECL\" \
+	casename=\"{$casename}\" \
+	wgt_file=\"{$GPCP_regrid_wgt_file}\" \
+	begin_month=$begin_month  \
+	end_month=$end_month \
+	ncl/esmf_regrid_ne120_GPCP_conservative_mapping_climo.ncl
 
 
 # plot climatology plots for different seasons
 
-python python/plot_climo_PRECT_vs_GPCP.py --indir $scratch_dir -c $casename -f PRECT --begin_month $begin_month --end_month $end_month --GPCP_dir $GPCP_data_dir --plots_dir $plots_dir
+python python/plot_climo_PRECT_vs_GPCP.py 	--indir $scratch_dir \
+						-c $casename \
+						-f PRECT \
+						--begin_month $begin_month \
+						--end_month $end_month \
+						--GPCP_dir $GPCP_data_dir \
+						--plots_dir $plots_dir

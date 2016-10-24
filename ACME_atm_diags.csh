@@ -2,92 +2,211 @@
 
 #GENERATE ATMOSPHERIC DIAGNOSTICS
 
-if ($generate_prect == 1) then
+#Reading case info
+source $log_dir/case_info.temp
+set n_cases = $#case_set
 
-	# PRECT
+set ref_case        = $case_set[$n_cases]
+set ref_scratch_dir = $scratch_dir_set[$n_cases]
 
-	# Condense precipitation fields
-
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename PRECC &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename PRECL &
-
-	wait
-
-	#Generate climatology and plots
-	csh_scripts/precip_climo_plot.csh $scratch_dir $casename 0 11 $GPCP_regrid_wgt_file $data_dir $plots_dir  &
-	csh_scripts/precip_climo_plot.csh $scratch_dir $casename 2 4  $GPCP_regrid_wgt_file $data_dir $plots_dir  &
-	csh_scripts/precip_climo_plot.csh $scratch_dir $casename 5 7  $GPCP_regrid_wgt_file $data_dir $plots_dir  &
-	csh_scripts/precip_climo_plot.csh $scratch_dir $casename 8 10 $GPCP_regrid_wgt_file $data_dir $plots_dir  &
-	csh_scripts/precip_climo_plot.csh $scratch_dir $casename 11 1 $GPCP_regrid_wgt_file $data_dir $plots_dir  &
+#Reading seasonal info 
+source $log_dir/season_info.temp
+set n_seasons = $#begin_month_set
 
 
-	#PRECIPITATION TRENDS
 
-	#Interpolate PRECC and PRECL time series to GPCP grid
+echo
+echo Generating atmospheric climatology diagnostics...
+echo
 
-	echo
-	echo Interpolating time series to GPCP grid ...
 
-	ncl indir=\"{$scratch_dir}\" field_name=\"PRECC\" casename=\"{$casename}\" wgt_file=\"{$GPCP_regrid_wgt_file}\" ncl/esmf_regrid_ne120_GPCP_conservative_mapping.ncl &
-	ncl indir=\"{$scratch_dir}\" field_name=\"PRECL\" casename=\"{$casename}\" wgt_file=\"{$GPCP_regrid_wgt_file}\" ncl/esmf_regrid_ne120_GPCP_conservative_mapping.ncl &
+# Condense fields into individual files
 
-	wait
+foreach j (`seq 1 $n_cases`)
+	set casename 		= $case_set[$j]
+	set archive_dir 	= $archive_dir_set[$j]
+	set scratch_dir 	= $scratch_dir_set[$j]
+	set short_term_archive 	= $short_term_archive_set[$j]
+	set begin_yr 		= $begin_yr_set[$j]
+	set end_yr   		= $end_yr_set[$j]
 
-	#plot trend plots for different regions
+	set condense_field_ts      	= $condense_field_ts_set[$j]
+	set condense_field_climo      	= $condense_field_climo_set[$j]
+	set compute_climo       	= $compute_climo_set[$j]
 
-	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir -c $casename -f PRECT --interp_grid GPCP_conservative_mapping --begin_month 0 --end_month 11 --aggregate 0 --plots_dir $plots_dir --debug False &
+	csh_scripts/condense_field_bundle.csh	$archive_dir \
+						$scratch_dir \
+						$short_term_archive \
+						$casename \
+						$begin_yr \
+						$end_yr \
+						$condense_field_ts \
+						$condense_field_climo \
+						$compute_climo \
+						$ref_case
 
-	wait
+end
 
+
+
+#Compute climatology
+
+#Ensuring a unique set of fields to compute climatology to reduce redundancy in climatology computations
+if ($ref_case == obs) then
+        set var_list_file = var_list_climo_model_vs_obs.csh
+else
+        set var_list_file = var_list_climo_model_vs_model.csh
 endif
 
+set compute_climo_var_list_file = $log_dir/var_list_compute_climo.csh
 
-if ($generate_rad == 1) then
-
-	# RADIATION
-
-	# Condense radiation fields
-
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename FSNTOA &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename FLUT &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename FSNT &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename FLNT &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename SWCF &
-	csh_scripts/condense_field.csh $archive_dir $scratch_dir $casename LWCF &
-
-	wait
-
-	#Generate climatology and plots
-
-	csh_scripts/rad_climo_plot.csh $scratch_dir $casename 0 11 $CERES_EBAF_regrid_wgt_file $data_dir $plots_dir &
-	csh_scripts/rad_climo_plot.csh $scratch_dir $casename 2 4 $CERES_EBAF_regrid_wgt_file $data_dir $plots_dir &
-	csh_scripts/rad_climo_plot.csh $scratch_dir $casename 5 7 $CERES_EBAF_regrid_wgt_file $data_dir $plots_dir &
-	csh_scripts/rad_climo_plot.csh $scratch_dir $casename 8 10 $CERES_EBAF_regrid_wgt_file $data_dir $plots_dir &
-	csh_scripts/rad_climo_plot.csh $scratch_dir $casename 11 1 $CERES_EBAF_regrid_wgt_file $data_dir $plots_dir &
-
-	# RADIATION TRENDS        
-
-	# Interpolate time series of radiation fields
-
-	echo
-	echo Interpolating FSNT and FLNT time series to CERES-EBAF grid ...
-
-	ncl indir=\"{$scratch_dir}\" field_name=\"FSNT\" casename=\"{$casename}\" wgt_file=\"{$CERES_EBAF_regrid_wgt_file}\" ncl/esmf_regrid_ne120_CERES-EBAF_conservative_mapping.ncl &
-	ncl indir=\"{$scratch_dir}\" field_name=\"FLNT\" casename=\"{$casename}\" wgt_file=\"{$CERES_EBAF_regrid_wgt_file}\" ncl/esmf_regrid_ne120_CERES-EBAF_conservative_mapping.ncl &
-
-	wait
-
-	# Plot trends for different regions
-
-	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir -c $casename -f FSNT   --interp_grid CERES-EBAF_conservative_mapping --begin_month 0 --end_month 11 --plots_dir $plots_dir &
-	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir -c $casename -f FLNT   --interp_grid CERES-EBAF_conservative_mapping --begin_month 0 --end_month 11 --plots_dir $plots_dir &
-	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir -c $casename -f RESTOM --interp_grid CERES-EBAF_conservative_mapping --begin_month 0 --end_month 11 --plots_dir $plots_dir &
+csh_scripts/generate_unique_field_list.csh $var_list_file \
+					   $compute_climo_var_list_file
 
 
-	wait
+foreach j (`seq 1 $n_cases`)
+	set casename      = $case_set[$j]
+	set scratch_dir   = $scratch_dir_set[$j]
+	set compute_climo = $compute_climo_set[$j]
+
+	if ($compute_climo == 1) then
+		echo
+		echo Submitting jobs to compute seasonal climatology for $casename
+		echo Log files in $log_dir/climo_$casename...
+		echo
+		csh_scripts/compute_climo.csh 	$scratch_dir \
+						$casename \
+						$compute_climo_var_list_file
+	else
+		echo compute_climo set to $compute_climo or casename is obs. Not computing climatology for $casename!
+	endif
+end
+	
+echo
 
 
+#Remap climatology
+
+foreach j (`seq 1 $n_cases`)
+	set casename    = $case_set[$j]
+	set scratch_dir = $scratch_dir_set[$j]
+	set native_res  = $native_res_set[$j]
+	set remap_climo = $remap_climo_set[$j]
+
+	if ($remap_climo == 1) then
+		echo
+		echo Submitting jobs to remap seasonal climatology files for $casename 
+		echo Log files in $log_dir/remap_climo_$casename...
+		echo
+		csh_scripts/remap_climo_nco.csh $scratch_dir \
+						$casename \
+						$native_res \
+						$compute_climo_var_list_file 
+	else
+		echo remap_climo set to $remap_climo or casename is obs. Not remapping climatology for $casename!
+	endif
+end
+
+echo
+
+
+#Plot climatologies and differences
+
+echo
+echo Submitting jobs to plot seasonal climatology and differences
+echo Log files in $log_dir/plot_climo...
+echo
+
+set ref_case        = $case_set[$n_cases]
+set ref_scratch_dir = $scratch_dir_set[$n_cases]
+
+echo Reference Case: $ref_case
+echo
+
+@ n_test_cases = $n_cases - 1
+
+foreach j (`seq 1 $n_test_cases`)
+	set casename   = $case_set[$j]
+	set scratch_dir = $scratch_dir_set[$j]
+
+	csh_scripts/plot_climo.csh $scratch_dir \
+				   $casename \
+				   $ref_scratch_dir \
+				   $ref_case
+end
+
+
+
+# TIME TRENDS        
+
+# Interpolate time series of fields
+
+#Ensuring a unique set of fields to remap
+
+if ($ref_case == obs) then
+        set var_list_file = var_list_time_series_model_vs_obs.csh
+else
+        set var_list_file = var_list_time_series_model_vs_model.csh
 endif
 
-	#wind stress
+set ts_remap_var_list_file = $log_dir/ts_remap_var_list.csh
+
+csh_scripts/generate_unique_field_list.csh $var_list_file \
+					   $ts_remap_var_list_file
+
+
+foreach j (`seq 1 $n_cases`)
+	set casename    = $case_set[$j]
+	set scratch_dir = $scratch_dir_set[$j]
+	set native_res  = $native_res_set[$j]
+	set remap_ts    = $remap_ts_set[$j]
+
+	if ($remap_ts == 1) then
+		echo
+		echo Submitting jobs to interpolate time series files for $casename
+		echo Log files in $log_dir/remap_time_series_${casename}...
+		echo
+		csh_scripts/remap_time_series_nco.csh 	$scratch_dir \
+							$casename \
+							$native_res \
+							$ts_remap_var_list_file 
+	endif
+end
+
+
+# Plot trends for different regions
+echo
+echo Submitting jobs to plot time series
+echo Log files in $log_dir/
+echo
+
+set ref_case        = $case_set[$n_cases]
+set ref_scratch_dir = $scratch_dir_set[$n_cases]
+
+echo Reference Case: $ref_case
+echo
+
+@ n_test_cases = $n_cases - 1
+
+foreach j (`seq 1 $n_test_cases`)
+	set casename    = $case_set[$j]
+	set scratch_dir = $scratch_dir_set[$j]
+
+	csh_scripts/plot_time_series.csh $scratch_dir \
+					 $casename \
+					 $ref_scratch_dir \
+					 $ref_case
+end
+
+echo
+echo Completed atmosphere diagnostics! 
+echo
+echo Plots in $plots_dir
+echo
+
+
+
+if ($generate_html == 1) then
+	csh csh_scripts/generate_html_index_file.csh $case_set[1] $plots_dir $www_dir
+endif
 

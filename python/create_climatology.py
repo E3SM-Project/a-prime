@@ -9,6 +9,8 @@ import math
 import time
 from   optparse import OptionParser
 
+from get_season_name import get_season_name
+
 #Parse options
 if __name__ == "__main__":
     parser = OptionParser(usage = "mpirun [options] python %prog [options]")
@@ -117,11 +119,11 @@ print "weights: ", weights
 #Computing seasonal mean
 seasonal_clim[:] = numpy.average(clim_field[seasonal_index, :], axis = 0, weights = weights)
 
+season = get_season_name(begin_month, end_month)
 
 #Writing netcdf file
-outfile = indir + '/'+ casename + \
-            '.climo.' + str(begin_month) + '_' + str(end_month) + \
-	    '.' + field_name + '.nc'
+outfile = indir + '/'+ casename + '_' + season \
+            + '_climo.' + field_name + '.nc'
  
 print "Writing ", outfile
 print ""
