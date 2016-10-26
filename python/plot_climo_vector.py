@@ -133,20 +133,20 @@ if field_name == 'TAU':
 	print 'Reading climo file for case: ', ref_case
 	print
 
-	field_ref_case_TAUX, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
+	field_ref_case_TAUX, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+						 casename = ref_case, \
 						 season = season, \
 						 field_name = 'TAUX', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
+						 interp_grid = ref_interp_grid, \
+						 interp_method = ref_interp_method, \
 						 reg = 'global')
 
-	field_ref_case_TAUY, lat, lon, units = read_climo_file(indir = indir, \
-						 casename = casename, \
+	field_ref_case_TAUY, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+						 casename = ref_case, \
 						 season = season, \
 						 field_name = 'TAUY', \
-						 interp_grid = interp_grid, \
-						 interp_method = interp_method, \
+						 interp_grid = ref_interp_grid, \
+						 interp_method = ref_interp_method, \
 						 reg = 'global')
 
 	#Computing an approximation of wind stress magnitude

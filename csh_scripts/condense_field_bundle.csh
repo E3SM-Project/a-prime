@@ -5,14 +5,13 @@ if ($#argv == 0) then
 else
         set archive_dir  		= $argv[1]
         set scratch_dir 		= $argv[2]
-        set short_term_archive 		= $argv[3]
-        set casename    		= $argv[4]
-        set begin_yr    		= $argv[5]
-        set end_yr      		= $argv[6]
-	set condense_field_ts 		= $argv[7]
-	set condense_field_climo 	= $argv[8]
-	set compute_climo 		= $argv[9]
-	set ref_case			= $argv[10]
+        set casename    		= $argv[3]
+        set begin_yr    		= $argv[4]
+        set end_yr      		= $argv[5]
+	set condense_field_ts 		= $argv[6]
+	set condense_field_climo 	= $argv[7]
+	set compute_climo 		= $argv[8]
+	set ref_case			= $argv[9]
 endif
 
 
@@ -73,7 +72,6 @@ if ($condense_field_climo == 1 || $condense_field_ts == 1) then
 		echo $var
 		csh_scripts/condense_field.csh  $archive_dir \
 						$scratch_dir \
-						$short_term_archive \
 						$casename \
 						$var \
 						$begin_yr \

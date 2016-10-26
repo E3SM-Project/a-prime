@@ -26,8 +26,8 @@ setenv test_casename 			20160428.A_WCYCL1850.ne30_oEC.edison.alpha5_00
 setenv test_native_res			ne30
 setenv test_short_term_archive		1
 setenv test_scratch_dir			$PROJWORK/cli106/$USER/$test_casename.test.pp
-setenv test_begin_yr			15
-setenv test_end_yr			20
+setenv test_begin_yr_climo		15
+setenv test_end_yr_climo		20
 setenv test_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst  
 setenv test_condense_field_climo	1
 setenv test_condense_field_ts		1
@@ -36,10 +36,10 @@ setenv test_remap_climo			1
 setenv test_remap_ts			1
 
 #reference case variables
-setenv ref_case			20160401.A_WCYCL2000.ne30_oEC.edison.alpha4_00H
-setenv ref_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst
-#setenv ref_case			obs
-#setenv ref_archive_dir 		$WORLDWORK/csc121/obs_data
+#setenv ref_case			20160401.A_WCYCL2000.ne30_oEC.edison.alpha4_00H
+#setenv ref_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst
+setenv ref_case			obs
+setenv ref_archive_dir 		$WORLDWORK/csc121/obs_data
 setenv ref_condense_field_climo	1
 setenv ref_condense_field_ts	1
 setenv ref_compute_climo        1
@@ -50,8 +50,8 @@ setenv ref_remap_ts		1
 setenv ref_scratch_dir		$PROJWORK/cli106/$USER/$ref_case.test.pp
 setenv ref_native_res             ne30
 setenv ref_short_term_archive     1
-setenv ref_begin_yr               1
-setenv ref_end_yr                 5
+setenv ref_begin_yr_climo         1
+setenv ref_end_yr_climo           5
 
 #set locations of plots directory and log files directory
 setenv plots_dir 		  $PROJWORK/cli106/$USER/coupled_diagnostics_${test_casename}-$ref_case
@@ -85,8 +85,8 @@ if (! -d $log_dir)     mkdir $log_dir
 echo "set case_set 			= ($test_casename $ref_case)" > $log_dir/case_info.temp
 echo "set archive_dir_set 		= ($test_archive_dir $ref_archive_dir)" >> $log_dir/case_info.temp
 echo "set short_term_archive_set 	= ($test_short_term_archive $ref_short_term_archive)" >> $log_dir/case_info.temp
-echo "set begin_yr_set			= ($test_begin_yr $ref_begin_yr)" >> $log_dir/case_info.temp
-echo "set end_yr_set 			= ($test_end_yr $ref_end_yr)" >> $log_dir/case_info.temp
+echo "set begin_yr_climo_set		= ($test_begin_yr_climo $ref_begin_yr_climo)" >> $log_dir/case_info.temp
+echo "set end_yr_climo_set 		= ($test_end_yr_climo $ref_end_yr_climo)" >> $log_dir/case_info.temp
 echo "set native_res_set 		= ($test_native_res $ref_native_res)" >> $log_dir/case_info.temp
 
 if ($ref_case == obs) then

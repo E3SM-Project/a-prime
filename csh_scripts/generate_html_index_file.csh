@@ -9,11 +9,26 @@ else
         set casename    = $argv[1]
 	set plots_dir   = $argv[2]
         set www_dir  = $argv[3]
+	set begin_yr = $argv[4]
+	set end_yr = $argv[5]
 endif
 
 set case_compare = B1850C5_ne30_v0.4
-set begin_yr = 0021
-set end_yr = 0030
+
+# padding begin_yr and end_yr with zeroes
+@ nc = `echo $begin_yr | wc -c` - 1
+while ($nc != 4)
+	set begin_yr = "0"$begin_yr
+	@ nc = `echo $begin_yr | wc -c` - 1
+end
+
+@ nc = `echo $end_yr | wc -c` - 1
+while ($nc != 4)
+	set end_yr = "0"$end_yr
+	@ nc = `echo $end_yr | wc -c` - 1
+end
+
+echo $begin_yr $end_yr
 
 cd $plots_dir
 
@@ -79,9 +94,9 @@ ACME Coupled Priority Metrics</b></font>
 <TR>
   <TH ALIGN=LEFT>PRECT 
   <TH ALIGN=LEFT>Precipitation rate
-  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_JJA.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_ANN.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-GPCP_PRECT_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-GPCP_PRECT_climo_JJA.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-GPCP_PRECT_climo_ANN.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>CERES-EBAF</font>
@@ -91,27 +106,27 @@ ACME Coupled Priority Metrics</b></font>
 <TR>
   <TH ALIGN=LEFT>FLUT 
   <TH ALIGN=LEFT>TOA upward LW flux
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_ANN.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FLUT_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FLUT_climo_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FLUT_climo_ANN.png">plot</A>
 <TR>
   <TH ALIGN=LEFT>FSNTOA 
   <TH ALIGN=LEFT>TOA net SW flux
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_ANN.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FSNTOA_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FSNTOA_climo_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_FSNTOA_climo_ANN.png">plot</A>
 <TR>
   <TH ALIGN=LEFT>LWCF 
   <TH ALIGN=LEFT>TOA longwave cloud forcing
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_ANN.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_LWCF_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_LWCF_climo_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_LWCF_climo_ANN.png">plot</A>
 <TR>
   <TH ALIGN=LEFT>SWCF 
   <TH ALIGN=LEFT>TOA shortwave cloud forcing
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_ANN.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_SWCF_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_SWCF_climo_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-CERES-EBAF_SWCF_climo_ANN.png">plot</A>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>ERS</font>
@@ -121,9 +136,9 @@ ACME Coupled Priority Metrics</b></font>
 <TR>
   <TH ALIGN=LEFT>Wind Stress 
   <TH ALIGN=LEFT>Ocean Wind Stress
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_ANN.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-ERS_TAU_climo_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}-ERS_TAU_climo_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}-ERS_TAU_climo_ANN.png">plot</A>
 <TR>
 </TABLE>
 
@@ -220,7 +235,7 @@ echo
 echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
-cp -r $plots_dir $www_dir/.
+cp -r $plots_dir $www_dir
 chmod -R a+rx $www_dir/coupled_diagnostics_$casename
 
 echo Moved plots and index.html to the website directory: $www_dir

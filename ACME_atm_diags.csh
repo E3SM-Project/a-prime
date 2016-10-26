@@ -27,19 +27,25 @@ foreach j (`seq 1 $n_cases`)
 	set archive_dir 	= $archive_dir_set[$j]
 	set scratch_dir 	= $scratch_dir_set[$j]
 	set short_term_archive 	= $short_term_archive_set[$j]
-	set begin_yr 		= $begin_yr_set[$j]
-	set end_yr   		= $end_yr_set[$j]
+	set begin_yr_climo 	= $begin_yr_climo_set[$j]
+	set end_yr_climo   	= $end_yr_climo_set[$j]
 
 	set condense_field_ts      	= $condense_field_ts_set[$j]
 	set condense_field_climo      	= $condense_field_climo_set[$j]
 	set compute_climo       	= $compute_climo_set[$j]
 
-	csh_scripts/condense_field_bundle.csh	$archive_dir \
+	set archive_dir_atm = $archive_dir/$casename/run
+
+	if ($short_term_archive == 1) then
+		echo Using ACME short term archiving directory structure!
+		set archive_dir_atm = $archive_dir/$casename/atm/hist
+	endif
+
+	csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
 						$scratch_dir \
-						$short_term_archive \
 						$casename \
-						$begin_yr \
-						$end_yr \
+						$begin_yr_climo \
+						$end_yr_climo \
 						$condense_field_ts \
 						$condense_field_climo \
 						$compute_climo \
@@ -207,6 +213,9 @@ echo
 
 
 if ($generate_html == 1) then
-	csh csh_scripts/generate_html_index_file.csh $case_set[1] $plots_dir $www_dir
+	csh csh_scripts/generate_html_index_file.csh 	$case_set[1] \
+							$plots_dir \
+							$www_dir \
+							$begin_yr_climo_set[1] \
+							$end_yr_climo_set[1]
 endif
-
