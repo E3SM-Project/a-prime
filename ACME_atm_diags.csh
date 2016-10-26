@@ -230,11 +230,6 @@ echo
 
 
 if ($generate_html == 1) then
-<<<<<<< HEAD
 	csh csh_scripts/generate_html_index_file.csh $case_set[1] $plots_dir $www_dir
-=======
-	if ( ! -d $www_dir ) mkdir $www_dir
-	csh csh_scripts/generate_html_index_file.csh $casename $plots_dir $www_dir
->>>>>>> e7754e1... Added ocean and sea-ice diagnostic scripts.
 endif
 
