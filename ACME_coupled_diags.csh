@@ -246,4 +246,18 @@ endif
 
 #GENERATE OCEAN DIAGNOSTICS
 
+# OHC TRENDS
 
+python python/ohc.py --indir $scratch_dir -c $casename --plots_dir $plots_dir --compare_with_model "true" --indir_model_tocompare $scratch_dir_model_tocompare --casename_model_tocompare $casename_model_tocompare --compare_with_obs "false"
+
+# SST TRENDS
+
+# SST CLIMATOLOGIES
+
+# SEA ICE CONCENTRATION AND THICKNESS TIME SERIES
+
+# SEA ICE CONCENTRATION AND THICKNESS CLIMATOLOGIES
+
+# MERIDIONAL HEAT TRANSPORT AND MOC
+
+# NINO3.4 TIME SERIES

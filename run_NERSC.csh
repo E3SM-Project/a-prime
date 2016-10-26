@@ -4,10 +4,6 @@ module load nco
 module load ncl
 
 #Load the anaconda-2.7-climate env which loads all required python modules
-module unload python
-module unload python_base
-module use /global/project/projectdirs/acme/software/modulefiles/all
-module load python/anaconda-2.7-climate
 
 #Do the following module loads if not using anaconda-2.7-climate environment
 #module load python
@@ -18,7 +14,7 @@ module load python/anaconda-2.7-climate
 #module load basemap
 
 # variables to specify
-setenv casename 		  20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_00 
+setenv casename 		  20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_01 
 setenv native_res		  ne30
 
 setenv short_term_archive	  0
@@ -31,7 +27,6 @@ setenv ERS_regrid_wgt_file        /global/project/projectdirs/acme/salil/grids/$
 setenv data_dir 		  /global/project/projectdirs/acme/obs_for_diagnostics
 setenv plots_dir 		  /global/project/projectdirs/acme/$USER/coupled_diagnostics_$casename
 setenv log_dir 			  /global/project/projectdirs/acme/$USER/$casename.test.pp/logs
-
 
 #select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_prect 0
@@ -56,4 +51,3 @@ echo archive_dir: $archive_dir
 
 ./ACME_atm_diags.csh
 ./ACME_ocn_diags.csh
-

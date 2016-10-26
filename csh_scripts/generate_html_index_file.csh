@@ -36,26 +36,33 @@ ACME Coupled Priority Metrics</b></font>
 </b></font>
 <TABLE>
 <TR>
-  <TH><BR>
   <TH ALIGN=LEFT><A HREF="${casename}_RESTOM_ANN_reg_ts.png">RESTOM</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_FLNT_ANN_reg_ts.png">FLNT</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_FSNT_ANN_reg_ts.png">FSNT</a>
+<TR>
   <TH ALIGN=LEFT><A HREF="${casename}_PRECT_ANN_reg_ts.png">PRECT</a>
-  <TH>
+<TR>
 </TABLE>
 <hr noshade size=2 size="100%">
 <p>
-<font color=red size=+1><b>Time Series Plots: Global means (ICE)</b></font>
+<font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
 <hr noshade size=2 size="100%">
 </b></font>
 <TABLE>
 <TR>
-  <TH><BR>
-  <TH ALIGN=LEFT><A HREF="iceAreaCellNH_${casename}_$case_compare.png">Ice Area (NH)</a>
-  <TH ALIGN=LEFT><A HREF="iceAreaCellSH_${casename}_$case_compare.png">Ice Area (SH)</a>
-  <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}_$case_compare.png">Ice Volume (NH)</a>
-  <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}_$case_compare.png">Ice Volume (SH)</a>
-  <TH>
+  <TH ALIGN=LEFT><A HREF="sst_global_${casename}_$case_compare.png">Global SST</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="ohc_global_${casename}_$case_compare.png">Global OHC</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellNH_${casename}_$case_compare.png">NH Ice Area</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellSH_${casename}_$case_compare.png">SH Ice Area</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}_$case_compare.png">NH Ice Volume</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}_$case_compare.png">SH Ice Volume</a>
 </TABLE>
 <hr noshade size=2 size="100%">
 <p>
@@ -126,32 +133,28 @@ ACME Coupled Priority Metrics</b></font>
 <hr noshade size=2 size="100%">
 <TABLE>
 <TR>
+  <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere</font>
+<TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
   <TH>JFM
   <TH>JAS
 <TR>
-  <TH ALIGN=LEFT><font color=brown size=+1>NH</font>
 <TR>
-<TR>
-  <TH ALIGN=LEFT>Ice conc. 
+  <TH ALIGN=LEFT>Ice Conc. 
   <TH ALIGN=LEFT>Ice concentration
   <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
   <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
-  <TH>DJF
   <TH>JFM
-  <TH>JJA
   <TH>JAS
 <TR>
 <TR>
-  <TH ALIGN=LEFT>Ice conc. 
+  <TH ALIGN=LEFT>Ice Conc. 
   <TH ALIGN=LEFT>Ice concentration
-  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
   <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
   <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
@@ -160,52 +163,49 @@ ACME Coupled Priority Metrics</b></font>
   <TH>ON
 <TR>
 <TR>
-  <TH ALIGN=LEFT>Ice conc. 
+  <TH ALIGN=LEFT>Ice Thick. 
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+<TR>
+  <TH><BR>
+<TR>
+<TR>
+  <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere</font>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
+  <TH>DJF
+  <TH>JJA
+<TR>
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
   <TH ALIGN=LEFT>Ice concentration
-  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>CERES-EBAF</font>
-  <TH>DJF
-  <TH>JJA
-  <TH>ANN
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
+  <TH>JFM
+  <TH>JAS
 <TR>
-  <TH ALIGN=LEFT>FLUT 
-  <TH ALIGN=LEFT>TOA upward LW flux
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_ANN.png">plot</A>
 <TR>
-  <TH ALIGN=LEFT>FSNTOA 
-  <TH ALIGN=LEFT>TOA net SW flux
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_ANN.png">plot</A>
-<TR>
-  <TH ALIGN=LEFT>LWCF 
-  <TH ALIGN=LEFT>TOA longwave cloud forcing
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_ANN.png">plot</A>
-<TR>
-  <TH ALIGN=LEFT>SWCF 
-  <TH ALIGN=LEFT>TOA shortwave cloud forcing
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_ANN.png">plot</A>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>ERS</font>
-  <TH>DJF
-  <TH>JJA
-  <TH>ANN
+  <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
+  <TH>FM
+  <TH>ON
 <TR>
-  <TH ALIGN=LEFT>Wind Stress 
-  <TH ALIGN=LEFT>Ocean Wind Stress
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_DJF.png">plot</a>
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_JJA.png">plot</A>
-  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_ANN.png">plot</A>
+<TR>
+  <TH ALIGN=LEFT>Ice Thick. 
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
 </TABLE>
 
