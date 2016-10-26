@@ -34,7 +34,7 @@ echo
 echo condensing $field_name
 echo
 
-ncrcat -O -v date,time,lat,lon,area,$field_name $file_list $scratch_dir/$casename.cam.h0.$field_name.nc
+ncrcat -O -v date,time,lat,lon,area,$field_name $file_list $scratch_dir/$casename.cam.h0.$field_name.$begin_yr-$end_yr.nc
 
 if ($status != 0) then
 	echo

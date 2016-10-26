@@ -8,82 +8,29 @@ else
         set casename    		= $argv[3]
         set begin_yr    		= $argv[4]
         set end_yr      		= $argv[5]
-	set condense_field_ts 		= $argv[6]
-	set condense_field_climo 	= $argv[7]
-	set compute_climo 		= $argv[8]
-	set ref_case			= $argv[9]
+	set var_set_file		= $argv[6]
 endif
 
+source $var_set_file
 
-set condense_var_set_temp = ()
+echo
+echo Submitting jobs to condense $casename fields:
+echo $var_set
+echo
+echo Log files in $log_dir/condense_field_${casename}...log
+echo
 
-if ($condense_field_ts == 1) then
-
-	if ($ref_case == obs) then
-		source var_list_time_series_model_vs_obs.csh
-	else
-		source var_list_time_series_model_vs_model.csh
-	endif
-
-	set condense_var_set_temp = ($condense_var_set_temp $source_var_set)
-endif
-
-if ($compute_climo == 1 && $condense_field_climo == 1) then
-	if ($ref_case == obs) then
-		source var_list_climo_model_vs_obs.csh
-	else
-		source var_list_climo_model_vs_model.csh
-	endif
-
-	set condense_var_set_temp = ($condense_var_set_temp $source_var_set)
-endif
-
-# Keeping only unique variables in condense_field_var_set
-
-set condense_var_set = ()
-
-foreach var ($condense_var_set_temp)
-
-	set add_var = 1
-
-	foreach var_condense ($condense_var_set)
-		if ($var =~ $var_condense) then
-			set add_var = 0
-		endif
-	end
-
-	if ($add_var == 1) then
-		set condense_var_set = ($condense_var_set $var)
-	endif
+foreach var ($var_set)
+	echo $var
+	csh_scripts/condense_field.csh  $archive_dir \
+					$scratch_dir \
+					$casename \
+					$var \
+					$begin_yr \
+					$end_yr >& $log_dir/condense_field_${casename}_$var.log &
 end
 
-echo condense_var_set:
-echo $condense_var_set
+wait
 
-if ($condense_field_climo == 1 || $condense_field_ts == 1) then
-	echo
-	echo Submitting jobs to condense $casename fields:
-	echo $condense_var_set
-	echo
-	echo Log files in $log_dir/condense_field_${casename}...log
-	echo
-
-	foreach var ($condense_var_set)
-		echo $var
-		csh_scripts/condense_field.csh  $archive_dir \
-						$scratch_dir \
-						$casename \
-						$var \
-						$begin_yr \
-						$end_yr >& $log_dir/condense_field_${casename}_$var.log &
-	end
-
-	wait
-
-else
-
-	echo condense_field set to 0 or casename is obs. Not condensing for $casename!
-
-endif
 
 echo

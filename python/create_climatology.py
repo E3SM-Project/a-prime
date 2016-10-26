@@ -49,7 +49,8 @@ end_month   = options.end_month
 
 #Get filename
 
-file_name = indir + '/' + casename + '.cam.h0.' + field_name + '.nc'
+file_name = indir + '/' + casename + '.cam.h0.' + field_name + \
+		'.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
 
 print "file_name: ", file_name
 

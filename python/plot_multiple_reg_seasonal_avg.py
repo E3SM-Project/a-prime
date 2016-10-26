@@ -180,9 +180,9 @@ def plot_multiple_reg_seasonal_avg (indir,
 	season = get_season_name(begin_month, end_month)
 	plt.suptitle(field_name + ' ' + season, fontsize = 24)
 
-        plot_time = numpy.arange(0,nt)
+        plot_time = numpy.arange(0,nt) + begin_yr
 
-	ref_case_text = ref_case + ' ' + field_name_ref
+	ref_case_text = ref_case + ' ' + field_name_ref + ' climo'
 
 	for i,name in enumerate(names):
 		min_plot = min(numpy.amin(plot_ts[i, :]), ref_plot_ts[i, 0])
