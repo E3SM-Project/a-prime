@@ -317,40 +317,14 @@ cat >> index.html << EOF
 EOF
 
 
-#Generating climatology (ocn/ice) part of index.html file
+#Generating climatology (atm/ice) part of index.html file
 cat >> index.html << EOF
 <hr noshade size=2 size="100%">
 <font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
 <hr noshade size=2 size="100%">
 <TABLE>
 <TR>
-  <TH ALIGN=LEFT><font color=green size=+1>Global Ocean</font>
-<TR>
-  <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>SST Hadley-NOAA-OI</font>
-  <TH>JFM
-  <TH>JAS
-  <TH>ANN
-<TR>
-  <TH ALIGN=LEFT>SST
-  <TH><BR>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_Annual_years${begin_yr}-${end_yr}.png">plot</a>
-<TR>
-  <TH><BR>
-<TR>
-  <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere Sea-ice</font>
-<TR>
-  <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
-  <TH>JFM
-  <TH>JAS
-<TR>
-  <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere</font>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
@@ -363,7 +337,17 @@ cat >> index.html << EOF
   <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
+  <TH>JFM
+  <TH>JAS
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TD ALIGN=LEFT>Ice concentration
+  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
   <TH>FM
   <TH>ON
 <TR>
@@ -374,17 +358,7 @@ cat >> index.html << EOF
 <TR>
   <TH><BR>
 <TR>
-  <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere Sea-ice</font>
-<TR>
-  <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
-  <TH>DJF
-  <TH>JJA
-<TR>
-  <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere</font>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
@@ -397,7 +371,17 @@ cat >> index.html << EOF
   <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
-  <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
+  <TH>JFM
+  <TH>JAS
+<TR>
+  <TH ALIGN=LEFT>Ice Conc. 
+  <TD ALIGN=LEFT>Ice concentration
+  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
   <TH>FM
   <TH>ON
 <TR>
@@ -421,7 +405,7 @@ echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
 
-cp -r $plots_dir $www_dir/coupled_diagnostics_$casename-$ref_case
+cp -r $plots_dir $www_dir
 cp $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
 
 chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case
