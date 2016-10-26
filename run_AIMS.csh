@@ -1,10 +1,5 @@
 #!/bin/csh -f
 
-echo 'Running template version of run_AIMS!'
-echo 'Please copy template to run_AIMS_$user.csh and modify/run that instead'
-echo 'Exiting...'
-exit
-
 #setenv NCARG_ROOT /usr/local/src/NCL-6.3.0
 
 source /usr/local/uvcdat/latest/bin/setup_runtime.sh
