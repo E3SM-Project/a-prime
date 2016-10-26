@@ -1,8 +1,7 @@
 
 import os
 import subprocess
-import matplotlib as mpl
-mpl.use('Agg')
+from netCDF4 import Dataset
 from matplotlib.colors import LogNorm
 from mpas_xarray import preprocess_mpas, preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import matplotlib.pyplot as plt
@@ -13,6 +12,7 @@ import numpy.ma as ma
 import xarray as xr
 import pandas as pd
 import datetime
+from netCDF4 import Dataset as netcdf_dataset
 
 try:
     get_ipython()
@@ -80,7 +80,9 @@ title_font = {'size':'18', 'color':'black', 'weight':'normal'}
 
 # Define/read in general variables
 print "  Load SST data..."
-infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.????-??*nc'])
+#infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.????-??*nc'])
+infiles = "".join([indir,'/am.mpas-o.timeSeriesStats.00[0-3]?-??*nc'])
+#infiles2 = "".join([indir,'/am.mpas-o.surfaceAreaWeightedAverages.????-??*nc'])
 
 # Load data:
 ds = xr.open_mfdataset(infiles,preprocess=lambda x: preprocess_mpas_timeSeriesStats(x, yearoffset=yr_offset,                         timestr='time_avg_daysSinceStartOfSim',                                                                      onlyvars=['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']))
@@ -160,6 +162,7 @@ for iregion in range(len(iregions)):
     
     if compare_with_model == "true":
         # load in other model run data
+        #infiles_model_tocompare = "".join([indir_model_tocompare,'OHC',regions[iregion],'.',casename_model_tocompare,'.year*.nc'])
         infiles_model_tocompare = "".join([indir_model_tocompare,'/SST.',casename_model_tocompare,'.year*.nc'])
         ds_model_tocompare = xr.open_mfdataset(infiles_model_tocompare,preprocess=lambda x: preprocess_mpas(x, yearoffset=yr_offset))
         ds_model_tocompare = remove_repeated_time_index(ds_model_tocompare)

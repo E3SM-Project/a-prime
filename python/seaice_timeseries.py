@@ -1,8 +1,7 @@
 
 import os
 import subprocess
-import matplotlib as mpl
-mpl.use('Agg')
+from netCDF4 import Dataset                     # For reading data
 from matplotlib.colors import LogNorm
 from mpas_xarray import preprocess_mpas, preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import matplotlib.pyplot as plt                 # For plotting
@@ -13,6 +12,10 @@ import numpy.ma as ma
 import xarray as xr
 import pandas as pd
 import datetime
+from netCDF4 import Dataset as netcdf_dataset
+#from pylab import rcParams
+#rcParams['figure.figsize'] = (20.0, 15.0)
+#rcParams['savefig.dpi'] = 600
 
 try:
     get_ipython()
@@ -125,7 +128,8 @@ N_movavg = 1
 dsmesh = xr.open_dataset(meshfile)
 
 # Load data
-infiles = "".join([indir,'/am.mpas-cice.timeSeriesStatsMonthly.????-??-??.nc'])
+#infiles = "".join([indir,'/am.mpas-cice.timeSeriesStatsMonthly.????-??-??.nc'])
+infiles = "".join([indir,'/am.mpas-cice.timeSeriesStatsMonthly.00[0-3]?-??-??.nc'])
 ds = xr.open_mfdataset(infiles,preprocess=lambda x: preprocess_mpas_timeSeriesStats(x, yearoffset=yr_offset,                         timestr='timeSeriesStatsMonthly_avg_daysSinceStartOfSim_1',                                                  onlyvars=['timeSeriesStatsMonthly_avg_iceAreaCell_1',                                                                  'timeSeriesStatsMonthly_avg_iceVolumeCell_1']))
 ds = remove_repeated_time_index(ds)
 

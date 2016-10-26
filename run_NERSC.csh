@@ -1,8 +1,6 @@
 #!/bin/csh
 
 <<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 module load nco
 module load ncl
 
@@ -48,21 +46,6 @@ if ( $NERSC_HOST == "cori" ) then
   setenv LD_LIBRARY_PATH "~zender/lib_cori:${LD_LIBRARY_PATH}"
 endif
 module load ncl/6.3.0
-=======
-#module unload python
-#module unload python_base
-#module use /global/project/projectdirs/acme/software/modulefiles/all
-#module load python/anaconda-2.7-climate
-#if ( $NERSC_HOST == "edison" ) then
-#  setenv PATH "~zender/bin_edison:./:${PATH}"
-#  setenv LD_LIBRARY_PATH "~zender/lib_edison:${LD_LIBRARY_PATH}"
-#endif
-#if ( $NERSC_HOST == "cori" ) then
-#  setenv PATH "~zender/bin_cori:./:${PATH}"
-#  setenv LD_LIBRARY_PATH "~zender/lib_cori:${LD_LIBRARY_PATH}"
-#endif
-#module load ncl/6.3.0
->>>>>>> 5cfbc6d... Updated ocn/ice python scripts to read in all (rather than a subset of) input files available in the input directory.
 
 #module unload PE-intel
 #module load PE-gnu
@@ -76,8 +59,7 @@ module load ncl/6.3.0
 #module load python_pyqt4
 
 # variables to specify
-#setenv casename	  "20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01"
-setenv casename	  "20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_01"
+setenv casename	  "20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01"
 setenv native_res "ne30"
 
 set projdir = "/global/project/projectdirs/acme"
@@ -91,14 +73,12 @@ setenv archive_dir "/scratch1/scratchdirs/golaz/ACME_simulations/${casename}/run
 #set GPCP_data_dir = obs_for_diagnostics/GPCP
 #set GPCP_regrid_wgt_file = grids/ne120_to_GPCP.conservative.wgts.nc
 ##set GPCP_data_dir = /lustre/atlas/world-shared/csc121/obs_data
-setenv plots_dir "${projdir}/ACME_coupled_diags/${casename}"
+setenv plots_dir "${projdir}/milena/ACME_coupled_diags/${casename}"
 #setenv log_dir "$PROJWORK/cli106/$USER/$casename.test.pp/logs"
 
 setenv mpas_meshfile "${projdir}/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc"
-setenv mpas_remapfile "${projdir}/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc"
-setenv model_tocompare_remapfile "${projdir}/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc"
-#setenv mpas_remapfile "${projdir}/milena/remapfiles/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc"
-#setenv model_tocompare_remapfile "${projdir}/milena/remapfiles/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc"
+setenv mpas_remapfile "${projdir}/milena/remapfiles/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc"
+setenv model_tocompare_remapfile "${projdir}/milena/remapfiles/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc"
 setenv mpas_climodir "${projdir}/milena/climofiles" # casename will be appended to this
 set obs_ocndir = "${projdir}/observations/Ocean"
 setenv obs_seaicedir "${projdir}/observations/SeaIce"
@@ -119,7 +99,6 @@ setenv seaicedir_model_tocompare "${projdir}/ACMEv0_lowres/${casename_model_toco
 setenv generate_prect 0
 setenv generate_rad 0
 setenv generate_wind_stress 0
-<<<<<<< HEAD
 <<<<<<< HEAD
 
 #generate standalone html file to view plots on a browser, if required
@@ -146,16 +125,10 @@ setenv generate_ohc_trends 0
 setenv generate_sst_trends 0
 #setenv generate_sst_climo 0
 setenv generate_seaice_trends 0
-=======
-setenv generate_ohc_trends 1
-setenv generate_sst_trends 1
-setenv generate_sst_climo 0
-setenv generate_seaice_trends 1
->>>>>>> 5cfbc6d... Updated ocn/ice python scripts to read in all (rather than a subset of) input files available in the input directory.
 setenv generate_seaice_climo 1
-setenv generate_moc 0
-setenv generate_mht 0
-setenv generate_nino34 0
+#setenv generate_nino34 0
+#setenv generate_moc 0
+#setenv generate_mht 0
 
 #generate standalone html file to view plots on a browser, if required
 setenv generate_html 0
@@ -166,13 +139,10 @@ setenv yr_offset 1999    # for 2000 time slices
 #setenv yr_offset 1849   # for 1850 time slices
 
 # Choose years over which to compute climatologies:
-setenv climo_yr1 71
-setenv climo_yr2 100
+setenv climo_yr1 21
+setenv climo_yr2 30
 
 echo
-=======
-source setdiags.csh
->>>>>>> 13153e6... Fixed Agg renderer for matplotlib in python scripts.
 
 if ( ! -d ${plots_dir} ) mkdir ${plots_dir}
 #if ( ! -d ${scratch_dir} ) mkdir ${scratch_dir}
@@ -184,17 +154,4 @@ echo casename: $casename
 
 ./ACME_atm_diags.csh
 ./ACME_ocnice_diags.csh
-<<<<<<< HEAD
 >>>>>>> e7754e1... Added ocean and sea-ice diagnostic scripts.
-=======
-# How it would look like with an ocnice python script:
-# python ./ACME_ocnice_diags.py
-# which would look like something like this:
-# def run_cmd(astr):
-# 	out = subprocess.check_call(astr)
-#	return out
-#
-# for af in glob.glob('python/*'):
-# 	out = run_cmd('python ' + af) 
-
->>>>>>> 13153e6... Fixed Agg renderer for matplotlib in python scripts.
