@@ -13,7 +13,6 @@ module load python_scipy
 module load python_matplotlib
 module load python_netcdf4
 
-<<<<<<< HEAD
 # variables to specify
 set casename 			= famipc5_ne120_v0.3_00005
 set archive_dir 		= /lustre/atlas1/cli106/proj-shared/salil/archive  
@@ -26,17 +25,6 @@ set plots_dir 			= $PROJWORK/cli106/$USER/coupled_diagnostics_$casename
 #select sets of diagnostics to generate (False = 0, True = 1)
 set generate_prect = 1
 set generate_rad = 1
-=======
-set casename = b1850c5_t1a
-set archive_dir = /lustre/atlas1/cli115/world-shared/mbranst
-set scratch_dir = $PROJWORK/cli106/$USER/$casename.test.pp
-
-set GPCP_regrid_wgt_file = grids/ne120_to_GPCP.conservative.wgts.nc
-#set GPCP_data_dir = obs_for_diagnostics/GPCP.conservative.wgts.nc
-set GPCP_data_dir = /lustre/atlas/world-shared/csc121/obs_data
-
-set plots_dir = coupled_diagnostics_$casename
->>>>>>> 8fc08ea... Added OHC python script and started updating ACME_coupled_diags.csh.
 
 echo
 
@@ -258,18 +246,4 @@ endif
 
 #GENERATE OCEAN DIAGNOSTICS
 
-# OHC TRENDS
 
-python python/ohc.py --indir $scratch_dir -c $casename --plots_dir $plots_dir --compare_with_model "true" --indir_model_tocompare $scratch_dir_model_tocompare --casename_model_tocompare $casename_model_tocompare --compare_with_obs "false"
-
-# SST TRENDS
-
-# SST CLIMATOLOGIES
-
-# SEA ICE CONCENTRATION AND THICKNESS TIME SERIES
-
-# SEA ICE CONCENTRATION AND THICKNESS CLIMATOLOGIES
-
-# MERIDIONAL HEAT TRANSPORT AND MOC
-
-# NINO3.4 TIME SERIES
