@@ -3,8 +3,6 @@
 set scratch_dir = $argv[1]
 set casename = $argv[2]
 set compute_climo_var_list_file = $argv[3]
-set begin_yr = $argv[4]
-set end_yr = $argv[5]
 
 
 # Read in variable list for  diagnostics e.g FLUT, FSNT etc.
@@ -34,9 +32,7 @@ if ($casename != obs) then
 								-c $casename \
 								-f $var \
 								--begin_month $begin_month \
-								--end_month $end_month \
-								--begin_yr $begin_yr \
-								--end_yr $end_yr >& $log_dir/climo_${casename}_${var}_$season_name.log &
+								--end_month $end_month >& $log_dir/climo_${casename}_${var}_$season_name.log &
 		end
 	end
 endif

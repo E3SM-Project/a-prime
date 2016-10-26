@@ -213,8 +213,7 @@ print 'contour levels: ', levels_diff
 #Plot difference plot
 ax = f.add_subplot(3,1,3)
 
-#ax.set_title(casename + ' - ' + ref_case)
-ax.set_title('Difference')
+ax.set_title(casename + ' - ' + ref_case)
 
 m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=0,urcrnrlon=360,resolution='c')

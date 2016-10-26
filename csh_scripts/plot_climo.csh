@@ -7,9 +7,9 @@ set ref_case = $argv[4]
 
 # Read in variable list for plotting climatologies  diagnostics
 if ($ref_case == obs) then
-	source var_list_climo_model_vs_obs.csh
+	source var_list_plot_climo_obs.csh
 else
-	source var_list_climo_model_vs_model.csh
+	source var_list_plot_climo.csh
 endif
 
 set n_var = $#var_set

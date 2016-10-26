@@ -2,10 +2,8 @@
 
 set scratch_dir = $argv[1]
 set casename = $argv[2]
-set begin_yr = $argv[3]
-set end_yr = $argv[4]
-set native_res = $argv[5]
-set ts_remap_var_list_file = $argv[6]
+set native_res = $argv[3]
+set ts_remap_var_list_file = $argv[4]
 
 # Read in variable list for  diagnostics e.g FLUT, FSNT etc.
 source $ts_remap_var_list_file
@@ -27,7 +25,7 @@ if ($casename != obs) then
 		echo $casename $var
 		echo
 
-		set ts_file        = ${casename}.cam.h0.$var.$begin_yr-$end_yr.nc
+		set ts_file        = ${casename}.cam.h0.$var.nc
 		set interp_ts_file = ${casename}.cam.h0.${interp_grid}_$interp_method.$var.nc
 
 		ncremap -I $scratch_dir \

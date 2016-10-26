@@ -6,192 +6,50 @@
 if ($#argv == 0) then
         echo Input arguments not set. Will stop!
 else
-        set case_no    = $argv[1]
+        set casename    = $argv[1]
 	set plots_dir   = $argv[2]
         set www_dir  = $argv[3]
 endif
 
 set case_compare = B1850C5_ne30_v0.4
-
-
-#Reading case information from file
-source $log_dir/case_info.temp
-set n_cases = $#case_set
-
-set casename = $case_set[$case_no]
-set ref_case = $case_set[$n_cases]
-
-set begin_yr_climo 	= $begin_yr_climo_set[$case_no]
-set end_yr_climo 	= $end_yr_climo_set[$case_no]
-set begin_yr_ts 	= $begin_yr_ts_set[$case_no]
-set end_yr_ts 		= $end_yr_ts_set[$case_no]
-
-set ref_begin_yr_climo 	= $begin_yr_climo_set[$n_cases]
-set ref_end_yr_climo 	= $end_yr_climo_set[$n_cases]
-set ref_begin_yr_ts 	= $begin_yr_ts_set[$n_cases]
-set ref_end_yr_ts   	= $end_yr_ts_set[$n_cases]
-
-
-# padding begin_yr and end_yr with zeroes
-set begin_yr = $begin_yr_climo
-set end_yr   = $end_yr_climo
-
-
-@ nc = `echo $begin_yr | wc -c` - 1
-while ($nc != 4)
-	set begin_yr = "0"$begin_yr
-	@ nc = `echo $begin_yr | wc -c` - 1
-end
-
-@ nc = `echo $end_yr | wc -c` - 1
-while ($nc != 4)
-	set end_yr = "0"$end_yr
-	@ nc = `echo $end_yr | wc -c` - 1
-end
+set begin_yr = 0021
+set end_yr = 0030
 
 cd $plots_dir
 
-#Setting up text for ref case
-if $ref_case == obs then
-	set ref_case_text = $ref_case' (climo)' 
-	set ref_case_text_ts = $ref_case' (climo)' 
-else
-	set ref_case_text = $ref_case' (Years: '$ref_begin_yr_climo'-'$ref_end_yr_climo')'
-	set ref_case_text_ts = $ref_case' (Years: '$ref_begin_yr_ts'-'$ref_end_yr_ts')'
-endif
-
-
-#Beginning to write index.html file
 cat > index.html << EOF
 <HTML>
-
-<BODY BGCOLOR="ivory">
-
 <HEAD>
 <TITLE>ACME Coupled Diagnostic Plots</TITLE>
 </HEAD>
-
-<p><img src="acme-banner_1.jpg" style="float:right;width:590px;height:121px;">
-</p>
-
-<div style="text-align:center">
-<font color=seagreen size=+3><b>ACME Coupled Priority Metrics</b></font><br>
-
-<font color=sienna size=+2><b>
-${casename} (Years: $begin_yr_climo-$end_yr_climo)<br>vs.<br>$ref_case_text
+<BODY BGCOLOR="white">
+<p>
+<font color=green size=+3><b>
+${casename} <br>and<br> OBS data 
+<p>
 </b></font>
-</div>
-
-<br>
-<br>
+<font color=orange size=+2><b> 
+ACME Coupled Priority Metrics</b></font>
+<p>
+<font color=red size=+1><b>Time Series Plots: Global and Zonal-band means (ATM)</b></font>
 <hr noshade size=2 size="100%">
-
-<font color=red size=+1><b>Time Series Plots: Global and Zonal-band means (ATM)</b></font><br>
-
-<div style="text-align:left">
-<font color=peru size=-1>$casename (Years: $begin_yr_ts-$end_yr_ts)</font><br>
-<font color=peru size=-1>$ref_case_text_ts</font>
-</div>
-
-<hr noshade size=2 size="100%">
-
+</b></font>
 <TABLE>
-
-EOF
-
-#Generating time series part of index.html file
-if ($ref_case == obs) then
-	source $coupled_diags_home/var_list_time_series_model_vs_obs.csh
-else
-	source $coupled_diags_home/var_list_time_series_model_vs_model.csh
-endif
-
-set var_grp_unique_set = ()
-set grp_interp_grid_set = ()
-
-@ i = 1
-
-foreach grp ($var_group_set)
-
-        set add_var = 1
-
-        foreach temp_grp ($var_grp_unique_set)
-                if ($grp =~ $temp_grp) then
-                        set add_var = 0
-                endif
-        end
-
-        if ($add_var == 1) then
-                set var_grp_unique_set = ($var_grp_unique_set $grp)
-                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
-        endif
-
-        @ i = $i + 1
-end
-
-
-@ j = 1
-
-foreach grp ($var_grp_unique_set)
-
-	if ($ref_case == obs) then
-		set grp_text = "$grp ($grp_interp_grid_set[$j])"
-	else
-		set grp_text = $grp
-	endif
-
-	cat >> index.html << EOF
-	<TR>
-	  <TH><BR>
-	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
-
-EOF
-
-	@ i = 1
-	foreach var ($var_set)
-
-		if ($var_group_set[$i] == $grp) then
-
-			if ($ref_case == obs) then
-				set ref_casename_plot = $interp_grid_set[$i]
-			else
-				set ref_casename_plot = $ref_case  
-			endif
-
-			cat >> index.html << EOF
-			<TR>
-			  <TH ALIGN=LEFT><A HREF="${casename}_${var}_ANN_reg_ts.png">$var</a> 
-			  <TD ALIGN=LEFT>$var_name_set[$i]
-EOF
-		endif
-		@ i = $i + 1
-	end
-
-	cat >> index.html << EOF
-	<TR>
-	  <TD><BR>
-EOF
-	@ j = $j + 1
-end
-
-cat >> index.html << EOF
-</TABLE>
-
-EOF
-
-#Generating time series ocn/ice part of index.html file
-cat >> index.html << EOF
+<TR>
+  <TH ALIGN=LEFT><A HREF="${casename}_RESTOM_ANN_reg_ts.png">RESTOM</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="${casename}_FLNT_ANN_reg_ts.png">FLNT</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="${casename}_FSNT_ANN_reg_ts.png">FSNT</a>
+<TR>
+  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_ANN_reg_ts.png">PRECT</a>
+<TR>
 </TABLE>
 <hr noshade size=2 size="100%">
-
+<p>
 <font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
-</b></font>
-
 <hr noshade size=2 size="100%">
-
-EOF
-
-cat >> index.html << EOF
+</b></font>
 <TABLE>
 <TR>
   <TH ALIGN=LEFT><A HREF="sst_global_${casename}_$case_compare.png">Global SST</a>
@@ -205,121 +63,72 @@ cat >> index.html << EOF
   <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}_$case_compare.png">NH Ice Volume</a>
 <TR>
   <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}_$case_compare.png">SH Ice Volume</a>
-<TR>
-  <TD><BR>
 </TABLE>
 <hr noshade size=2 size="100%">
-
-EOF
-
-
-#Generating climatology (atm) part of index.html file
-cat >> index.html << EOF
-<font color=red size=+1><b>Climatology Plots (ATM)</b></font><br>
-
-<div style="text-align:left">
-<font color=peru size=-1>$casename (Years: $begin_yr_climo-$end_yr_climo)</font><br>
-<font color=peru size=-1>$ref_case_text</font>
-</div>
-
+<p>
+<font color=red size=+1><b>Climatology Plots (ATM)</b></font>
 <hr noshade size=2 size="100%">
-
 <TABLE>
-
-EOF
-
-
-if ($ref_case == obs) then
-	source $coupled_diags_home/var_list_climo_model_vs_obs.csh
-else
-	source $coupled_diags_home/var_list_climo_model_vs_model.csh
-endif
-
-set var_grp_unique_set = ()
-set grp_interp_grid_set = ()
-
-@ i = 1
-
-foreach grp ($var_group_set)
-
-        set add_var = 1
-
-        foreach temp_grp ($var_grp_unique_set)
-                if ($grp =~ $temp_grp) then
-                        set add_var = 0
-                endif
-        end
-
-        if ($add_var == 1) then
-                set var_grp_unique_set = ($var_grp_unique_set $grp)
-                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
-        endif
-
-        @ i = $i + 1
-end
-
-
-@ j = 1
-
-foreach grp ($var_grp_unique_set)
-
-	if ($ref_case == obs) then
-		set grp_text = "$grp ($grp_interp_grid_set[$j])"
-	else
-		set grp_text = $grp
-	endif
-
-	cat >> index.html << EOF
-
-	<TR>
-	  <TH><BR>
-	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
-	  <TH>DJF
-	  <TH>JJA
-	  <TH>ANN
-
-EOF
-
-	@ i = 1
-	foreach var ($var_set)
-
-		if ($var_group_set[$i] == $grp) then
-
-			if ($ref_case == obs) then
-				set ref_casename_plot = $interp_grid_set[$i]
-			else
-				set ref_casename_plot = $ref_case  
-			endif
-
-			cat >> index.html << EOF
-			<TR>
-			  <TH ALIGN=LEFT>$var 
-			  <TD ALIGN=LEFT>$var_name_set[$i]
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_DJF.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_JJA.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_ANN.png">plot</a>
-EOF
-		endif
-		@ i = $i + 1
-	end
-
-	cat >> index.html << EOF
-	<TR>
-	  <TD><BR>
-EOF
-
-	@ j = $j + 1
-end
-
-cat >> index.html << EOF
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>GPCP</font>
+  <TH>DJF
+  <TH>JJA
+  <TH>ANN
+<TR>
+<TR>
+  <TH ALIGN=LEFT>PRECT 
+  <TH ALIGN=LEFT>Precipitation rate
+  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_JJA.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_PRECT_climo_GPCP_ANN.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>CERES-EBAF</font>
+  <TH>DJF
+  <TH>JJA
+  <TH>ANN
+<TR>
+  <TH ALIGN=LEFT>FLUT 
+  <TH ALIGN=LEFT>TOA upward LW flux
+  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}_FLUT_climo_CERES_EBAF_ANN.png">plot</A>
+<TR>
+  <TH ALIGN=LEFT>FSNTOA 
+  <TH ALIGN=LEFT>TOA net SW flux
+  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}_FSNTOA_climo_CERES_EBAF_ANN.png">plot</A>
+<TR>
+  <TH ALIGN=LEFT>LWCF 
+  <TH ALIGN=LEFT>TOA longwave cloud forcing
+  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}_LWCF_climo_CERES_EBAF_ANN.png">plot</A>
+<TR>
+  <TH ALIGN=LEFT>SWCF 
+  <TH ALIGN=LEFT>TOA shortwave cloud forcing
+  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}_SWCF_climo_CERES_EBAF_ANN.png">plot</A>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>ERS</font>
+  <TH>DJF
+  <TH>JJA
+  <TH>ANN
+<TR>
+  <TH ALIGN=LEFT>Wind Stress 
+  <TH ALIGN=LEFT>Ocean Wind Stress
+  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_DJF.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_JJA.png">plot</A>
+  <TH ALIGN=LEFT><A HREF="${casename}_wind_stress_climo_ERS_ANN.png">plot</A>
+<TR>
 </TABLE>
 
-EOF
-
-
-#Generating climatology (atm/ice) part of index.html file
-cat >> index.html << EOF
 <hr noshade size=2 size="100%">
+<p>
 <font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
 <hr noshade size=2 size="100%">
 <TABLE>
@@ -331,32 +140,37 @@ cat >> index.html << EOF
   <TH>JFM
   <TH>JAS
 <TR>
+<TR>
   <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
   <TH>JFM
   <TH>JAS
 <TR>
+<TR>
   <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
   <TH>FM
   <TH>ON
 <TR>
+<TR>
   <TH ALIGN=LEFT>Ice Thick. 
-  <TD ALIGN=LEFT>Ice Thickness
-  <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
 <TR>
   <TH><BR>
+<TR>
 <TR>
   <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere</font>
 <TR>
@@ -365,32 +179,34 @@ cat >> index.html << EOF
   <TH>DJF
   <TH>JJA
 <TR>
+<TR>
   <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASA Team</font>
   <TH>JFM
   <TH>JAS
 <TR>
+<TR>
   <TH ALIGN=LEFT>Ice Conc. 
-  <TD ALIGN=LEFT>Ice concentration
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT>Ice concentration
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
   <TH ALIGN=LEFT><font color=brown size=+1>ICE Sat</font>
   <TH>FM
   <TH>ON
 <TR>
-  <TH ALIGN=LEFT>Ice Thick. 
-  <TD ALIGN=LEFT>Ice Thickness
-  <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
-  <TD><BR>
+  <TH ALIGN=LEFT>Ice Thick. 
+  <TH ALIGN=LEFT>Ice Thickness
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TH ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
 </TABLE>
 
 <hr noshade size=2 size="100%">
@@ -404,31 +220,16 @@ echo
 echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
-
-cp -r $plots_dir $www_dir
-cp $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
-
-chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case
+cp -r $plots_dir $www_dir/.
+chmod -R a+rx $www_dir/coupled_diagnostics_$casename
 
 echo Moved plots and index.html to the website directory: $www_dir
 echo
-
-if (`echo $HOSTNAME | cut -c1-4` == 'rhea') then
-	echo Viewable at:
-	echo http://users.nccs.gov/~$USER/coupled_diagnostics_${casename}-$ref_case
-	echo
-	echo Please ensure that the read and execute permissions for $www_dir are set for all:
-	echo chmod a+rx $www_dir
-endif
-
-if (`echo $HOSTNAME | cut -c1-6` == 'edison') then
-	echo Viewable at:
-	echo http://portal.nersc.gov/project/acme/$USER/coupled_diagnostics_$casename-$ref_case
-	echo
-	echo Please ensure that the read and execute permissions for $www_dir are set for all:
-	echo chmod a+rx $www_dir
-endif
-
+echo On rhea, viewable at:
+echo http://users.nccs.gov/~$USER/coupled_diagnostics_${casename}-$ref_case
 echo
-
+echo On edison, viewable at:
+echo http://portal.nersc.gov/project/acme/$USER/coupled_diagnostics_$casename
+echo
+echo
 cd -

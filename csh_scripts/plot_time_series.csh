@@ -2,9 +2,8 @@
 
 set scratch_dir = $argv[1]
 set casename = $argv[2]
-set begin_yr = $argv[3]
-set ref_scratch_dir = $argv[4]
-set ref_case = $argv[5]
+set ref_scratch_dir = $argv[3]
+set ref_case = $argv[4]
 
 # Read in variable list for plotting climatologies  diagnostics
 if ($ref_case == obs) then
@@ -42,7 +41,6 @@ foreach k (`seq 1 $n_var`)
 	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir \
 							-c $casename \
 							-f $var \
-							--begin_yr $begin_yr \
 							--interp_grid $interp_grid \
 							--interp_method $interp_method \
 							--ref_case_dir $ref_scratch_dir \
