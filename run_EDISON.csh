@@ -26,9 +26,9 @@ set projdir =                  		/global/project/projectdirs/acme
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables
-setenv test_casename                    20160805v0atm.A_WCYCL1850_v0atm.ne30_oEC.edison.alpha7_00
+setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00
 setenv test_native_res                  ne30
-setenv test_archive_dir                 /scratch1/scratchdirs/petercal/ACME_simulations
+setenv test_archive_dir                 /global/cscratch1/sd/golaz/ACME_simulations
 setenv test_short_term_archive		0
 setenv test_begin_yr_climo		6
 setenv test_end_yr_climo		10
@@ -46,10 +46,10 @@ setenv test_condense_field_ts		1
 setenv test_remap_ts			1
 
 #Reference case variables (similar to test_case variables)
-setenv ref_case				20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01
-setenv ref_archive_dir 			/scratch1/scratchdirs/golaz/ACME_simulations
-#setenv ref_case			obs
-#setenv ref_archive_dir 		$projdir/obs_for_diagnostics
+setenv ref_case			obs
+setenv ref_archive_dir 		$projdir/obs_for_diagnostics
+#setenv ref_case				20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01
+#setenv ref_archive_dir 			/scratch1/scratchdirs/golaz/ACME_simulations
 
 #ACMEv0 ref_case info for ocn/ice diags
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
@@ -97,9 +97,9 @@ setenv generate_ocnice_diags 		1
 #The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
 setenv generate_ohc_trends 		1
 setenv generate_sst_trends 		1
+setenv generate_sst_climo 		1
 setenv generate_seaice_trends 		1
 setenv generate_seaice_climo 		1
-setenv generate_sst_climo 		1
 
 #Other diagnostics not working currently, work in progress
 setenv generate_moc 			0
