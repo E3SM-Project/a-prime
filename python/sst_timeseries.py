@@ -62,7 +62,7 @@ def sst_timeseries(config):
 
         title = plot_titles[iregion]
         title = "SST, %s, %s (r-)" % (title, casename)
-        xlabel = ""
+        xlabel = "Time [years]"
         ylabel = "[$^\circ$ C]"
 
         SST = SSTregions[:,iregion]

@@ -117,7 +117,7 @@ def seaice_timeseries(config):
 
         print "  Make plots..."
 
-        xlabel = ""
+        xlabel = "Time [years]"
 
         if compare_with_model:
             figname_nh = "%s/%sNH_%s_%s.png" % (plots_dir,varname,casename,casename_model_tocompare)

@@ -58,9 +58,27 @@ N_movavg = 1
 # title font properties
 title_font_size = 18
 
-[seaice_modelvsobs]
+[sst_modelvsobs]
+# colormap for model/observations
+#cmapModelObs = viridis
+cmapModelObs = RdYlBu_r
+# colormap for differences
+#cmapDiff = RdBu_r
+cmapDiff = coolwarm
 
-# colormap for observations
+# indices into cmapModelObs for contour color
+cmapIndicesModelObs = [0,40,80,110,140,170,200,230,255]
+# indices into cmapModelObs for contour color
+cmapIndicesDiff = [0,40,80,120,140,170,210,255]
+#cmapIndicesDiff = [0,40,80,127,170,210,255] # good for RdBu_r
+
+# colormap levels/values for contour boundaries
+clevsModelObs = [-2,0,2,6,10,16,22,26,28,32]
+clevsDiff = [-5,-3,-2,-1,0,1,2,3,5]
+#clevsDiff = [-3,-2,-1,-0.5,0.5,1,2,3] # good for RdBu_r
+
+[seaice_modelvsobs]
+# colormap for model/observations
 cmapModelObs = inferno
 # colormap for differences
 cmapDiff = RdBu_r
@@ -70,30 +88,26 @@ cmapIndicesModelObs = [20,80,110,140,170,200,230,255]
 # indices into cmapModelObs for contour color
 cmapIndicesDiff = [0,40,80,127,127,170,210,255]
 
-# values for contour boundaries
+# colormap levels/values for contour boundaries (ice conncentration winter)
 clevsModelObs_conc_win = [0.15,0.4,0.7,0.9,0.94,0.96,0.98,0.99,1]
-# values for contour boundaries
 clevsDiff_conc_win = [-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8]
 
-# values for contour boundaries
+# colormap levels/values for contour boundaries (ice conncentration summer)
 clevsModelObs_conc_sum = [0.15,0.3,0.5,0.7,0.8,0.85,0.9,0.95,1]
-# values for contour boundaries
 clevsDiff_conc_sum = [-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8]
 
-# values for contour boundaries
+# colormap levels/values for contour boundaries (ice thickness NH)
 clevsModelObs_thick_NH = [0,0.25,0.5,1,1.5,2,2.5,3,3.5]
-# values for contour boundaries
 clevsDiff_thick_NH = [-2.5,-2,-0.5,-0.1,0,0.1,0.5,2,2.5]
 
-# values for contour boundaries
+# colormap levels/values for contour boundaries (ice thickness SH)
 clevsModelObs_thick_SH = [0,0.2,0.4,0.6,0.8,1,1.5,2,2.5]
-# values for contour boundaries
 clevsDiff_thick_SH = [-2.5,-2,-0.5,-0.1,0,0.1,0.5,2,2.5]
 
-# reference lat/lon for sea ice plots in the north
+# reference lat/lon for sea ice plots in the NH
 latmin_NH = 50
 lon0_NH = 0
-# reference lat/lon for sea ice plots in the south
+# reference lat/lon for sea ice plots in the SH
 latmin_SH = -50
 lon0_SH = 180
 
@@ -108,7 +122,7 @@ plot_titles = [Arctic, Equatorial (15S-15N), Southern Ocean, Nino 3, Nino 4, Nin
 [plot]
 # set to true if you want plots to be displayed, rather than just written out
 # Note: displayToScreen = True seems to hang on Edison on large data sets,
-# so sugested use is just for debugging either locally or with small data sets
+# so suggested use is just for debugging either locally or with small data sets
 displayToScreen = False
 
 # font size on axes
@@ -117,5 +131,3 @@ axis_font_size = 16
 title_font_size = 20
 title_font_color = black
 title_font_weight = normal
-
-

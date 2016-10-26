@@ -114,7 +114,7 @@ def ohc_timeseries(config):
 
         title = 'OHC, %s, 0-bottom (thick-), 0-700m (thin-), 700-2000m (--), 2000m-bottom (-.) \n %s'%(plot_titles[iregion], casename)
 
-        xlabel = ""
+        xlabel = "Time [years]"
         ylabel = "[x$10^{22}$ J]"
 
         if compare_with_model:
@@ -130,12 +130,12 @@ def ohc_timeseries(config):
                                               ohc_model_tocompare_2000m, ohc_model_tocompare_btm],
                                      N_movavg, title, xlabel, ylabel, figname,
                                      lineStyles = ['r-', 'r-', 'r--', 'r-.', 'b-', 'b-', 'b--', 'b-.'],
-                                     lineWidths = [1.2, 1.2, 1.5, 1.5, 1.2, 1.2, 1.5, 1.5])
+                                     lineWidths = [2, 1, 1.5, 1.5, 2, 1, 1.5, 1.5])
 
         if not compare_with_obs and not compare_with_model:
             figname = "%s/ohc_%s_%s.png" % (plots_dir,regions[iregion],casename)
             timeseries_analysis_plot(config, [ohc_tot, ohc_700m, ohc_2000m, ohc_btm],
                                      N_movavg, title, xlabel, ylabel, figname,
                                      lineStyles = ['r-', 'r-', 'r--', 'r-.'],
-                                     lineWidths = [1.2, 1.2, 1.5, 1.5])
+                                     lineWidths = [2, 1, 1.5, 1.5])
 

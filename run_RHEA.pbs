@@ -1,0 +1,10 @@
+#!/bin/csh
+
+#PBS -A cli115
+#PBS -N ACME_coupled_metrics
+#PBS -l walltime=2:00:00,nodes=1
+#PBS -j oe
+
+cd $PBS_O_WORKDIR
+
+csh run_RHEA.csh

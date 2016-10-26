@@ -57,10 +57,10 @@ from sst_timeseries import sst_timeseries
 #from nino34_timeseries import nino34_timeseries
 #from mht_timeseries import mht_timeseries
 #from moc_timeseries import moc_timeseries
+from sst_modelvsobs import sst_modelvsobs
 
 from seaice_timeseries import seaice_timeseries
 from seaice_modelvsobs import seaice_modelvsobs
-
 
 
 #GENERATE OCEAN DIAGNOSTICS
@@ -89,6 +89,11 @@ if config.getboolean('moc_timeseries','generate'):
     print ""
     print "Plotting Meridional Overturning Circulation (MOC)..."
     #moc_timeseries(config)
+    
+if config.getboolean('sst_modelvsobs','generate'):
+    print ""
+    print "Plotting 2-d maps of SST climatologies..."
+    sst_modelvsobs(config)
 
 
 #GENERATE SEA-ICE DIAGNOSTICS
@@ -102,7 +107,9 @@ if config.getboolean('seaice_modelvsobs','generate'):
     print "Plotting 2-d maps of sea-ice concentration and thickness climatologies..."
     seaice_modelvsobs(config)
 
+
 #GENERATE LAND-ICE DIAGNOSTICS
+
 
 if config.getboolean('plot','displayToScreen'):
    plt.show()

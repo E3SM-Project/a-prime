@@ -3,8 +3,8 @@ from ocnice_plotting import plot_polar_comparison
 import os
 import subprocess
 import matplotlib.pyplot as plt
-
 import matplotlib.colors as cols
+
 from mpas_xarray import preprocess_mpas_timeSeriesStats, remove_repeated_time_index
 import numpy as np
 import numpy.ma as ma
@@ -280,8 +280,8 @@ def seaice_modelvsobs(config):
                 cmapDiff,
                 clevsDiff,
                 title = "%s (%s, years %04d-%04d)" % (suptitle, monthsName, climo_yr1, climo_yr2),
-                fileout = "%s/icetick%s_%s_%s_years%04d-%04d.png" % (plots_dir, hemisphere,
-                                                                     casename, monthsName, climo_yr1, climo_yr2),
+                fileout = "%s/icethick%s_%s_%s_years%04d-%04d.png" % (plots_dir, hemisphere,
+                                                                      casename, monthsName, climo_yr1, climo_yr2),
                 plotProjection = plotProjection,
                 latmin = latmin,
                 lon0 = lon0,
