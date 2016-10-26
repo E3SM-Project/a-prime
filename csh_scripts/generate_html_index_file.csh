@@ -421,7 +421,7 @@ echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
 
-cp -r $plots_dir $www_dir
+cp -r $plots_dir $www_dir/coupled_diagnostics_$casename-$ref_case
 cp $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
 
 chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case

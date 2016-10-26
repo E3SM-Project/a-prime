@@ -71,4 +71,4 @@ echo "" >> $configFile
 echo "[seaice_modelvsobs]" >> $configFile
 echo "generate = $generate_seaice_climo" >> $configFile
 
-python python/ocnice_analysis_driver.py config.ocnice $configFile
+python python/MPAS-Analysis/run_analysis.py config.ocnice $configFile
