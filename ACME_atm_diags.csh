@@ -76,7 +76,6 @@ foreach j (`seq 1 $n_cases`)
 		echo
 		csh_scripts/compute_climo.csh 	$scratch_dir \
 						$casename \
-<<<<<<< HEAD
 						$compute_climo_var_list_file
 	else
 		echo compute_climo set to $compute_climo or casename is obs. Not computing climatology for $casename!
@@ -84,28 +83,6 @@ foreach j (`seq 1 $n_cases`)
 end
 	
 echo
-=======
-						$var >& $log_dir/condense_field_$var.log; \
-		echo "set condense_status = $status" > $log_dir/condense_status_$var.temp &
-	end
-
-	wait
-
-	foreach var ($var_set)
-		source $log_dir/condense_status_$var.temp
-
-		if ($condense_status != 0) then
-			echo
-			echo "Could not condense $var into one file. Exiting"
-			echo "Check log files at $log_dir/condense_field_$var.log"
-			exit
-		endif
-	end
-
-
-
-	#Generate climatology and plots
->>>>>>> 73c4e5c... adding capability to generate webpages on NERSC for coupled diags and a minor bug fix
 
 
 #Remap climatology

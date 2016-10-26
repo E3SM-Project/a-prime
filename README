@@ -1,4 +1,4 @@
-Python based scripts to generate plots of the coupled ACME model 
+python based scripts to generate plots of the coupled ACME model 
 
 To use on OLCF: 
 
@@ -12,10 +12,13 @@ II. Set case specific variables:
 		casename:    name of the model run case
 		archive_dir: location of case output files
 		native_res:  resolution of the case (e.g. ne30, ne120)
-		short_term_archive: Is the short term archiving directory structure being used? 1 = True, 0 = False
+		short_term_archive: Is the short term archiving directory structured being used? 1 = True, 0 = False
 				    e.g. ...$casename/atm/hist, ...$casename/ocn/hist
 		
 	   That file is the driver and calls the atm and ocn diags files.
+
+	   The script currently expects the directory structure of ACME short term archiving,
+	   i.e. .../casename/atm/hist for the atmosphere.
 
 	2. Point to the right observational data, mapping files and output locations if the defaults are not optimal:
 		data_dir: 	            location of the observational data files
