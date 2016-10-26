@@ -11,22 +11,18 @@ def read_monthly_data_ts_field(indir,
 			 begin_month,
 			 end_month,
 			 reg,
-			 interp_method,
-			 interp_grid,
+			 interp_grid = None,
 			 debug = False):
 
     #Get filename
     #indir = '/lustre/atlas1/cli049/proj-shared/salil/archive/'
 
-    print indir, casename, interp_grid,interp_method, field_name
-
-    if interp_grid == '0':
+    if interp_grid is None:
 	    file_name = indir + '/' + casename + \
 			'.cam.h0.' + field_name + '.nc'
     else:	
 	    file_name = indir + '/' + casename + \
-			'.cam.h0' + '.' + interp_grid + '_' + \
-			interp_method + '.' + field_name + '.nc'
+			'.cam.h0' + '.' + interp_grid + '.' + field_name + '.nc'
 
     print "file_name: ", file_name
 

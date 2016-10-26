@@ -1,10 +1,7 @@
 
-import matplotlib as mpl
-#changing the default backend to agg to resolve contouring issue on rhea
-mpl.use('Agg')
-
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 import numpy
 from netCDF4 import Dataset

@@ -3,10 +3,7 @@ import numpy
 def get_reg_area_avg(field, lat, lon, debug = False):
 	nlon = lon.shape[0]
 	nlat = lat.shape[0]
-	if field.ndim == 2:
-		nt = 1
-	else:
-		nt   = field.shape[0]
+	nt   = field.shape[0]
 
 	if debug: print __name__, 'nlon, nlat: ', nlon, nlat
 
@@ -14,7 +11,6 @@ def get_reg_area_avg(field, lat, lon, debug = False):
 
         delta_lat = lat[1]-lat[0]
 
-	print
 	print __name__, 'delta_lat: ', delta_lat
 
 	area_wgts_lat[:] = numpy.absolute(numpy.sin((lat[:] + delta_lat/2.0) * numpy.pi/180.0) - numpy.sin((lat[:] - delta_lat/2.0)*numpy.pi/180.0))
@@ -35,11 +31,8 @@ def get_reg_area_avg(field, lat, lon, debug = False):
 
 	area_average = numpy.zeros(nt)
 
-	if field.ndim == 2:
-		area_average[0] = numpy.sum(field[:, :] * area_wgts[:, :])/numpy.sum(area_wgts)
-	else:
-		for i in range(0,nt):
-		    area_average[i] = numpy.sum(field[i, :, :] * area_wgts[:, :])/numpy.sum(area_wgts)
+	for i in range(0,nt):
+	    area_average[i] = numpy.sum(field[i, :, :] * area_wgts[:, :])/numpy.sum(area_wgts)
 
 	print __name__, 'area_average.shape: ', area_average.shape
         if debug: print __name__, 'area weighted total_field: ', area_average
