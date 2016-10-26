@@ -421,16 +421,12 @@ echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
 
-if (! -d $www_dir/coupled_diagnostics_$casename-$ref_case) then
-	mkdir $www_dir/coupled_diagnostics_$casename-$ref_case
-endif
-
-cp -fr $plots_dir/* $www_dir/coupled_diagnostics_$casename-$ref_case
-cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
+cp -r $plots_dir $www_dir/coupled_diagnostics_$casename-$ref_case
+cp $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
 
 chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case
 
-echo Moved plots and index.html to the website directory: $www_dir/coupled_diagnostics_$casename-$ref_case
+echo Moved plots and index.html to the website directory: $www_dir
 echo
 
 if (`echo $HOSTNAME | cut -c1-4` == 'rhea') then

@@ -1,15 +1,6 @@
 #!/bin/csh -f
 #GENERATE OCEAN DIAGNOSTICS
 
-# initialize MPAS-Analysis code
-setenv tmp_currentdir "`pwd`"
-setenv tmp_gittopdir "`git rev-parse --show-toplevel`"
-cd $tmp_gittopdir
-git submodule update --init
-echo 'MPAS-Analysis submodule: '`git submodule status`
-cd $tmp_currentdir
-unsetenv tmp_currentdir, tmp_gittopdir
-
 set configFile = config.driver
 rm -rf $configFile
 
@@ -17,7 +8,7 @@ echo "[case]" >> $configFile
 echo "casename = $test_casename" >> $configFile
 echo "native_res = $test_native_res" >> $configFile
 echo "short_term_archive = $test_short_term_archive" >> $configFile
-echo "ref_casename_v0 = $ref_case_v0" >> $configFile
+echo "casename_model_tocompare = $casename_model_tocompare" >> $configFile
 echo "" >> $configFile
 echo "[paths]" >> $configFile
 echo "archive_dir = $test_archive_dir" >> $configFile
@@ -36,13 +27,13 @@ echo "log_dir = $log_dir" >> $configFile
 echo "obs_ocndir = $obs_ocndir" >> $configFile
 echo "obs_sstdir = $obs_sstdir" >> $configFile
 echo "obs_seaicedir = $obs_seaicedir" >> $configFile
-echo "ref_archive_v0_ocndir = $ref_archive_v0_ocndir" >> $configFile
-echo "ref_archive_v0_seaicedir = $ref_archive_v0_seaicedir" >> $configFile
+echo "ocndir_model_tocompare = $ocndir_model_tocompare" >> $configFile
+echo "seaicedir_model_tocompare = $seaicedir_model_tocompare" >> $configFile
 echo "" >> $configFile
 echo "[data]" >> $configFile
 echo "mpas_meshfile = $mpas_meshfile" >> $configFile
 echo "mpas_remapfile = $mpas_remapfile" >> $configFile
-echo "pop_remapfile = $pop_remapfile" >> $configFile
+echo "model_tocompare_remapfile = $model_tocompare_remapfile" >> $configFile
 echo "mpas_climodir = $mpas_climodir" >> $configFile
 echo "" >> $configFile
 echo "[seaIceData]" >> $configFile
