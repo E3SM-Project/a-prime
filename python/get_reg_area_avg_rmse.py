@@ -1,6 +1,6 @@
 import numpy
 
-def get_reg_area_avg(field, lat, lon, debug = False):
+def get_reg_area_avg_rmse(field, lat, lon, debug = False):
 	nlon = lon.shape[0]
 	nlat = lat.shape[0]
 	if field.ndim == 2:
@@ -14,7 +14,6 @@ def get_reg_area_avg(field, lat, lon, debug = False):
 
         delta_lat = lat[1]-lat[0]
 
-	print
 	print __name__, 'delta_lat: ', delta_lat
 
 	area_wgts_lat[:] = numpy.absolute(numpy.sin((lat[:] + delta_lat/2.0) * numpy.pi/180.0) - numpy.sin((lat[:] - delta_lat/2.0)*numpy.pi/180.0))
@@ -33,17 +32,17 @@ def get_reg_area_avg(field, lat, lon, debug = False):
 	if debug: print __name__, 'lat_tile.shape: ', area_wgts_tile.shape
 	if debug: print __name__, 'lat_reshape.shape: ', area_wgts.shape
 
-	area_average = numpy.zeros(nt)
+	area_average_rmse = numpy.zeros(nt)
 
 	if field.ndim == 2:
-		area_average[0] = numpy.sum(field[:, :] * area_wgts[:, :])/numpy.sum(area_wgts)
+		area_average_rmse[0] = numpy.sqrt(numpy.sum(numpy.power(field[:, :], 2.0) * area_wgts[:, :])/numpy.sum(area_wgts))
 	else:
 		for i in range(0,nt):
-		    area_average[i] = numpy.sum(field[i, :, :] * area_wgts[:, :])/numpy.sum(area_wgts)
+		    area_average_rmse[i] = numpy.sqrt(numpy.sum(numpy.power(field[i, :, :], 2.0) * area_wgts[:, :])/numpy.sum(area_wgts))
 
-	print __name__, 'area_average.shape: ', area_average.shape
-        if debug: print __name__, 'area weighted total_field: ', area_average
+	print __name__, 'area_average_rmse.shape: ', area_average_rmse.shape
+        if debug: print __name__, 'area weighted total_field: ', area_average_rmse
 
 
 
-	return area_average
+	return area_average_rmse

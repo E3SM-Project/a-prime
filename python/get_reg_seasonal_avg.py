@@ -11,6 +11,7 @@ def get_reg_seasonal_avg (indir,
 			  casename, 
 			  field_name,
 		          interp_grid,
+			  interp_method,
 			  begin_yr,
 			  end_yr,
 			  begin_month,
@@ -23,6 +24,7 @@ def get_reg_seasonal_avg (indir,
 				 casename = casename,
 				 field_name = field_name,
 				 interp_grid = interp_grid,
+				 interp_method = interp_method,
 				 begin_yr = begin_yr,
 				 end_yr = end_yr,
 				 begin_month = begin_month,
@@ -47,6 +49,6 @@ def get_reg_seasonal_avg (indir,
 							  wgts = day_wgts,
 							  debug = debug)
 
-		return area_seasonal_avg, units_out
+		return area_seasonal_avg, n_months_season, units_out
 	else:
-		return area_average, units_out
+		return area_average, n_months_season, units_out
