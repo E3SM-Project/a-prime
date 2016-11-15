@@ -55,10 +55,10 @@ setenv ref_archive_dir 		/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostic
 
 #ACMEv0 ref_case info for ocn/ice diags
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
-#setenv ref_case_v0                   B1850C5_ne30_v0.4
-setenv ref_case_v0                   None
-setenv ref_archive_v0_ocndir         /space/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-setenv ref_archive_v0_seaicedir      /space/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+#setenv ref_case_v0                   None
+setenv ref_case_v0                   B1850C5_ne30_v0.4
+setenv ref_archive_v0_ocndir         /space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+setenv ref_archive_v0_seaicedir      /space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 
 #The following are ignored if ref_case is obs
 setenv ref_native_res             	ne30
@@ -95,7 +95,7 @@ setenv pop_remapfile              $projdir/mapping/maps/map_gx1v6_TO_0.5x0.5degr
 
 #Select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_atm_diags 		1
-setenv generate_ocnice_diags 		0
+setenv generate_ocnice_diags 		1
 
 #The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
 setenv generate_ohc_trends 		1
@@ -131,8 +131,8 @@ setenv ERS_regrid_wgt_file        $projdir/evans99/maps/$test_native_res-to-ERS.
 #Set ocn/ice specific paths to data file names and locations
 setenv mpas_climodir              $test_scratch_dir
 
-setenv obs_ocndir                 $projdir/observations/Ocean
-setenv obs_seaicedir              $projdir/observations/SeaIce
+setenv obs_ocndir                 $projdir/diagnostics/observations/Ocean
+setenv obs_seaicedir              $projdir/diagnostics/observations/SeaIce
 setenv obs_sstdir                 $obs_ocndir/SST
 setenv obs_iceareaNH              $obs_seaicedir/IceArea_timeseries/iceAreaNH_climo.nc
 setenv obs_iceareaSH              $obs_seaicedir/IceArea_timeseries/iceAreaSH_climo.nc
