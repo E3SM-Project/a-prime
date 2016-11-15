@@ -23,7 +23,7 @@ def get_climo_filename(	indir,
 	try:
 		f     = Dataset(file_name, "r")
 
-	except RuntimeError:
+	except (RuntimeError,IOError):
 		print
 		print file_name, " not found!"
 
