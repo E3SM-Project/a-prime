@@ -260,11 +260,3 @@ echo
 echo Plots in $plots_dir
 echo
 
-
-if ($generate_html == 1) then
-	csh csh_scripts/generate_html_index_file.csh 	$case_set[1] \
-							$plots_dir \
-							$www_dir \
-							$begin_yr_climo_set[1] \
-							$end_yr_climo_set[1]
-endif

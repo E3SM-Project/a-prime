@@ -89,7 +89,7 @@ setenv yr_offset 1849   # for 1850 time slices
 #      $projdir/mapping/maps/map_oRRS15to5_TO_0.5x0.5degree_blin.160412.nc  remap from RRS15to5 to regular 0.5degx0.5deg grid
 #
 #     Finally, note that pop_remapfile is not currently used
-setenv mpas_meshfile              $projdir/milena/MPAS-grids/ocn/gridfile.oEC60to30.nc
+setenv mpas_meshfile              $projdir/mapping/MPAS-grids/ocn/gridfile.oEC60to30.nc
 setenv mpas_remapfile             $projdir/mapping/maps/map_oEC60to30_TO_0.5x0.5degree_blin.160412.nc
 setenv pop_remapfile              $projdir/mapping/maps/map_gx1v6_TO_0.5x0.5degree_blin.160413.nc
 
@@ -123,10 +123,10 @@ setenv plots_dir 		  $projdir/$USER/coupled_diagnostics_${test_casename}-$ref_ca
 setenv log_dir 			  $projdir/$USER/coupled_diagnostics_${test_casename}-$ref_case.logs
 
 #Set atm specific paths to mapping and data files locations
-setenv remap_files_dir		  $projdir/evans99/maps
-setenv GPCP_regrid_wgt_file 	  $projdir/evans99/maps/$test_native_res-to-GPCP.conservative.wgts.nc
-setenv CERES_EBAF_regrid_wgt_file $projdir/evans99/maps/$test_native_res-to-CERES-EBAF.conservative.wgts.nc
-setenv ERS_regrid_wgt_file        $projdir/evans99/maps/$test_native_res-to-ERS.conservative.wgts.nc
+setenv remap_files_dir		  $projdir/mapping/maps
+setenv GPCP_regrid_wgt_file 	  $projdir/mapping/maps/$test_native_res-to-GPCP.conservative.wgts.nc
+setenv CERES_EBAF_regrid_wgt_file $projdir/mapping/maps/$test_native_res-to-CERES-EBAF.conservative.wgts.nc
+setenv ERS_regrid_wgt_file        $projdir/mapping/maps/$test_native_res-to-ERS.conservative.wgts.nc
 
 #Set ocn/ice specific paths to data file names and locations
 setenv mpas_climodir              $test_scratch_dir
@@ -140,7 +140,7 @@ setenv obs_icevolNH               $obs_seaicedir/PIOMAS/PIOMASvolume_monthly_cli
 setenv obs_icevolSH               none
 
 #Location of website directory to host the webpage
-setenv www_dir /var/www/acme/acme-diags
+setenv www_dir /var/www/acme/acme-diags/$USER
 
 ##############################################################################
 ###USER SHOULD NOT NEED TO CHANGE ANYTHING HERE ONWARDS######################

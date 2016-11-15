@@ -451,7 +451,7 @@ endif
 
 if (`echo $HOSTNAME | cut -c1-4` == 'aims') then
 	echo Viewable at:
-	echo http://aims4.llnl.gov/acme-diags/coupled_diagnostics_$casename-$ref_case
+	echo http://aims4.llnl.gov/acme-diags/$USER/coupled_diagnostics_$casename-$ref_case
 	echo
 	echo The name and password to view the plots is acme/acmediags
 	echo If trouble viewing, try chmod a+rx $www_dir

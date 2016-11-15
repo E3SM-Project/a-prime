@@ -214,7 +214,7 @@ def plot_multiple_reg_seasonal_avg (indir,
 
 		ref_line, = ax[i].plot(plot_time, ref_plot_ts[i, :], color = 'green', linewidth = 1.0, label = ref_case_text)
 		if i == 0:
-			ax[i].legend(bbox_to_anchor = (1.0,1.3), handles=[ref_line], fontsize = 10)
+			ax[i].legend(bbox_to_anchor = (1.0,1.5), handles=[ref_line], fontsize = 10)
 
 		ax[i].set_title(name + ' , mean = ' +  "%.2f" % plot_ts_mean[i], fontsize = 12)
 
