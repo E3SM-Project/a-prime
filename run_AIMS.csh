@@ -7,6 +7,7 @@
 #	1. Activate the environment, set:
 #		a. export NCL_PATH= /usr/local/src/NCL-6.3.0/bin
 #		b. export CONDA_PATH=/export/evans99/miniconda2/bin:$NCL_PATH:$PATH
+#		c. source activate /export/evans99/miniconda2
 #       2. copy this template to something like run_AIMS_$user.csh
 #       3. open run_AIMS_$user.csh and set user defined, case-specific variables
 #       4. execute: csh run_AIMS_$user.csh
