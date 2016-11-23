@@ -49,7 +49,7 @@ foreach j (`seq 1 $n_cases`)
 	set condense_field_climo      	= $condense_field_climo_set[$j]
 	set compute_climo       	= $compute_climo_set[$j]
 
-	set archive_dir_atm = $archive_dir/$casename
+	set archive_dir_atm = $archive_dir/$casename/run
 
 	if ($short_term_archive == 1) then
 		echo Using ACME short term archiving directory structure!
@@ -180,7 +180,7 @@ foreach j (`seq 1 $n_cases`)
 
 	set condense_field_ts      	= $condense_field_ts_set[$j]
 
-	set archive_dir_atm = $archive_dir/$casename
+	set archive_dir_atm = $archive_dir/$casename/run
 
 	if ($short_term_archive == 1) then
 		echo Using ACME short term archiving directory structure!

@@ -34,7 +34,7 @@ set projdir =                  		/space2
 #Test case variables, for casename, add any addendums like /run or /atm/hist 
 setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00
 setenv test_native_res                  ne30
-setenv test_archive_dir                 /space1/test_data/ACME_simulations
+setenv test_archive_dir                 /space2/test_data/ACME_simulations
 setenv test_short_term_archive		0
 setenv test_begin_yr_climo		6
 setenv test_end_yr_climo		10

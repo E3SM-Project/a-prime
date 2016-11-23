@@ -1,7 +1,7 @@
 #!/bin/csh -f 
 
 if (! -d $test_scratch_dir) mkdir $test_scratch_dir
-if (! -d $ref_scratch_dir) && ($ref_case != obs) mkdir $ref_scratch_dir
+if (! -d $ref_scratch_dir && $ref_case != obs) mkdir $ref_scratch_dir
 if (! -d $plots_dir)   mkdir $plots_dir
 if (! -d $log_dir)     mkdir $log_dir
 if (! -d $www_dir)     mkdir $www_dir

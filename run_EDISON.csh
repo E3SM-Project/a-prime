@@ -28,7 +28,7 @@ set projdir =                  		/global/project/projectdirs/acme
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables
-setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00/run
+setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00
 setenv test_native_res                  ne30
 setenv test_archive_dir                 /global/cscratch1/sd/golaz/ACME_simulations
 setenv test_short_term_archive		0
