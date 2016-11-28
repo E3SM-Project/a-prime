@@ -53,8 +53,8 @@ setenv ref_archive_dir 			/lustre/atlas1/cli115/proj-shared/mbranst
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
 set projdir =                           $PROJWORK/cli115
 setenv ref_case_v0                      B1850C5_ne30_v0.4
-setenv ref_archive_v0_ocndir            $projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-setenv ref_archive_v0_seaicedir         $projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+setenv ref_archive_v0_ocndir            $projdir/milena/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+setenv ref_archive_v0_seaicedir         $projdir/milena/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 
 #The following are ignored if ref_case is obs
 setenv ref_native_res             	ne30
