@@ -10,7 +10,7 @@ echo 'MPAS-Analysis submodule: '`git submodule status`
 cd $tmp_currentdir
 unsetenv tmp_currentdir, tmp_gittopdir
 
-setenv archive_dir_ocn $test_archive_dir/$test_casename
+setenv archive_dir_ocn $test_archive_dir/$test_casename/run
 
 if ($test_short_term_archive == 1) then
 	echo Using ACME short term archiving directory structure!
