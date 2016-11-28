@@ -28,12 +28,27 @@ I. System Setup Requirements:
 		The anaconda-2.7-climate env built for acme includes all the required packages
 		The driver script loads anaconda-2.7-climate
 
+To use on AIMS at LLNL:
 
-II. Choose driver script: On EDISON, the driver script is run_EDISON.csh, on RHEA it is run_RHEA.csh
+I. System Setup Requirements:
+
+                In bash shell, execute the following:
+		
+		export PATH=/export/evans99/miniconda2/bin:$PATH
+		source activate /export/evans99/miniconda2
+
+		This loads the conda environment required to run the package.
+
+
+
+Common steps for all machines (RHEA, EDISON, AIMS):
+
+
+II. Choose driver script: On EDISON, the driver script is run_EDISON.csh, on RHEA it is run_RHEA.csh, on AIMS it is run_AIMS.csh
     Copy the template script (e.g. run_EDISON.csh) to user version (e.g. run_EDISON_$user.csh)
 
 
-III. Set case specific variables in driver script (run_EDISON_$user.csh or run_RHEA_$user.csh):
+III. Set case specific variables in driver script (run_EDISON_$user.csh or run_RHEA_$user.csh or run_AIMS_$user.csh):
 
 	1. Where marked, set the test case and reference case specific variables:
 
