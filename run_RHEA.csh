@@ -26,10 +26,10 @@
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables
-setenv test_casename 			20160428.A_WCYCL1850.ne30_oEC.edison.alpha5_00
+setenv test_casename 			20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_01
 setenv test_native_res			ne30
 setenv test_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst  
-setenv test_short_term_archive		1
+setenv test_short_term_archive		0
 setenv test_begin_yr_climo		15
 setenv test_end_yr_climo		20
 setenv test_begin_yr_ts			1
@@ -44,10 +44,10 @@ setenv test_remap_ts			1
 
 
 #Reference case variables
-setenv ref_case				20160401.A_WCYCL2000.ne30_oEC.edison.alpha4_00H
-setenv ref_archive_dir 			/lustre/atlas1/cli115/proj-shared/mbranst
-#setenv ref_case			obs
-#setenv ref_archive_dir 		$WORLDWORK/csc121/obs_data
+#setenv ref_case				20160401.A_WCYCL2000.ne30_oEC.edison.alpha4_00H
+#setenv ref_archive_dir 			/lustre/atlas1/cli115/proj-shared/mbranst
+setenv ref_case				obs
+setenv ref_archive_dir 			/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
 
 #ACMEv0 ref_case info for ocn/ice diags
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
@@ -58,7 +58,7 @@ setenv ref_archive_v0_seaicedir         $projdir/milena/ACMEv0_lowres/${ref_case
 
 #The following are ignored if ref_case is obs
 setenv ref_native_res             	ne30
-setenv ref_short_term_archive     	1
+setenv ref_short_term_archive     	0
 setenv ref_begin_yr_climo         	1
 setenv ref_end_yr_climo           	5
 setenv ref_begin_yr_ts		  	1
@@ -90,7 +90,7 @@ setenv pop_remapfile              $projdir/milena/mapping_files/map_gx1v6_TO_0.5
 
 #Select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_atm_diags 		1
-setenv generate_ocnice_diags 		0
+setenv generate_ocnice_diags 		1
 
 #The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
 setenv generate_ohc_trends 		1
@@ -164,7 +164,7 @@ if ($generate_atm_diags == 1) then
 endif
 
 if ($generate_ocnice_diags == 1) then
-	./ACME_ocn_diags.csh
+	./ACME_ocnice_diags.csh
 endif
 
 
