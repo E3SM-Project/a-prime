@@ -6,7 +6,8 @@
 #Basic usage:
 #       1. copy this template to something like run_EDISON_$user.csh
 #       2. open run_EDISON_$user.csh and set user defined, case-specific variables
-#       3. execute: csh run_EDISON_$user.csh
+#	3. load nco/4.6.2
+#       4. execute: csh run_EDISON_$user.csh 
 
 #Meaning of acronyms/words used in variable names below:
 #	test:		Test case
