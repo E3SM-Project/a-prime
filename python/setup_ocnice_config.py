@@ -24,6 +24,8 @@ add_config_option(config, 'paths', 'plots_dir', os.environ['plots_dir'])
 add_config_option(config, 'paths', 'log_dir', os.environ['log_dir'])
 add_config_option(config, 'paths', 'obs_ocndir', os.environ['obs_ocndir'])
 add_config_option(config, 'paths', 'obs_sstdir', os.environ['obs_sstdir'])
+add_config_option(config, 'paths', 'obs_sssdir', os.environ['obs_sssdir'])
+add_config_option(config, 'paths', 'obs_mlddir', os.environ['obs_mlddir'])
 add_config_option(config, 'paths', 'obs_seaicedir', os.environ['obs_seaicedir'])
 add_config_option(config, 'paths', 'ref_archive_v0_ocndir', os.environ['ref_archive_v0_ocndir'])
 add_config_option(config, 'paths', 'ref_archive_v0_seaicedir', os.environ['ref_archive_v0_seaicedir'])
@@ -41,6 +43,8 @@ add_config_option(config, 'seaIceData', 'obs_icevolSH', os.environ['obs_icevolSH
 add_config_option(config, 'time', 'climo_yr1', os.environ['test_begin_yr_climo'])
 add_config_option(config, 'time', 'climo_yr2', os.environ['test_end_yr_climo'])
 add_config_option(config, 'time', 'yr_offset', os.environ['yr_offset'])
+add_config_option(config, 'time', 'timeseries_yr1', os.environ['test_begin_yr_ts'])
+add_config_option(config, 'time', 'timeseries_yr2', os.environ['test_end_yr_ts'])
 
 add_config_option(config, 'ohc_timeseries', 'generate', os.environ['generate_ohc_trends'])
 
@@ -53,6 +57,10 @@ add_config_option(config, 'mht_timeseries', 'generate', os.environ['generate_mht
 add_config_option(config, 'moc_timeseries', 'generate', os.environ['generate_moc'])
 
 add_config_option(config, 'sst_modelvsobs', 'generate', os.environ['generate_sst_climo'])
+
+add_config_option(config, 'sss_modelvsobs', 'generate', os.environ['generate_sss_climo'])
+
+add_config_option(config, 'mld_modelvsobs', 'generate', os.environ['generate_mld_climo'])
 
 add_config_option(config, 'seaice_timeseries', 'generate', os.environ['generate_seaice_trends'])
 

@@ -152,7 +152,9 @@ III. Set case specific variables in driver script (run_EDISON_$user.csh or run_R
 
                 obs_ocndir                 location ocean observational data (parent directory)
 		obs_seaicedir              location of sea-ice observational data (parent directory)
-                obs_sstdir                 location of SST observational data (parent directory)
+                obs_sstdir                 location of SST observational data
+                obs_sssdir                 location of SSS observational data
+                obs_mlddir                 location of MLD observational data
 		obs_iceareaNH              NH sea-ice area data file
 		obs_iceareaSH              SH sea-ice area data file
 		obs_icevolNH               NH sea-ice volume data file

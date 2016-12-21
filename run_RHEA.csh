@@ -96,6 +96,8 @@ setenv generate_ocnice_diags 		1
 setenv generate_ohc_trends 		1
 setenv generate_sst_trends 		1
 setenv generate_sst_climo 		1
+setenv generate_sss_climo               1
+setenv generate_mld_climo               1
 setenv generate_seaice_trends 		1
 setenv generate_seaice_climo 		1
 
@@ -132,6 +134,8 @@ setenv mpas_climodir              $test_scratch_dir
 setenv obs_ocndir                 $projdir/observations
 setenv obs_seaicedir              $projdir/observations/SeaIce
 setenv obs_sstdir                 $obs_ocndir/SST
+setenv obs_sssdir                 $obs_ocndir/SSS
+setenv obs_mlddir                 $obs_ocndir/MLD
 setenv obs_iceareaNH              $obs_seaicedir/IceArea_timeseries/iceAreaNH_climo.nc
 setenv obs_iceareaSH              $obs_seaicedir/IceArea_timeseries/iceAreaSH_climo.nc
 setenv obs_icevolNH               $obs_seaicedir/PIOMAS/PIOMASvolume_monthly_climo.nc

@@ -336,7 +336,31 @@ cat >> index.html << EOF
   <TH><BR>
   <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
   <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_Annual_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>SSS Aquarius</font>
+  <TH>JFM
+  <TH>JAS
+  <TH>ANN
+<TR>
+  <TH ALIGN=LEFT>SSS
+  <TH><BR>
+  <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
+<TR>
+  <TH><BR>
+  <TH ALIGN=LEFT><font color=brown size=+1>MLD Holte-Talley ARGO</font>
+  <TH>JFM
+  <TH>JAS
+  <TH>ANN
+<TR>
+  <TH ALIGN=LEFT>MLD
+  <TH><BR>
+  <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+  <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
 <TR>
   <TH><BR>
 <TR>
