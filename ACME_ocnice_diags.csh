@@ -2,13 +2,13 @@
 #GENERATE OCEAN DIAGNOSTICS
 
 # initialize MPAS-Analysis code
-#setenv tmp_currentdir "`pwd`"
-#setenv tmp_gittopdir "`git rev-parse --show-toplevel`"
-#cd $tmp_gittopdir
-#git submodule update --init
-#echo 'MPAS-Analysis submodule: '`git submodule status`
-#cd $tmp_currentdir
-#unsetenv tmp_currentdir, tmp_gittopdir
+setenv tmp_currentdir "`pwd`"
+setenv tmp_gittopdir "`git rev-parse --show-toplevel`"
+cd $tmp_gittopdir
+git submodule update --init
+echo 'MPAS-Analysis submodule: '`git submodule status`
+cd $tmp_currentdir
+unsetenv tmp_currentdir, tmp_gittopdir
 
 setenv archive_dir_ocn $test_archive_dir/$test_casename/run
 

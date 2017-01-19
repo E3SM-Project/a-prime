@@ -11,15 +11,17 @@ else
         set www_dir  = $argv[3]
 endif
 
-set case_compare = B1850C5_ne30_v0.4
-
-
 #Reading case information from file
 source $log_dir/case_info.temp
 set n_cases = $#case_set
 
 set casename = $case_set[$case_no]
 set ref_case = $case_set[$n_cases]
+if $ref_case_v0 == None then
+  set casename_v0 = ""
+else
+  set casename_v0 = "_$ref_case_v0"
+endif
 
 set begin_yr_climo 	= $begin_yr_climo_set[$case_no]
 set end_yr_climo 	= $end_yr_climo_set[$case_no]
@@ -194,17 +196,17 @@ EOF
 cat >> index.html << EOF
 <TABLE>
 <TR>
-  <TH ALIGN=LEFT><A HREF="sst_global_${casename}_$case_compare.png">Global SST</a>
+  <TH ALIGN=LEFT><A HREF="sst_global_${casename}$casename_v0.png">Global SST</a>
 <TR>
-  <TH ALIGN=LEFT><A HREF="ohc_global_${casename}_$case_compare.png">Global OHC</a>
+  <TH ALIGN=LEFT><A HREF="ohc_global_${casename}$casename_v0.png">Global OHC</a>
 <TR>
-  <TH ALIGN=LEFT><A HREF="iceAreaCellNH_${casename}_$case_compare.png">NH Ice Area</a>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellNH_${casename}$casename_v0.png">NH Ice Area</a>
 <TR>
-  <TH ALIGN=LEFT><A HREF="iceAreaCellSH_${casename}_$case_compare.png">SH Ice Area</a>
+  <TH ALIGN=LEFT><A HREF="iceAreaCellSH_${casename}$casename_v0.png">SH Ice Area</a>
 <TR>
-  <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}_$case_compare.png">NH Ice Volume</a>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellNH_${casename}$casename_v0.png">NH Ice Volume</a>
 <TR>
-  <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}_$case_compare.png">SH Ice Volume</a>
+  <TH ALIGN=LEFT><A HREF="iceVolumeCellSH_${casename}$casename_v0.png">SH Ice Volume</a>
 <TR>
   <TD><BR>
 </TABLE>

@@ -5,3 +5,5 @@ run_RHEA_*.csh
 run_RHEA.*.csh
 run_AIMS_*.csh
 run_AIMS.*.csh
+run_LANL_*.csh
+run_LANL.*.csh
