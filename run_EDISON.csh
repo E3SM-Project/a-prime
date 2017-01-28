@@ -155,7 +155,6 @@ module unload python
 module unload python_base
 module use /global/project/projectdirs/acme/software/modulefiles/all
 module load python/anaconda-2.7-climate
-
 module load nco
 
 #PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS

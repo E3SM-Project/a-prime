@@ -4,10 +4,12 @@
 # Template driver script to generate coupled diagnostics on rhea
 #
 #Basic usage:
-#	1. Activate the environment, set:
+#	1. To activate the environment, set this in your .bashrc (or .chrc):
 #		a. export NCL_PATH= /usr/local/src/NCL-6.3.0/bin
-#		b. export CONDA_PATH=/export/evans99/miniconda2/bin:$NCL_PATH:$PATH
-#		c. source activate /export/evans99/miniconda2
+#		b. export CONDA_PATH=/export/veneziani1/miniconda2.7/bin
+#               c. export NCO_PATH=/export/zender1/bin
+#		d. export PATH=${CONDA_PATH}\:${NCL_PATH}\:${NCO_PATH}\:${PATH}
+#               e. export LD_LIBRARY_PATH='/export/zender1/lib'\:${LD_LIBRARY_PATH}
 #       2. copy this template to something like run_AIMS_$user.csh
 #       3. open run_AIMS_$user.csh and set user defined, case-specific variables
 #       4. execute: csh run_AIMS_$user.csh
@@ -105,8 +107,8 @@ setenv generate_ocnice_diags 		1
 setenv generate_ohc_trends 		1
 setenv generate_sst_trends 		1
 setenv generate_sst_climo 		1
-setenv generate_sss_climo 		1
-setenv generate_mld_climo 		1
+setenv generate_sss_climo               1
+setenv generate_mld_climo               1
 setenv generate_seaice_trends 		1
 setenv generate_seaice_climo 		1
 
@@ -154,14 +156,6 @@ setenv www_dir /var/www/acme/acme-diags/$USER
 ###USER SHOULD NOT NEED TO CHANGE ANYTHING HERE ONWARDS######################
 
 setenv coupled_diags_home $PWD
-
-#LOAD THE ANACONDA-2.7-CLIMATE ENV WHICH LOADS ALL REQUIRED PYTHON MODULES
-# put this in your .bash_profile: 
-# NCL_PATH = /usr/local/src/NCL-6.3.0/bin
-# NCO_PATH = /export/zender1/bin
-#CONDA_PATH = /export/evans99/miniconda2 (installed by user, see confluence for documentation)
-
-# then type "source activate uvcdat-nightly "
 
 #PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
 csh_scripts/setup.csh
