@@ -159,11 +159,6 @@ module load nco
 
 #PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
 csh_scripts/setup.csh
-if ($status != 0) then
-	exit
-	echo
-	echo
-endif
 
 #RUN DIAGNOSTICS
 if ($generate_atm_diags == 1) then

@@ -26,7 +26,7 @@
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables
-setenv test_casename 			20160520.A_WCYCL2000.ne30_oEC.edison.alpha6_01
+setenv test_casename 			20161117.beta0.A_WCYCL1850S.ne30_oEC_ICG.edison
 setenv test_native_res			ne30
 setenv test_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst  
 setenv test_short_term_archive		0
@@ -157,33 +157,51 @@ module load python/anaconda-2.7-climate
 module load nco
 setenv PATH $PATH\:/autofs/nccs-svm1_home1/zender/bin_rhea
 
-
-#PUT THE PRESCRIBED INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
+#PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
 csh_scripts/setup.csh
-
 
 #RUN DIAGNOSTICS
 if ($generate_atm_diags == 1) then
-	./ACME_atm_diags.csh
+        ./ACME_atm_diags.csh
+        set atm_status = $status
+else
+        set atm_status = 0
 endif
 
 if ($generate_ocnice_diags == 1) then
-	./ACME_ocnice_diags.csh
+        ./ACME_ocnice_diags.csh
+        set ocnice_status = $status
+else
+        set ocnice_status = 0
+endif
+
+#GENERATE HTML PAGE IF ASKED
+echo
+echo "Status of atmospheric diagnostics, 0 implies success or not invoked:" $atm_status
+echo "Status of ocean/ice diagnostics, 0 implies success or not invoked:" $ocnice_status
+
+if ($atm_status == 0 || $ocnice_status == 0) then
+        source $log_dir/case_info.temp
+
+        set n_cases = $#case_set
+
+        @ n_test_cases = $n_cases - 1
+
+        foreach j (`seq 1 $n_test_cases`)
+
+                if ($generate_html == 1) then
+                        csh csh_scripts/generate_html_index_file.csh    $j \
+                                                                        $plots_dir \
+                                                                        $www_dir
+                endif
+        end
+else
+        echo
+        echo Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!
+        echo
+        echo
 endif
 
 
-#GENERATE HTML PAGE IF ASKED
-source $log_dir/case_info.temp 
 
-set n_cases = $#case_set
 
-@ n_test_cases = $n_cases - 1
-
-foreach j (`seq 1 $n_test_cases`)
-
-	if ($generate_html == 1) then
-		csh csh_scripts/generate_html_index_file.csh 	$j \
-								$plots_dir \
-								$www_dir
-	endif
-end

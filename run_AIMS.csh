@@ -162,25 +162,43 @@ csh_scripts/setup.csh
 
 #RUN DIAGNOSTICS
 if ($generate_atm_diags == 1) then
-	./ACME_atm_diags.csh
+        ./ACME_atm_diags.csh
+        set atm_status = $status
+else
+        set atm_status = 0
 endif
 
 if ($generate_ocnice_diags == 1) then
-	./ACME_ocnice_diags.csh
+        ./ACME_ocnice_diags.csh
+        set ocnice_status = $status
+else
+        set ocnice_status = 0
 endif
 
 #GENERATE HTML PAGE IF ASKED
-source $log_dir/case_info.temp 
+echo
+echo "Status of atmospheric diagnostics, 0 implies success or not invoked:" $atm_status
+echo "Status of ocean/ice diagnostics, 0 implies success or not invoked:" $ocnice_status
 
-set n_cases = $#case_set
+if ($atm_status == 0 || $ocnice_status == 0) then
+        source $log_dir/case_info.temp
 
-@ n_test_cases = $n_cases - 1
+        set n_cases = $#case_set
 
-foreach j (`seq 1 $n_test_cases`)
+        @ n_test_cases = $n_cases - 1
 
-	if ($generate_html == 1) then
-		csh csh_scripts/generate_html_index_file.csh 	$j \
-								$plots_dir \
-								$www_dir
-	endif
-end
+        foreach j (`seq 1 $n_test_cases`)
+
+                if ($generate_html == 1) then
+                        csh csh_scripts/generate_html_index_file.csh    $j \
+                                                                        $plots_dir \
+                                                                        $www_dir
+                endif
+        end
+else
+        echo
+        echo Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!
+        echo
+        echo
+endif
+
