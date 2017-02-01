@@ -1,5 +1,40 @@
 #!/bin/csh -f
 
+#Checking if required mapping files exist, exiting otherwise
+if (! -d $remap_files_dir) then
+        echo remap_files_dir $remap_files_dir does not exist! Please check. 
+	echo Exiting atmospheric diagnostics ...
+	echo 
+	echo
+        exit 1
+endif
+
+if (! -f $GPCP_regrid_wgt_file) then
+        echo GPCP_regrid_wgt_file $GPCP_regrid_wgt_file does not exist! Please check.
+	echo Exiting atmospheric diagnostics ...
+	echo
+	echo
+        exit 1
+endif
+
+if (! -f $CERES_EBAF_regrid_wgt_file) then
+        echo CERES_EBAF_regid_wgt_file $CERES_EBAF_regrid_wgt_file does not exist! Please check.
+	echo Exiting atmospheric diagnostics ...
+	echo 
+	echo
+        exit 1
+endif
+
+if (! -f $ERS_regrid_wgt_file) then
+        echo ERS_regrid_wgt_file $ERS_regrid_wgt_file does not exist! Please check.
+	echo Exiting atmospheric diagnostics ...
+	echo 
+	echo
+        exit 1
+endif
+
+
+
 #GENERATE ATMOSPHERIC DIAGNOSTICS
 
 #Reading case info
@@ -54,6 +89,18 @@ foreach j (`seq 1 $n_cases`)
 	if ($short_term_archive == 1) then
 		echo Using ACME short term archiving directory structure!
 		set archive_dir_atm = $archive_dir/$casename/atm/hist
+	endif
+
+	if ($casename == obs) then
+		set archive_dir_atm = $archive_dir
+	endif
+
+	if (! -d $archive_dir_atm) then
+		echo $archive_dir_atm for $casename does not exist! Please check.
+		echo Exiting atmospheric diagnostics...
+		echo 
+		echo
+        	exit 1
 	endif
 
 	if ($condense_field_climo == 1 && $compute_climo == 1) then

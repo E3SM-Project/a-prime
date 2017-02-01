@@ -1,11 +1,13 @@
 #!/bin/csh -f 
 
+#Creating scratch directories
 if (! -d $test_scratch_dir) mkdir $test_scratch_dir
 if (! -d $ref_scratch_dir && $ref_case != obs) mkdir $ref_scratch_dir
 if (! -d $plots_dir)   mkdir $plots_dir
 if (! -d $log_dir)     mkdir $log_dir
 if (! -d $www_dir)     mkdir $www_dir
 
+#Placing case information in a file: $log_dir/case_info.temp for scripts to read
 echo "set case_set                      = ($test_casename $ref_case)" > $log_dir/case_info.temp
 echo "set archive_dir_set               = ($test_archive_dir $ref_archive_dir)" >> $log_dir/case_info.temp
 echo "set short_term_archive_set        = ($test_short_term_archive $ref_short_term_archive)" >> $log_dir/case_info.temp

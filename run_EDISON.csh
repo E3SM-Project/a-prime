@@ -28,14 +28,14 @@ set projdir =                  		/global/project/projectdirs/acme
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables
-setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00
+setenv test_casename                    20161117.beta0.A_WCYCL1850.ne30_oEC.edison
 setenv test_native_res                  ne30
-setenv test_archive_dir                 /global/cscratch1/sd/golaz/ACME_simulations
+setenv test_archive_dir                 /scratch2/scratchdirs/golaz/ACME_simulations
 setenv test_short_term_archive		0
-setenv test_begin_yr_climo		6
-setenv test_end_yr_climo		10
-setenv test_begin_yr_ts			1
-setenv test_end_yr_ts			10
+setenv test_begin_yr_climo		31
+setenv test_end_yr_climo		40
+setenv test_begin_yr_ts			31
+setenv test_end_yr_ts			40
 
 #Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #If no pre-processing is done (climatology, remapping), all the switches below should be 1
@@ -159,28 +159,51 @@ module load nco
 
 #PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
 csh_scripts/setup.csh
+if ($status != 0) then
+	exit
+	echo
+	echo
+endif
 
 #RUN DIAGNOSTICS
 if ($generate_atm_diags == 1) then
 	./ACME_atm_diags.csh
+	set atm_status = $status 
+else
+	set atm_status = 0
 endif
 
 if ($generate_ocnice_diags == 1) then
 	./ACME_ocnice_diags.csh
+	set ocnice_status = $status
+else
+	set ocnice_status = 0
 endif
 
 #GENERATE HTML PAGE IF ASKED
-source $log_dir/case_info.temp 
+echo
+echo "Status of atmospheric diagnostics, 0 implies success or not invoked:" $atm_status
+echo "Status of ocean/ice diagnostics, 0 implies success or not invoked:" $ocnice_status
 
-set n_cases = $#case_set
+if ($atm_status == 0 || $ocnice_status == 0) then
+	source $log_dir/case_info.temp 
 
-@ n_test_cases = $n_cases - 1
+	set n_cases = $#case_set
 
-foreach j (`seq 1 $n_test_cases`)
+	@ n_test_cases = $n_cases - 1
 
-	if ($generate_html == 1) then
-		csh csh_scripts/generate_html_index_file.csh 	$j \
-								$plots_dir \
-								$www_dir
-	endif
-end
+	foreach j (`seq 1 $n_test_cases`)
+
+		if ($generate_html == 1) then
+			csh csh_scripts/generate_html_index_file.csh 	$j \
+									$plots_dir \
+									$www_dir
+		endif
+	end
+else
+	echo
+	echo Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!
+	echo
+	echo
+endif
+
