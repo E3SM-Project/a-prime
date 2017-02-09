@@ -55,9 +55,9 @@ setenv ref_archive_dir                 $projdir/obs_for_diagnostics
 
 #ACMEv0 ref_case info for ocn/ice diags
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
-setenv ref_case_v0                   None
-setenv ref_archive_v0_ocndir         $projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-setenv ref_archive_v0_seaicedir      $projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+setenv ref_case_v0                   B1850C5_ne30_v0.4
+setenv ref_archive_v0_ocndir         $projdir/SHARED_CLIMATE/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+setenv ref_archive_v0_seaicedir      $projdir/SHARED_CLIMATE/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 
 #The following are ignored if ref_case is obs
 setenv ref_native_res                  ne30

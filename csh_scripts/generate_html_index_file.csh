@@ -451,6 +451,7 @@ if (! -d $www_dir/coupled_diagnostics_$casename-$ref_case) then
 	mkdir $www_dir/coupled_diagnostics_$casename-$ref_case
 endif
 
+unalias cp
 cp -fr $plots_dir/* $www_dir/coupled_diagnostics_$casename-$ref_case
 cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
 

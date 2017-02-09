@@ -8,7 +8,7 @@
 #          in your .cshrc or .bashrc
 #	1. To activate the environment, set this in your .bashrc (or .cshrc):
 #		a. export NCL_PATH= /usr/local/src/NCL-6.3.0/bin
-#		b. export CONDA_PATH=/export/evans99/miniconda2/bin
+#		b. export CONDA_PATH=/export/veneziani1/miniconda2.7/bin
 #               c. export NCO_PATH=/export/zender1/bin
 #		d. export PATH=${CONDA_PATH}\:${NCL_PATH}\:${NCO_PATH}\:${PATH}
 #               e. export LD_LIBRARY_PATH='/export/zender1/lib'\:${LD_LIBRARY_PATH}
@@ -36,14 +36,14 @@ set projdir =                  		/space2
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
 #Test case variables, for casename, add any addendums like /run or /atm/hist 
-setenv test_casename                    20160805.A_WCYCL1850.ne30_oEC.edison.alpha7_00
+setenv test_casename                    20161117.beta0.A_WCYCL1850S.ne30_oEC_ICG.edison
 setenv test_native_res                  ne30
 setenv test_archive_dir                 /space2/test_data/ACME_simulations
 setenv test_short_term_archive		0
-setenv test_begin_yr_climo		6
-setenv test_end_yr_climo		10
-setenv test_begin_yr_ts			1
-setenv test_end_yr_ts			10
+setenv test_begin_yr_climo		31
+setenv test_end_yr_climo		40
+setenv test_begin_yr_ts			31
+setenv test_end_yr_ts			40
 
 #Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #If no pre-processing is done (climatology, remapping), all the switches below should be 1
