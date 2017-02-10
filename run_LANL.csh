@@ -23,7 +23,8 @@
 #      short_term_archive:     Adds /atm/hist after the casename. If the data sits in a different structure, add it after
 #      the casename in test_casename 
 
-set projdir =                                  /usr/projects/climate
+set projdir =                           /usr/projects/climate
+set output_base_dir =                   /dir/to/analysis/output
 
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
@@ -118,10 +119,10 @@ setenv generate_html                   1
 #OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD WORK, USER PREFERENCE BASED CHANGES)
 
 #Set paths to scratch, logs and plots directories
-setenv test_scratch_dir          $projdir/$USER/$test_casename.test.pp
-setenv ref_scratch_dir           $projdir/$USER/$ref_case.test.pp
-setenv plots_dir                 $projdir/$USER/coupled_diagnostics_${test_casename}-$ref_case
-setenv log_dir                   $projdir/$USER/coupled_diagnostics_${test_casename}-$ref_case.logs
+setenv test_scratch_dir           $output_base_dir/$test_casename.test.pp
+setenv ref_scratch_dir            $output_base_dir/$ref_case.test.pp
+setenv plots_dir                  $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case
+setenv log_dir                    $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case.logs
 
 #Set atm specific paths to mapping and data files locations
 setenv remap_files_dir           $projdir/mapping/maps

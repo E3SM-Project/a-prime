@@ -25,6 +25,9 @@
 
 #USER DEFINED CASE SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
+set projdir =                           $PROJWORK/cli115
+set output_base_dir =                   /dir/to/analysis/output
+
 #Test case variables
 setenv test_casename 			20161117.beta0.A_WCYCL1850S.ne30_oEC_ICG.edison
 setenv test_native_res			ne30
@@ -51,7 +54,6 @@ setenv ref_archive_dir 			/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
 
 #ACMEv0 ref_case info for ocn/ice diags
 # IMPORTANT: the ACMEv0 model data MUST have been pre-processed. If this pre-processed data is not available, set ref_case_v0 to None.
-set projdir =                           $PROJWORK/cli115
 setenv ref_case_v0                      B1850C5_ne30_v0.4
 setenv ref_archive_v0_ocndir            $projdir/milena/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
 setenv ref_archive_v0_seaicedir         $projdir/milena/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
@@ -117,13 +119,13 @@ setenv generate_html 			1
 #OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD WORK, USER PREFERENCE BASED CHANGES)
 
 #Set paths to scratch, logs and plots directories
-setenv test_scratch_dir		  $PROJWORK/cli115/$USER/$test_casename.test.pp
-setenv ref_scratch_dir		  $PROJWORK/cli115/$USER/$ref_case.test.pp
-setenv plots_dir 		  $PROJWORK/cli115/$USER/coupled_diagnostics_${test_casename}-$ref_case
-setenv log_dir 			  $PROJWORK/cli115/$USER/coupled_diagnostics_${test_casename}-$ref_case.logs
+setenv test_scratch_dir           $output_base_dir/$test_casename.test.pp
+setenv ref_scratch_dir            $output_base_dir/$ref_case.test.pp
+setenv plots_dir                  $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case
+setenv log_dir                    $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case.logs
 
 #Set atm specific paths to mapping and data files locations
-setenv remap_files_dir		  $PROJWORK/cli115/mapping/maps
+setenv remap_files_dir		  $projdir/mapping/maps
 setenv GPCP_regrid_wgt_file 	  $remap_files_dir/$test_native_res-to-GPCP.conservative.wgts.nc
 setenv CERES_EBAF_regrid_wgt_file $remap_files_dir/$test_native_res-to-CERES-EBAF.conservative.wgts.nc
 setenv ERS_regrid_wgt_file        $remap_files_dir/$test_native_res-to-ERS.conservative.wgts.nc
