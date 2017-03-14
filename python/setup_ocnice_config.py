@@ -1,70 +1,149 @@
+'''
+Creates a config file for ACME ice-ocean analysis given a number of environment
+variables set in one of the run_<machine>.csh scripts and the default config
+file from MPAS-Analysis
+
+Authors
+-------
+Xylar Asay-Davis
+
+Modified
+--------
+2017/03/31
+'''
+
 import os
 import ConfigParser
+
 
 def add_config_option(config, section, option, value):
     if not config.has_section(section):
         config.add_section(section)
     config.set(section, option, value)
 
-inFileName = 'python/MPAS-Analysis/config.analysis'
+
+def check_env(envVarName):
+    return os.environ[envVarName].lower() in ['1', 't', 'true']
+
+
+inFileName = 'python/MPAS-Analysis/config.default'
 outFileName = 'config.ocnice'
 
 config = ConfigParser.RawConfigParser()
 config.read(inFileName)
 
-add_config_option(config, 'case', 'casename', os.environ['test_casename'])
-add_config_option(config, 'case', 'native_res', os.environ['test_native_res'])
-add_config_option(config, 'case', 'short_term_archive', os.environ['test_short_term_archive'])
-add_config_option(config, 'case', 'ref_casename_v0', os.environ['ref_case_v0'])
+add_config_option(config, 'runs', 'mainRunName',
+                  os.environ['test_casename'])
+add_config_option(config, 'runs', 'preprocessedReferenceRunName',
+                  os.environ['ref_case_v0'])
 
-add_config_option(config, 'paths', 'archive_dir', os.environ['test_archive_dir'])
-add_config_option(config, 'paths', 'archive_dir_ocn', os.environ['archive_dir_ocn'])
-add_config_option(config, 'paths', 'scratch_dir', os.environ['test_scratch_dir'])
-add_config_option(config, 'paths', 'plots_dir', os.environ['plots_dir'])
-add_config_option(config, 'paths', 'log_dir', os.environ['log_dir'])
-add_config_option(config, 'paths', 'obs_ocndir', os.environ['obs_ocndir'])
-add_config_option(config, 'paths', 'obs_sstdir', os.environ['obs_sstdir'])
-add_config_option(config, 'paths', 'obs_sssdir', os.environ['obs_sssdir'])
-add_config_option(config, 'paths', 'obs_mlddir', os.environ['obs_mlddir'])
-add_config_option(config, 'paths', 'obs_seaicedir', os.environ['obs_seaicedir'])
-add_config_option(config, 'paths', 'ref_archive_v0_ocndir', os.environ['ref_archive_v0_ocndir'])
-add_config_option(config, 'paths', 'ref_archive_v0_seaicedir', os.environ['ref_archive_v0_seaicedir'])
+baseDir = '{}/{}'.format(os.environ['test_archive_dir'],
+                         os.environ['test_casename'])
 
-add_config_option(config, 'data', 'mpas_meshfile', os.environ['mpas_meshfile'])
-add_config_option(config, 'data', 'mpas_remapfile', os.environ['mpas_remapfile'])
-add_config_option(config, 'data', 'pop_remapfile', os.environ['pop_remapfile'])
-add_config_option(config, 'data', 'mpas_climodir', os.environ['mpas_climodir'])
+scratchDir = os.environ['test_scratch_dir']
 
-add_config_option(config, 'seaIceData', 'obs_iceareaNH', os.environ['obs_iceareaNH'])
-add_config_option(config, 'seaIceData', 'obs_iceareaSH', os.environ['obs_iceareaSH'])
-add_config_option(config, 'seaIceData', 'obs_icevolNH', os.environ['obs_icevolNH'])
-add_config_option(config, 'seaIceData', 'obs_icevolSH', os.environ['obs_icevolSH'])
+add_config_option(config, 'input', 'baseDirectory', baseDir)
+add_config_option(config, 'input', 'runSubdirectory', 'run')
+add_config_option(config, 'input', 'oceanNamelistFileName', 'run/mpas-o_in')
+add_config_option(config, 'input', 'oceanStreamsFileName', 'run/streams.ocean')
+add_config_option(config, 'input', 'seaIceNamelistFileName', 'run/mpas-cice_in')
+add_config_option(config, 'input', 'seaIceStreamsFileName', 'run/streams.cice')
+if check_env('test_short_term_archive'):
+    add_config_option(config, 'input', 'oceanHistorySubdirectory', 'ocn/hist')
+    add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'ice/hist')
+else:
+    add_config_option(config, 'input', 'oceanHistorySubdirectory', 'run')
+    add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'run')
+add_config_option(config, 'input', 'mpasMeshName', 
+                  os.environ['test_mpas_mesh_name'])
 
-add_config_option(config, 'time', 'climo_yr1', os.environ['test_begin_yr_climo'])
-add_config_option(config, 'time', 'climo_yr2', os.environ['test_end_yr_climo'])
-add_config_option(config, 'time', 'yr_offset', os.environ['yr_offset'])
-add_config_option(config, 'time', 'timeseries_yr1', os.environ['test_begin_yr_ts'])
-add_config_option(config, 'time', 'timeseries_yr2', os.environ['test_end_yr_ts'])
+add_config_option(config, 'output', 'baseDirectory',
+                  os.environ['output_base_dir'])
+add_config_option(config, 'output', 'scratchSubdirectory',
+                  os.environ['test_scratch_dir'])
+add_config_option(config, 'output', 'plotsSubdirectory',
+                  os.environ['plots_dir'])
+add_config_option(config, 'output', 'logsSubdirectory',
+                  os.environ['log_dir'])
+add_config_option(config, 'output', 'mappingSubdirectory',
+                  '{}/mapping'.format(scratchDir))
+add_config_option(config, 'output', 'mpasClimatologySubdirectory',
+                  '{}/clim/mpas/'.format(scratchDir))
+add_config_option(config, 'output', 'mpasRegriddedClimSubdirectory',
+                  '{}/clim/mpas/regridded'.format(scratchDir))
+add_config_option(config, 'output', 'timeSeriesSubdirectory',
+                  '{}/timeSeries/'.format(scratchDir))
 
-add_config_option(config, 'ohc_timeseries', 'generate', os.environ['generate_ohc_trends'])
+generate = []
+if check_env('generate_ohc_trends'):
+    generate.append('timeSeriesOHC')
+if check_env('generate_sst_trends'):
+    generate.append('timeSeriesSST')
+if check_env('generate_nino34'):
+    generate.append('indexNino34')
+if check_env('generate_mht'):
+    generate.append('timeSeriesMHT')
+if check_env('generate_moc'):
+    generate.append('streamfunctionMOC')
 
-add_config_option(config, 'sst_timeseries', 'generate', os.environ['generate_sst_trends'])
+for field in ['sst', 'sss', 'mld']:
+    if check_env('generate_{}_climo'.format(field)):
+        generate.append('regridded{}'.format(field.upper()))
 
-add_config_option(config, 'nino34_timeseries', 'generate', os.environ['generate_nino34'])
+if check_env('generate_seaice_trends'):
+    generate.append('timeSeriesSeaIceAreaVol')
+if check_env('generate_seaice_climo'):
+    generate.append('regriddedSeaIceConcThick')
 
-add_config_option(config, 'mht_timeseries', 'generate', os.environ['generate_mht'])
+generateString = ', '.join(["'{}'".format(element)
+                            for element in generate])
 
-add_config_option(config, 'moc_timeseries', 'generate', os.environ['generate_moc'])
+add_config_option(config, 'output', 'generate',
+                  '[{}]'.format(generateString))
 
-add_config_option(config, 'sst_modelvsobs', 'generate', os.environ['generate_sst_climo'])
+add_config_option(config, 'climatology', 'startYear',
+                  os.environ['test_begin_yr_climo'])
+add_config_option(config, 'climatology', 'endYear',
+                  os.environ['test_end_yr_climo'])
+add_config_option(config, 'climatology', 'mpasMappingFile',
+                  os.environ['mpas_remapfile'])
 
-add_config_option(config, 'sss_modelvsobs', 'generate', os.environ['generate_sss_climo'])
+add_config_option(config, 'timeSeries', 'startYear',
+                  os.environ['test_begin_yr_ts'])
+add_config_option(config, 'timeSeries', 'endYear',
+                  os.environ['test_end_yr_ts'])
 
-add_config_option(config, 'mld_modelvsobs', 'generate', os.environ['generate_mld_climo'])
+add_config_option(config, 'index', 'startYear',
+                  os.environ['test_begin_yr_climateIndex_ts'])
+add_config_option(config, 'index', 'endYear',
+                  os.environ['test_end_yr_climateIndex_ts'])
 
-add_config_option(config, 'seaice_timeseries', 'generate', os.environ['generate_seaice_trends'])
+add_config_option(config, 'oceanObservations', 'baseDirectory',
+                  os.environ['obs_ocndir'])
+for field in ['sst', 'sss', 'mld']:
+    add_config_option(config, 'oceanObservations', 
+                      '{}Subdirectory'.format(field),
+                      os.environ['obs_{}dir'.format(field)])
+add_config_option(config, 'oceanObservations', 'climatologySubdirectory',
+                  '{}/clim/obs/'.format(scratchDir))
+add_config_option(config, 'oceanObservations', 'regriddedClimSubdirectory',
+                  '{}/clim/obs/regridded'.format(scratchDir))
 
-add_config_option(config, 'seaice_modelvsobs', 'generate', os.environ['generate_seaice_climo'])
+add_config_option(config, 'oceanPreprocessedReference', 'baseDirectory',
+                  os.environ['ref_archive_v0_ocndir'])
+
+add_config_option(config, 'seaIceObservations', 'baseDirectory',
+                  os.environ['obs_seaicedir'])
+add_config_option(config, 'seaIceObservations', 'climatologySubdirectory',
+                  '{}/clim/obs/'.format(scratchDir))
+add_config_option(config, 'seaIceObservations', 'regriddedClimSubdirectory',
+                  '{}/clim/obs/regridded'.format(scratchDir))
+
+add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
+                  os.environ['ref_archive_v0_seaicedir'])
+
+add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles', 
+                  os.environ['mpaso_regions_file'])
 
 filePointer = open(outFileName, 'w')
 config.write(filePointer)
