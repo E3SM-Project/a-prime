@@ -1,6 +1,7 @@
 #!/bin/csh -f 
 
 #Creating scratch directories
+if (! -d $output_base_dir) mkdir $output_base_dir
 if (! -d $test_scratch_dir) mkdir $test_scratch_dir
 if (! -d $ref_scratch_dir && $ref_case != obs) mkdir $ref_scratch_dir
 if (! -d $plots_dir)   mkdir $plots_dir
@@ -15,6 +16,8 @@ echo "set begin_yr_climo_set            = ($test_begin_yr_climo $ref_begin_yr_cl
 echo "set end_yr_climo_set              = ($test_end_yr_climo $ref_end_yr_climo)" >> $log_dir/case_info.temp
 echo "set begin_yr_ts_set               = ($test_begin_yr_ts $ref_begin_yr_ts)" >> $log_dir/case_info.temp
 echo "set end_yr_ts_set                 = ($test_end_yr_ts $ref_end_yr_ts)" >> $log_dir/case_info.temp
+echo "set begin_yr_climateIndex_set     = ($test_begin_yr_climateIndex_ts $ref_begin_yr_climateIndex_ts)" >> $log_dir/case_info.temp
+echo "set end_yr_climateIndex_set       = ($test_end_yr_climateIndex_ts $ref_end_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 
 echo "set native_res_set                = ($test_native_res $ref_native_res)" >> $log_dir/case_info.temp
 
