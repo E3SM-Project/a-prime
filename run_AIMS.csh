@@ -172,6 +172,7 @@ if ($generate_atm_diags == 1) then
           set atm_status = $status
         else
           echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting atm diagnostics..."
+          echo "Please set test_end_yr_climo <= ${year_max}"
           set atm_status = 0
         endif
 else
@@ -187,6 +188,7 @@ if ($generate_ocnice_diags == 1) then
           set ocnice_status = $status
         else
           echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting ocn/ice diagnostics..."
+          echo "Please set test_end_yr_climo <= ${year_max}"
           set ocnice_status = 0
         endif
 else
