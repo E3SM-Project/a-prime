@@ -120,7 +120,7 @@ add_config_option(config, 'index', 'endYear',
 
 add_config_option(config, 'oceanObservations', 'baseDirectory',
                   os.environ['obs_ocndir'])
-for field in ['sst', 'sss', 'mld']:
+for field in ['sst', 'sss', 'mld', 'nino']:
     add_config_option(config, 'oceanObservations', 
                       '{}Subdirectory'.format(field),
                       os.environ['obs_{}dir'.format(field)])

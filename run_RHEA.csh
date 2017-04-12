@@ -134,6 +134,7 @@ setenv obs_seaicedir              $projdir/observations/SeaIce
 setenv obs_sstdir                 $obs_ocndir/SST
 setenv obs_sssdir                 $obs_ocndir/SSS
 setenv obs_mlddir                 $obs_ocndir/MLD
+setenv obs_ninodir                $obs_ocndir/Nino
 setenv obs_iceareaNH              $obs_seaicedir/IceArea_timeseries/iceAreaNH_climo.nc
 setenv obs_iceareaSH              $obs_seaicedir/IceArea_timeseries/iceAreaSH_climo.nc
 setenv obs_icevolNH               $obs_seaicedir/PIOMAS/PIOMASvolume_monthly_climo.nc
