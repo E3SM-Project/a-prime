@@ -15,6 +15,7 @@
 #       2. copy this template to something like run_AIMS_$user.csh
 #       3. open run_AIMS_$user.csh and set user defined, case-specific variables
 #       4. execute: csh run_AIMS_$user.csh
+#       5. access the html link by using username/password equalt to acme/acme, respectively
 
 # Meaning of acronyms/words used in variable names below:
 #	test:		Test case
