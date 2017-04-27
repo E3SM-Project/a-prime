@@ -97,10 +97,10 @@ setenv generate_sst_climo 		1
 setenv generate_sss_climo               1
 setenv generate_mld_climo               1
 setenv generate_moc 			1
-setenv generate_nino34 			1
+setenv generate_mht 			1
 setenv generate_seaice_trends 		1
 setenv generate_seaice_climo 		1
-setenv generate_mht 			1
+setenv generate_nino34 			1
 
 # Generate standalone html file to view plots on a browser, if required
 setenv generate_html 			1

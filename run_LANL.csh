@@ -97,12 +97,10 @@ setenv generate_sst_climo              1
 setenv generate_sss_climo              1
 setenv generate_mld_climo              1
 setenv generate_moc                    1
-setenv generate_nino34                 1
+setenv generate_mht                    1
 setenv generate_seaice_trends          1
 setenv generate_seaice_climo           1
-
-# Other diagnostics not working currently, work in progress
-setenv generate_mht                    0
+setenv generate_nino34                 1
 
 # Generate standalone html file to view plots on a browser, if required
 setenv generate_html                   1
@@ -137,6 +135,7 @@ setenv obs_sstdir                 $obs_ocndir/SST
 setenv obs_sssdir                 $obs_ocndir/SSS
 setenv obs_mlddir                 $obs_ocndir/MLD
 setenv obs_ninodir                $obs_ocndir/Nino
+setenv obs_mhtdir                 $obs_ocndir/MHT
 setenv obs_iceareaNH              $obs_seaicedir/IceArea_timeseries/iceAreaNH_climo.nc
 setenv obs_iceareaSH              $obs_seaicedir/IceArea_timeseries/iceAreaSH_climo.nc
 setenv obs_icevolNH               $obs_seaicedir/PIOMAS/PIOMASvolume_monthly_climo.nc

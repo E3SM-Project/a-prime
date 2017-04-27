@@ -75,7 +75,6 @@ setenv ref_archive_dir 		/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostic
 # ACMEv0 ref_case info for ocn/ice diags
 #  IMPORTANT: the ACMEv0 model data MUST have been pre-processed.
 #  If this pre-processed data is not available, set ref_case_v0 to None.
-#setenv ref_case_v0                   None
 setenv ref_case_v0                   B1850C5_ne30_v0.4
 setenv ref_archive_v0_ocndir         /space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
 setenv ref_archive_v0_seaicedir      /space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
@@ -107,10 +106,10 @@ setenv generate_sst_climo 		1
 setenv generate_sss_climo               1
 setenv generate_mld_climo               1
 setenv generate_moc 			1
-setenv generate_nino34 			1
+setenv generate_mht 			1
 setenv generate_seaice_trends 		1
 setenv generate_seaice_climo 		1
-setenv generate_mht 			1
+setenv generate_nino34 			1
 
 # Generate standalone html file to view plots on a browser, if required
 setenv generate_html 			1
