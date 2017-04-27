@@ -82,7 +82,7 @@ if check_env('generate_sst_trends'):
 if check_env('generate_nino34'):
     generate.append('indexNino34')
 if check_env('generate_mht'):
-    generate.append('timeSeriesMHT')
+    generate.append('meridionalHeatTransport')
 if check_env('generate_moc'):
     generate.append('streamfunctionMOC')
 
@@ -120,7 +120,7 @@ add_config_option(config, 'index', 'endYear',
 
 add_config_option(config, 'oceanObservations', 'baseDirectory',
                   os.environ['obs_ocndir'])
-for field in ['sst', 'sss', 'mld', 'nino']:
+for field in ['sst', 'sss', 'mld', 'mht', 'nino']:
     add_config_option(config, 'oceanObservations', 
                       '{}Subdirectory'.format(field),
                       os.environ['obs_{}dir'.format(field)])

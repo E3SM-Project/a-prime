@@ -3,7 +3,11 @@ run_EDISON_*.csh
 run_EDISON.*.csh
 run_RHEA_*.csh
 run_RHEA.*.csh
+run_OLCF_*.csh
+run_OLCF.*.csh
 run_AIMS_*.csh
 run_AIMS.*.csh
+run_LLNL_*.csh
+run_LLNL.*.csh
 run_LANL_*.csh
 run_LANL.*.csh

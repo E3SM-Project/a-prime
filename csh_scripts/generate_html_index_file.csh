@@ -455,6 +455,16 @@ EOF
   <TR>
     <TD><BR>
   <TR>
+    <TH ALIGN=LEFT><font color=green size=+1>Meridional Heat Transport (MHT)</font>
+  <TR>
+    <TH><BR>
+  <TR>
+    <TH ALIGN=LEFT><A HREF="mht_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MHT</a> 
+  <TR>
+    <TD><BR>
+  <TR>
+    <TD><BR>
+  <TR>
     <TH ALIGN=LEFT><font color=green size=+1>Nino3.4 Index</font>
   <TR>
     <TD><BR>
@@ -492,7 +502,8 @@ chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case
 echo Moved plots and index.html to the website directory: $www_dir/coupled_diagnostics_$casename-$ref_case
 echo
 
-if (`echo $HOSTNAME | cut -c1-4` == 'rhea') then
+if (`echo $HOSTNAME | cut -c1-4` == 'rhea' || \
+    `echo $HOSTNAME | cut -c1-5` == 'titan') then
 	echo Viewable at:
 	echo http://users.nccs.gov/~$USER/coupled_diagnostics_${casename}-$ref_case
 	echo
@@ -508,7 +519,8 @@ if (`echo $HOSTNAME | cut -c1-6` == 'edison') then
 	echo chmod a+rx $www_dir
 endif
 
-if (`echo $HOSTNAME | cut -c1-4` == 'aims') then
+if (`echo $HOSTNAME | cut -c1-4` == 'aims' || \
+    `echo $HOSTNAME | cut -c1-4` == 'acme') then
 	echo Viewable at:
 	echo http://aims4.llnl.gov/$USER/coupled_diagnostics_$casename-$ref_case
 	echo
