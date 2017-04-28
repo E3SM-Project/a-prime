@@ -1,7 +1,8 @@
 #!/bin/csh
 
 #
-# Template driver script to generate coupled diagnostics on rhea/titan
+# Template driver script to generate coupled diagnostics on titan/rhea
+#   Note: this package is much slower on rhea!
 #
 # Basic usage:
 #       1. copy this template to something like run_OLCF_$user.csh

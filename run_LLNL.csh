@@ -6,12 +6,9 @@
 # Basic usage:
 #       0. Make sure you do not point to any particular python or conda environment
 #          in your .cshrc or .bashrc
-#	1. To activate the environment, set this in your .bashrc (or .cshrc):
-#		a. export NCL_PATH= /usr/local/src/NCL-6.3.0/bin
-#		b. export CONDA_PATH=/export/veneziani1/miniconda2.7/bin
-#               c. export NCO_PATH=/export/zender1/bin
-#		d. export PATH=${CONDA_PATH}\:${NCL_PATH}\:${NCO_PATH}\:${PATH}
-#               e. export LD_LIBRARY_PATH='/export/zender1/lib'\:${LD_LIBRARY_PATH}
+#       1. To activate the environment, set this in your .bashrc (or .cshrc):
+#               a. export CONDA_PATH=/export/veneziani1/miniconda2.7/bin
+#               b. export PATH=${CONDA_PATH}\:${PATH}
 #       2. copy this template to something like run_LLNL_$user.csh
 #       3. open run_LLNL_$user.csh and set user defined, case-specific variables
 #       4. execute: csh run_LLNL_$user.csh
