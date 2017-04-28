@@ -519,12 +519,19 @@ if (`echo $HOSTNAME | cut -c1-6` == 'edison') then
 	echo chmod a+rx $www_dir
 endif
 
-if (`echo $HOSTNAME | cut -c1-4` == 'aims' || \
-    `echo $HOSTNAME | cut -c1-4` == 'acme') then
+if (`echo $HOSTNAME | cut -c1-5` == 'aims4') then
 	echo Viewable at:
 	echo http://aims4.llnl.gov/$USER/coupled_diagnostics_$casename-$ref_case
 	echo
-	echo The name and password to view the plots is acme/acmediags
+	echo The name and password to view the plots is acme/acme, respectively
+	echo If trouble viewing, try chmod a+rx $www_dir
+endif
+
+if (`echo $HOSTNAME | cut -c1-5` == 'acme1') then
+	echo Viewable at:
+	echo http://acme1.llnl.gov/$USER/coupled_diagnostics_$casename-$ref_case
+	echo
+	echo The name and password to view the plots is acme/acme, respectively
 	echo If trouble viewing, try chmod a+rx $www_dir
 endif
 
