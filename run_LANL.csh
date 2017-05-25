@@ -30,14 +30,18 @@ set projdir =                           /usr/projects/climate/SHARED_CLIMATE
 # Main directory where all analysis output is stored
 # (e.g., plots will go in a specific subdirectory of $output_base_dir,
 # as will log files, generated climatologies, etc)
+
 setenv output_base_dir                  /dir/to/analysis/output
 
 # Test case variables
 setenv test_casename                   20161117.beta0.A_WCYCL1850S.ne30_oEC_ICG.edison
 setenv test_native_res                 ne30
+
 # one of the supported mesh names (e.g. oEC60to30v1, oEC60to30v3, oRRS18to6v1)
 # NB: this may change with a different choice of test_casename!
+
 setenv test_mpas_mesh_name              oEC60to30v1
+
 setenv test_archive_dir                /lustre/scratch2/turquoise/milena/ACME
 setenv test_short_term_archive         0
 setenv test_begin_yr_climo             2
@@ -49,6 +53,9 @@ setenv test_end_yr_climateIndex_ts     9999
 
 # Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 # If no pre-processing is done (climatology, remapping), all the switches below should be 1
+# If a switch is 0, then the user should ensure that the needed files are in the scratch directory (defined below)
+# If a switch is 0 for climo, then the user should ensure that the files in the scratch directory correspond to the intended begin and end years set above.
+
 setenv test_compute_climo              1
 setenv test_remap_climo                1
 setenv test_condense_field_climo       1       #ignored if test_compute_climo = 0
@@ -60,12 +67,16 @@ setenv test_remap_ts                   1
 # Reference case variables (similar to test_case variables)
 setenv ref_case                        obs
 setenv ref_archive_dir                 $projdir/obs_for_diagnostics
+
 #setenv ref_case                               20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01
 #setenv ref_archive_dir                        /scratch1/scratchdirs/golaz/ACME_simulations
+
+
 
 # ACMEv0 ref_case info for ocn/ice diags
 #  IMPORTANT: the ACMEv0 model data MUST have been pre-processed.
 #  If this pre-processed data is not available, set ref_case_v0 to None.
+
 setenv ref_case_v0                   B1850C5_ne30_v0.4
 setenv ref_archive_v0_ocndir         $projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
 setenv ref_archive_v0_seaicedir      $projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
@@ -104,6 +115,7 @@ setenv generate_nino34                 1
 
 # Generate standalone html file to view plots on a browser, if required
 setenv generate_html                   1
+
 ###############################################################################################
 
 # OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD WORK, USER PREFERENCE BASED CHANGES)
@@ -111,8 +123,22 @@ setenv generate_html                   1
 # Set paths to scratch, logs and plots directories
 setenv test_scratch_dir           $output_base_dir/$test_casename.test.pp
 setenv ref_scratch_dir            $output_base_dir/$ref_case.test.pp
-setenv plots_dir                  $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case
-setenv log_dir                    $output_base_dir/coupled_diagnostics_${test_casename}-$ref_case.logs
+
+if ($ref_case == obs) then
+        setenv plots_dir_name     coupled_diagnostics_${test_casename}_yr_${test_begin_yr_climo}-${test_end_yr_climo}_vs_$ref_case
+else
+        setenv plots_dir_name     coupled_diagnostics_${test_casename}_${test_begin_yr_climo}_${test_end_yr_climo}-${ref_case}_yr_${ref_begin_yr_climo}-${ref_end_yr_climo}
+endif
+
+
+#User can set a custom name for the $plot_dir_name here, if the default (above) is not ideal 
+#setenv plots_dir_name            XXYYY
+
+setenv log_dir_name               $plots_dir_name.logs
+
+setenv plots_dir                  $output_base_dir/$plots_dir_name
+setenv log_dir                    $output_base_dir/$log_dir_name
+
 
 # Set atm specific paths to mapping and data files locations
 setenv remap_files_dir            $projdir/mapping/maps
@@ -190,6 +216,11 @@ if ($generate_ocnice_diags == 1) then
 else
         set ocnice_status = 0
 endif
+
+
+#COPY THIS RUN SCRIPT TO THE $plots_dir FOR PROVENANCE
+cp $0 $plots_dir/$0
+
 
 # GENERATE HTML PAGE IF ASKED
 echo

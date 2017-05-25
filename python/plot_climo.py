@@ -195,6 +195,7 @@ ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 
 #Computing levels for diff plot using mean and standard deviation
 field_diff      = field[:, :] - field_ref_case[:, :]
+field_diff_mean = field_avg - field_ref_case_avg
 field_diff_rmse = get_reg_area_avg_rmse(field_diff, lat, lon)
 field_diff_min  = numpy.min(field_diff)
 field_diff_max  = numpy.max(field_diff)
@@ -224,6 +225,7 @@ c = m.contourf(x, y, field_diff[:, :], cmap = 'seismic', levels = levels_diff, e
 cb = m.colorbar()
 
 text_data = 'RMSE = ' + str(round(field_diff_rmse, 2))+ ', ' + \
+	    'mean bias = ' + str(round(field_diff_mean, 2))+ ', ' + \
             'min = '  + str(round(field_diff_min, 2)) + ', ' + \
             'max = '  + str(round(field_diff_max, 2))
 

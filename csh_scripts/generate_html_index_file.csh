@@ -489,23 +489,23 @@ echo Standalone HTML file with links to coupled diagnostic plots generated!
 echo $plots_dir/index.html
 echo
 
-if (! -d $www_dir/coupled_diagnostics_$casename-$ref_case) then
-	mkdir $www_dir/coupled_diagnostics_$casename-$ref_case
+if (! -d $www_dir/$plots_dir_name) then
+	mkdir $www_dir/$plots_dir_name
 endif
 
 unalias cp
-cp -fr $plots_dir/* $www_dir/coupled_diagnostics_$casename-$ref_case
-cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/coupled_diagnostics_$casename-$ref_case
+cp -fr $plots_dir/* $www_dir/$plots_dir_name
+cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
 
-chmod -R a+rx $www_dir/coupled_diagnostics_$casename-$ref_case
+chmod -R a+rx $www_dir/$plots_dir_name
 
-echo Moved plots and index.html to the website directory: $www_dir/coupled_diagnostics_$casename-$ref_case
+echo Moved plots and index.html to the website directory: $www_dir/$plots_dir_name
 echo
 
 if (`echo $HOSTNAME | cut -c1-4` == 'rhea' || \
     `echo $HOSTNAME | cut -c1-5` == 'titan') then
 	echo Viewable at:
-	echo http://users.nccs.gov/~$USER/coupled_diagnostics_${casename}-$ref_case
+	echo http://users.nccs.gov/~$USER/$plots_dir_name
 	echo
 	echo Please ensure that the read and execute permissions for $www_dir are set for all:
 	echo chmod a+rx $www_dir
@@ -513,7 +513,7 @@ endif
 
 if (`echo $HOSTNAME | cut -c1-6` == 'edison') then
 	echo Viewable at:
-	echo http://portal.nersc.gov/project/acme/$USER/coupled_diagnostics_$casename-$ref_case
+	echo http://portal.nersc.gov/project/acme/$USER/$plots_dir_name
 	echo
 	echo Please ensure that the read and execute permissions for $www_dir are set for all:
 	echo chmod a+rx $www_dir
@@ -521,7 +521,7 @@ endif
 
 if (`echo $HOSTNAME | cut -c1-5` == 'aims4') then
 	echo Viewable at:
-	echo http://aims4.llnl.gov/$USER/coupled_diagnostics_$casename-$ref_case
+	echo http://aims4.llnl.gov/$USER/$plots_dir_name
 	echo
 	echo The name and password to view the plots is acme/acme, respectively
 	echo If trouble viewing, try chmod a+rx $www_dir
@@ -529,7 +529,7 @@ endif
 
 if (`echo $HOSTNAME | cut -c1-5` == 'acme1') then
 	echo Viewable at:
-	echo http://acme1.llnl.gov/$USER/coupled_diagnostics_$casename-$ref_case
+	echo http://acme1.llnl.gov/$USER/$plots_dir_name
 	echo
 	echo The name and password to view the plots is acme/acme, respectively
 	echo If trouble viewing, try chmod a+rx $www_dir

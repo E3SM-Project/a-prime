@@ -144,12 +144,12 @@ for ncattr in field.ncattrs():
 
 field_outfile.units = units_out
 
-lat_outfile[:] = lat
+lat_outfile[:] = lat[:]
 
 for ncattr in lat.ncattrs():
     lat_outfile.setncattr(ncattr, lat.getncattr(ncattr))
 
-lon_outfile[:] = lon
+lon_outfile[:] = lon[:]
 for ncattr in lon.ncattrs():
     lon_outfile.setncattr(ncattr, lon.getncattr(ncattr))
 
