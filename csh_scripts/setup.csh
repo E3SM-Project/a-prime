@@ -3,7 +3,17 @@
 #Creating scratch directories
 if (! -d $output_base_dir) mkdir $output_base_dir
 if (! -d $test_scratch_dir) mkdir $test_scratch_dir
+
+set test_scratch_dir_atm = $test_scratch_dir/atm
+if (! -d $test_scratch_dir_atm) mkdir $test_scratch_dir_atm
+
 if (! -d $ref_scratch_dir && $ref_case != obs) mkdir $ref_scratch_dir
+
+if ($ref_case != obs) then
+	set ref_scratch_dir_atm = $ref_scratch_dir/atm
+	if (! -d $ref_scratch_dir_atm) mkdir $ref_scratch_dir_atm
+endif
+
 if (! -d $plots_dir)   mkdir $plots_dir
 if (! -d $log_dir)     mkdir $log_dir
 if (! -d $www_dir)     mkdir $www_dir
@@ -22,14 +32,14 @@ echo "set end_yr_climateIndex_set       = ($test_end_yr_climateIndex_ts $ref_end
 echo "set native_res_set                = ($test_native_res $ref_native_res)" >> $log_dir/case_info.temp
 
 if ($ref_case == obs) then
-        echo "set scratch_dir_set               = ($test_scratch_dir $ref_archive_dir)" >> $log_dir/case_info.temp
+        echo "set scratch_dir_set               = ($test_scratch_dir_atm $ref_archive_dir)" >> $log_dir/case_info.temp
         echo "set condense_field_climo_set      = ($test_condense_field_climo 0)" >> $log_dir/case_info.temp
         echo "set condense_field_ts_set         = ($test_condense_field_ts 0)" >> $log_dir/case_info.temp
         echo "set compute_climo_set             = ($test_compute_climo 0)" >> $log_dir/case_info.temp
         echo "set remap_climo_set               = ($test_remap_climo 0)" >> $log_dir/case_info.temp
         echo "set remap_ts_set                  = ($test_remap_ts 0)" >> $log_dir/case_info.temp
 else
-        echo "set scratch_dir_set               = ($test_scratch_dir $ref_scratch_dir)" >> $log_dir/case_info.temp
+        echo "set scratch_dir_set               = ($test_scratch_dir_atm $ref_scratch_dir_atm)" >> $log_dir/case_info.temp
         echo "set condense_field_climo_set      = ($test_condense_field_climo $ref_condense_field_climo)" >> $log_dir/case_info.temp
         echo "set condense_field_ts_set         = ($test_condense_field_ts $ref_condense_field_ts)" >> $log_dir/case_info.temp
         echo "set compute_climo_set             = ($test_compute_climo $ref_compute_climo)" >> $log_dir/case_info.temp

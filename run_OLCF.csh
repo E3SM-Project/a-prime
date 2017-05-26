@@ -46,7 +46,7 @@ setenv test_mpas_mesh_name              oEC60to30v1
 
 setenv test_archive_dir 		/lustre/atlas1/cli115/proj-shared/mbranst
 setenv test_short_term_archive		0
-setenv test_begin_yr_climo		15
+setenv test_begin_yr_climo		16
 setenv test_end_yr_climo		20
 setenv test_begin_yr_ts			1
 setenv test_end_yr_ts			18

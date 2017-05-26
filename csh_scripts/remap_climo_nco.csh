@@ -2,8 +2,10 @@
 
 set scratch_dir = $argv[1]
 set casename = $argv[2]
-set native_res = $argv[3]
-set compute_climo_var_list_file = $argv[4]
+set begin_yr = $argv[3]
+set end_yr = $argv[4]
+set native_res = $argv[5]
+set compute_climo_var_list_file = $argv[6]
 
 # Read in variable list for  diagnostics e.g FLUT, FSNT etc.
 source $compute_climo_var_list_file
@@ -31,8 +33,8 @@ if ($casename != obs) then
 
 		foreach i (`seq 1 $n_seasons`)
 			set season_name       = $season_name_set[$i]
-			set climo_file        = ${casename}_${season_name}_climo.$var.nc
-			set interp_climo_file = ${casename}_${season_name}_climo.${interp_grid}_$interp_method.$var.nc
+			set climo_file        = ${casename}_${season_name}_climo.$var.$begin_yr-$end_yr.nc
+			set interp_climo_file = ${casename}_${season_name}_climo.${interp_grid}_$interp_method.$var.$begin_yr-$end_yr.nc
 
 			ncremap -I $scratch_dir \
 				-i $climo_file \

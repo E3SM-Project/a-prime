@@ -9,6 +9,8 @@ def read_climo_file (indir, \
 		     casename, \
 		     season, \
 		     field_name, \
+		     begin_yr, \
+		     end_yr, \
 		     interp_grid, \
 		     interp_method, \
 		     reg, \
@@ -18,6 +20,8 @@ def read_climo_file (indir, \
 					casename,
 					field_name,
 					season,
+					begin_yr,
+					end_yr,
 					interp_grid,
 					interp_method)
 
@@ -48,6 +52,8 @@ def read_climo_file (indir, \
 								casename,
 								field_name_temp_str,
 								season,
+								begin_yr,
+								end_yr,
 								interp_grid,
 								interp_method)
 

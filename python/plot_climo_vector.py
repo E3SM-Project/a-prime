@@ -55,6 +55,12 @@ if __name__ == "__main__":
     parser.add_option("--ref_case", dest = "ref_case",
                         help = "reference casename")
 
+    parser.add_option("--ref_begin_yr", dest = "ref_begin_yr", type = "int",
+                        help = "ref_case begin year")
+
+    parser.add_option("--ref_end_yr", dest = "ref_end_yr", type = "int",
+                        help = "ref_case end year")
+
     parser.add_option("--ref_interp_grid", dest = "ref_interp_grid",
                         help = "name of the interpolated grid of reference case")
 
@@ -77,6 +83,8 @@ interp_grid             = options.interp_grid
 interp_method           = options.interp_method
 ref_case_dir            = options.ref_case_dir
 ref_case                = options.ref_case
+ref_begin_yr            = options.ref_begin_yr
+ref_end_yr              = options.ref_end_yr
 ref_interp_grid         = options.ref_interp_grid
 ref_interp_method       = options.ref_interp_method
 plots_dir               = options.plots_dir
@@ -96,6 +104,8 @@ field_mask, lat, lon, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_mask_name, \
+					 begin_yr = begin_yr, \
+					 end_yr = end_yr, \
 					 interp_grid = interp_grid, \
 					 interp_method = interp_method, \
 					 reg = 'global')
@@ -105,6 +115,8 @@ field_X, lat, lon, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_X_name, \
+					 begin_yr = begin_yr, \
+					 end_yr = end_yr, \
 					 interp_grid = interp_grid, \
 					 interp_method = interp_method, \
 					 reg = 'global')
@@ -119,6 +131,8 @@ field_Y, lat, lon, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_Y_name, \
+					 begin_yr = begin_yr, \
+					 end_yr = end_yr, \
 					 interp_grid = interp_grid, \
 					 interp_method = interp_method, \
 					 reg = 'global')
@@ -143,6 +157,8 @@ field_ref_case_X, lat, lon, units = read_climo_file(indir = ref_case_dir, \
 					 casename = ref_case, \
 					 season = season, \
 					 field_name = field_X_name, \
+					 begin_yr = ref_begin_yr, \
+					 end_yr = ref_end_yr, \
 					 interp_grid = ref_interp_grid, \
 					 interp_method = ref_interp_method, \
 					 reg = 'global')
@@ -151,6 +167,8 @@ field_ref_case_Y, lat, lon, units = read_climo_file(indir = ref_case_dir, \
 					 casename = ref_case, \
 					 season = season, \
 					 field_name = field_Y_name, \
+					 begin_yr = ref_begin_yr, \
+					 end_yr = ref_end_yr, \
 					 interp_grid = ref_interp_grid, \
 					 interp_method = ref_interp_method, \
 					 reg = 'global')

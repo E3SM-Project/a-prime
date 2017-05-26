@@ -5,16 +5,18 @@ def get_climo_filename(	indir,
 			casename,
 			field_name,
 			season,
+			begin_yr, 
+			end_yr,
 			interp_grid,
 			interp_method):
 
 	if interp_grid == '0':
 		file_name = indir + '/' + casename + '_' + season + '_' +\
-				'climo.' + field_name + '.nc'
+				'climo.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
 	else:
 		file_name = indir + '/' + casename + '_' + season + '_' + \
 				'climo.' + interp_grid + '_' + interp_method + \
-				'.' + field_name + '.nc'
+				'.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
 
 
 	print "file_name: ", file_name

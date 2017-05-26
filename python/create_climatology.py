@@ -124,7 +124,8 @@ season = get_season_name(begin_month, end_month)
 
 #Writing netcdf file
 outfile = indir + '/'+ casename + '_' + season \
-            + '_climo.' + field_name + '.nc'
+            + '_climo.' + field_name + \
+	    '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
  
 print "Writing ", outfile
 print ""

@@ -162,6 +162,8 @@ foreach j (`seq 1 $n_cases`)
 		echo
 		csh_scripts/remap_climo_nco.csh $scratch_dir \
 						$casename \
+						$begin_yr_climo \
+						$end_yr_climo \
 						$native_res \
 						$compute_climo_var_list_file
 	else
@@ -180,6 +182,8 @@ echo
 
 set ref_case        = $case_set[$n_cases]
 set ref_scratch_dir = $scratch_dir_set[$n_cases]
+set ref_begin_yr_climo = $begin_yr_climo_set[$j]
+set ref_end_yr_climo   = $end_yr_climo_set[$j]
 
 echo Reference Case: $ref_case
 echo
@@ -189,11 +193,17 @@ echo
 foreach j (`seq 1 $n_test_cases`)
 	set casename   = $case_set[$j]
 	set scratch_dir = $scratch_dir_set[$j]
+        set begin_yr_climo = $begin_yr_climo_set[$j]
+        set end_yr_climo = $end_yr_climo_set[$j]
 
 	csh_scripts/plot_climo.csh $scratch_dir \
 				   $casename \
+				   $begin_yr_climo \
+				   $end_yr_climo \
 				   $ref_scratch_dir \
-				   $ref_case
+				   $ref_case \
+				   $ref_begin_yr_climo \
+				   $ref_end_yr_climo \
 end
 
 
