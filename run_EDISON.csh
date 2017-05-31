@@ -176,6 +176,7 @@ setenv www_dir /global/project/projectdirs/acme/www/$USER
 setenv coupled_diags_home $PWD
 
 # LOAD THE ANACONDA-2.7-CLIMATE ENV WHICH LOADS ALL REQUIRED PYTHON MODULES
+source /opt/modules/default/init/csh  
 module unload python
 module unload python_base
 module use /global/project/projectdirs/acme/software/modulefiles/all
