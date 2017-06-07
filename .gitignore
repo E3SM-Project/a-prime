@@ -11,3 +11,10 @@ run_LLNL_*.csh
 run_LLNL.*.csh
 run_LANL_*.csh
 run_LANL.*.csh
+
+*~
+*.nc
+*.log
+*.pbs
+*#
+*.pyc
