@@ -27,7 +27,7 @@ def check_env(envVarName):
 
 
 inFileName = 'python/MPAS-Analysis/config.default'
-outFileName = 'config.ocnice'
+outFileName = os.environ['config_file']
 
 config = ConfigParser.RawConfigParser()
 config.read(inFileName)
@@ -144,6 +144,12 @@ add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
 
 add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles', 
                   os.environ['mpaso_regions_file'])
+
+if check_env('run_batch_script'):
+    add_config_option(config, 'execute', 'parallelTaskCount',
+                      os.environ['mpas_analysis_tasks'])
+    add_config_option(config, 'execute', 'commandPrefix',
+                      os.environ['command_prefix'])
 
 filePointer = open(outFileName, 'w')
 config.write(filePointer)
