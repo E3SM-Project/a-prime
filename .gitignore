@@ -12,6 +12,8 @@ run_LLNL.*.csh
 run_LANL_*.csh
 run_LANL.*.csh
 
+batch_atm.*.*.bash
+batch_ocnice.*.*.bash
 aprime_atm_diags.o*
 aprime_atm_diags.e*
 aprime_ocnice_diags.o*

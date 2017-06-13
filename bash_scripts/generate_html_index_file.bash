@@ -492,36 +492,28 @@ chmod -R a+rx $www_dir/$plots_dir_name
 echo "Moved plots and index.html to the website directory: $www_dir/$plots_dir_name"
 echo
 
-if [ `echo $HOSTNAME | cut -c1-4` == "rhea" ] || \
-   [ `echo $HOSTNAME | cut -c1-5` == "titan" ]; then
-  echo "Viewable at:"
-  echo "http://users.nccs.gov/~$USER/$plots_dir_name"
-  echo
-  echo "Please ensure that the read and execute permissions for $www_dir are set for all:"
-  echo "chmod a+rx $www_dir"
-fi
-
-if [ `echo $HOSTNAME | cut -c1-6` == "edison" ]; then
-  echo "Viewable at:"
+echo "Viewable at:"
+if [ $machname == "nersc" ]; then
   echo "http://portal.nersc.gov/project/acme/$USER/$plots_dir_name"
   echo
   echo "Please ensure that the read and execute permissions for $www_dir are set for all:"
   echo "chmod a+rx $www_dir"
-fi
-
-if  [ `echo $HOSTNAME | cut -c1-5` == "aims4" ]; then
-  echo "Viewable at:"
+elif [ $machname == "olcf" ]; then
+  echo "http://users.nccs.gov/~$USER/$plots_dir_name"
+  echo
+  echo "Please ensure that the read and execute permissions for $www_dir are set for all:"
+  echo "chmod a+rx $www_dir"
+elif  [ $machname == "aims4" ]; then
   echo "https://aims4.llnl.gov/$USER/$plots_dir_name"
   echo
   echo "The name and password to view the plots is acme/acme, respectively"
   echo "If trouble viewing, try chmod a+rx $www_dir"
-fi
-
-if [ `echo $HOSTNAME | cut -c1-5` == "acme1" ]; then
-  echo "Viewable at:"
+elif [ $machname == "acme1" ]; then
   echo "https://acme-viewer.llnl.gov/$USER/$plots_dir_name"
   echo
   echo "If trouble viewing, try chmod a+rx $www_dir"
+else
+  echo "Machine $machname either not supported or online shared space not available for it"
 fi
 
 echo

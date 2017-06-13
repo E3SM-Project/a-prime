@@ -34,24 +34,32 @@
 export output_base_dir=/dir/to/analysis/output
 
 # MACHINE SPECIFIC VARIABLES (no need to modify these in most cases)
-machname4=`echo $HOSTNAME | cut -c1-4`
-machname5=`echo $HOSTNAME | cut -c1-5`
-machname6=`echo $HOSTNAME | cut -c1-6`
-if [ $machname6 == "edison" ]; then # NERSC
+if [ ${HOSTNAME:0:6} == "edison" ]; then
+  export machname="nersc"
+elif [ ${HOSTNAME:0:4} == "rhea" ] || [ ${HOSTNAME:0:5} == "titan" ]; then
+  export machname="olcf"
+elif [ ${HOSTNAME:0:5} == "aims4" ]; then
+  export machname="aims4"
+elif [ ${HOSTNAME:0:5} == "acme1" ]; then
+  export machname="acme1"
+elif [ ${HOSTNAME:0:4} == "wolf" ]; then
+  export machname="lanl"
+else
+  echo "Unsupported host $HOSTNAME. Exiting."
+  exit 1
+fi
+if [ $machname == "nersc" ]; then
   # Project directory
   projdir=/global/project/projectdirs/acme
   # Location of website directory to host the webpage
   export www_dir=/global/project/projectdirs/acme/www/$USER
-fi
-if [ $machname4 == "rhea" ] || [ $machname5 == "titan" ]; then # OLCF
+elif [ $machname == "olcf" ]; then
   projdir=$PROJWORK/cli115
   export www_dir=$HOME/www
-fi
-if [ $machname5 == "aims4" ] || [ $machname5 == "acme1" ]; then # LLNL (aims4/acme1)
+elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   projdir=/space2
   export www_dir=/var/www/acme/acme-diags/$USER
-fi
-if [ $machname4 == "wolf" ]; then # LANL
+elif [ $machname == "lanl" ]; then
   projdir=/usr/projects/climate/SHARED_CLIMATE
   export www_dir=$output_base_dir/www
 fi
@@ -202,29 +210,29 @@ export obs_icevolSH=none
 ######### USER SHOULD NOT NEED TO CHANGE ANYTHING HERE ONWARDS ###############
 
 export coupled_diags_home=$PWD
+# unique ID to be used to name unique MPAS-Analysis confg files
+# and batch scripts
+export uniqueID=`date +%Y-%m-%d_%H%M%S`
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
-if [ $machname6 == "edison" ]; then # NERSC
+if [ $machname == "nersc" ]; then
   source /opt/modules/default/init/bash  
   module unload python
   module unload python_base
   module use $projdir/software/modulefiles/all
   module load python/anaconda-2.7-acme
-fi
-if [ $machname4 == "rhea" ] || [ $machname5 == "titan" ]; then # OLCF
+elif [ $machname == "olcf" ]; then
   module unload python
   module use $projdir/pwolfram/modulefiles/all
   module load python/anaconda-2.7-climate
-fi
-if [ $machname5 == "aims4" ] || [ $machname5 == "acme1" ]; then # LLNL (aims4/acme1)
+elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   echo
   echo "Need to set/run the following:"
   echo "  export PATH=/usr/local/anaconda2/bin:$PATH"
   echo "  source activate ACME-UNIFIED   # (on aims4)"
   echo "  source activate ACME_UNIFIED   # (on acme1)"
   echo
-fi
-if [ $machname4 == "wolf" ]; then # LANL
+elif [ $machname == "llnl" ]; then
   module unload python
   module use $projdir/modulefiles/all
   module load python/anaconda-2.7-climate
@@ -243,8 +251,11 @@ if [ $generate_atm_diags -eq 1 ]; then
     if ! $run_batch_script; then
       ./bash_scripts/aprime_atm_diags.bash
     else
-      if [ $machname6 == "edison" ]; then # NERSC
-        sbatch ./bash_scripts/batch_atm.NERSC.bash
+      if [ $machname == "nersc" ]; then
+        batch_script="batch_atm.NERSC.$uniqueID.bash"
+        sed "s/output=.*/output=aprime_atm_diags.o$uniqueID/" ./bash_scripts/batch_atm.NERSC.bash > $batch_script
+        sed -i "s/error=.*/error=aprime_atm_diags.e$uniqueID/" $batch_script
+        sbatch $batch_script
       else
         echo
         echo "Batch jobs not supported on current machine"
@@ -274,9 +285,12 @@ if [ $generate_ocnice_diags -eq 1 ]; then
     if ! $run_batch_script; then
       ./bash_scripts/aprime_ocnice_diags.bash
     else
-      if [ $machname6 == "edison" ]; then # NERSC
-        sed -i "s/nodes=.*/nodes=$mpas_analysis_tasks/" ./bash_scripts/batch_ocnice.NERSC.bash
-        sbatch ./bash_scripts/batch_ocnice.NERSC.bash
+      if [ $machname == "nersc" ]; then # NERSC
+        batch_script="batch_ocnice.NERSC.$uniqueID.bash"
+        sed "s/output=.*/output=aprime_ocnice_diags.o$uniqueID/" ./bash_scripts/batch_ocnice.NERSC.bash > $batch_script
+        sed -i "s/error=.*/error=aprime_ocnice_diags.e$uniqueID/" $batch_script
+        sed -i "s/nodes=.*/nodes=$mpas_analysis_tasks/" $batch_script
+        sbatch $batch_script
       else
         echo
         echo "Batch jobs not supported on current machine"

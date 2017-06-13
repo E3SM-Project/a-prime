@@ -14,7 +14,6 @@ echo "MPAS-Analysis submodule: "`git submodule status`
 cd $tmp_currentdir
 unset tmp_currentdir tmp_gittopdir
 
-uniqueID=`date +%Y-%m-%d_%H:%M:%S`
 export config_file="config.ocnice.$uniqueID"
 python python/setup_ocnice_config.py
 if [ $? -ne 0 ]; then
