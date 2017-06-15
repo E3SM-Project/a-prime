@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #
-# Template driver script to generate coupled diagnostics on edison
+# Template driver script to generate A-Prime coupled diagnostics on ACME machines
+#  (Supported machines/HPC centers as of June 2017 are: Edison, OLCF, aims4/acme1 and LANL)
 #
 # Basic usage:
 #       1. copy this template to something like run_aprime_$user.bash
@@ -160,10 +161,6 @@ export mpas_analysis_tasks=10
 
 # OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD WORK, USER PREFERENCE BASED CHANGES)
 
-# Set paths to scratch, logs and plots directories
-export test_scratch_dir=$output_base_dir/$test_casename.test.pp
-export ref_scratch_dir=$output_base_dir/$ref_case.test.pp
-
 if [ $ref_case == "obs" ]; then
   export plots_dir_name=coupled_diagnostics_${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}
 else
@@ -173,10 +170,11 @@ fi
 # User can set a custom name for the $plot_dir_name here, if the default (above) is not ideal 
 #export plots_dir_name=XXYYY
 
-export log_dir_name=$plots_dir_name.logs
-
+# Set paths to scratch, logs and plots directories
+export test_scratch_dir=$output_base_dir/$plots_dir_name.scratch
+export ref_scratch_dir=$output_base_dir/$plots_dir_name.scratch
+export log_dir=$output_base_dir/$plots_dir_name.logs
 export plots_dir=$output_base_dir/$plots_dir_name
-export log_dir=$output_base_dir/$log_dir_name
 
 # Set atm specific paths to mapping and data files locations
 export remap_files_dir=$projdir/mapping/maps
@@ -190,7 +188,8 @@ export ERS_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-ERS.conservati
 export mpas_remapfile=$projdir/mpas_analysis/mapping/map_${test_mpas_mesh_name}_to_0.5x0.5degree_bilinear.nc
 #     MPAS-O region mask files containing masking information for the Atlantic basin
 #     NB: this file, instead, *needs* to be present 
-export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
+export mpaso_regions_file=$projdir/mapping/grids/${test_mpas_mesh_name}_SingleRegionAtlanticWTransportTransects_masks.nc
+#export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
 
 # Set ocn/ice specific paths to data file names and locations
 export obs_ocndir=$projdir/observations/Ocean
@@ -213,6 +212,16 @@ export coupled_diags_home=$PWD
 # unique ID to be used to name unique MPAS-Analysis confg files
 # and batch scripts
 export uniqueID=`date +%Y-%m-%d_%H%M%S`
+
+# Check on www_dir, permissions included
+chmod a+rx $www_dir
+# Create www_dir if it does not exist, purge it if it does
+if [ ! -d $www_dir/$plots_dir_name ]; then
+  mkdir $www_dir/$plots_dir_name
+else
+  rm -f $www_dir/$plots_dir_name/*
+fi
+chmod a+r $www_dir/$plots_dir_name
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
 if [ $machname == "nersc" ]; then
@@ -246,81 +255,126 @@ if [ $generate_atm_diags -eq 1 ]; then
   # Check whether requested files for computing climatologies are available
   rpointer_file=${test_archive_dir}/${test_casename}/run/rpointer.atm
   year_max=`grep -m 1 -Eo '\<[0-9]{4}\>' ${rpointer_file} | awk '{print $1-1}'`
+
   if [ $test_end_yr_climo -le $year_max ]; then
-    #
+
     if ! $run_batch_script; then
+
       ./bash_scripts/aprime_atm_diags.bash
+
+      atm_status=$?
+
+      if [ $atm_status -eq 0 ]; then
+        # Update www/plots directory with newly generated plots
+        rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
+
+        echo
+        echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
+        echo
+      fi
+
     else
+
       if [ $machname == "nersc" ]; then
-        batch_script="batch_atm.NERSC.$uniqueID.bash"
-        sed "s/output=.*/output=aprime_atm_diags.o$uniqueID/" ./bash_scripts/batch_atm.NERSC.bash > $batch_script
-        sed -i "s/error=.*/error=aprime_atm_diags.e$uniqueID/" $batch_script
+        batch_script="$log_dir/batch_atm.NERSC.$uniqueID.bash"
+        sed 's@output=.*@output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' ./bash_scripts/batch_atm.NERSC.bash > $batch_script
+        sed -i 's@error=.*@error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
+        echo
+        echo "**** Submitting atm batch script: $batch_script"
         sbatch $batch_script
+        echo
       else
         echo
         echo "Batch jobs not supported on current machine"
         echo "Please set $run_batch_script to false"
         echo
       fi
+      atm_status=-2
+
     fi
-    #
-    atm_status=$? 
+
   else
+
     echo
     echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting atm diagnostics..."
     echo "Please set test_end_yr_climo <= ${year_max}"
     echo
-    atm_status=0
+    atm_status=3
+
   fi
+
 else
-  atm_status=0
+  atm_status=-1
 fi
+
 
 if [ $generate_ocnice_diags -eq 1 ]; then
   # Check whether requested files for computing climatologies are available
   rpointer_file=${test_archive_dir}/${test_casename}/run/rpointer.ocn
   year_max=`grep -m 1 -Eo '\<[0-9]{4}\>' ${rpointer_file} | awk '{print $1-1}'`
+
   if [ ${test_end_yr_climo} -le ${year_max} ]; then
-    #
+ 
     if ! $run_batch_script; then
+
       ./bash_scripts/aprime_ocnice_diags.bash
+
+      ocnice_status=$?
+
+      if [ $ocnice_status -eq 0 ]; then
+        # Update www/plots directory with newly generated plots
+        rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
+
+        echo
+        echo "Updated ocn/ice plots in website directory: $www_dir/$plots_dir_name"
+        echo
+      fi
+
     else
+
       if [ $machname == "nersc" ]; then # NERSC
-        batch_script="batch_ocnice.NERSC.$uniqueID.bash"
-        sed "s/output=.*/output=aprime_ocnice_diags.o$uniqueID/" ./bash_scripts/batch_ocnice.NERSC.bash > $batch_script
-        sed -i "s/error=.*/error=aprime_ocnice_diags.e$uniqueID/" $batch_script
-        sed -i "s/nodes=.*/nodes=$mpas_analysis_tasks/" $batch_script
+        batch_script="$log_dir/batch_ocnice.NERSC.$uniqueID.bash"
+        sed 's@output=.*@output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' ./bash_scripts/batch_ocnice.NERSC.bash > $batch_script
+        sed -i 's@error=.*@error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
+        sed -i 's@nodes=.*@nodes='$mpas_analysis_tasks'@' $batch_script
+        echo
+        echo "**** Submitting ocn/ice batch script: $batch_script"
         sbatch $batch_script
+        echo
       else
         echo
         echo "Batch jobs not supported on current machine"
         echo "Please set $run_batch_script to false"
         echo
       fi
+      ocnice_status=-2
+
     fi
-    #
-    ocnice_status=$?
+
   else
+
     echo
     echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting ocn/ice diagnostics..."
     echo "Please set test_end_yr_climo <= ${year_max}"
     echo
-    ocnice_status=0
+    ocnice_status=3
+
   fi
+
 else
-  ocnice_status=0
+  ocnice_status=-1
 fi
 
-# COPY THIS RUN SCRIPT TO THE $plots_dir FOR PROVENANCE
-cp $0 $plots_dir/$0
+echo
+echo "Status of atmospheric diagnostics: $atm_status"
+echo " (0-->success, -1-->diags not invoked, -2-->batch_script, 3-->init error)"
+echo "Status of ocean/ice diagnostics: $ocnice_status"
+echo " (0-->success, -1-->diags not invoked, -2-->batch_script, 3-->init error)"
+echo
 
 # GENERATE HTML PAGE IF ASKED
-echo
-echo "Status of atmospheric diagnostics, 0 implies success or not invoked: $atm_status"
-echo "Status of ocean/ice diagnostics, 0 implies success or not invoked: $ocnice_status"
-echo
-
-if [ $atm_status -eq 0 ] || [ $ocnice_status -eq 0 ]; then
+if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
+   [ $ocnice_status -eq 0 ] || [ $ocnice_status -eq -2 ]; then
   source $log_dir/case_info.temp 
   n_cases=${#case_set[@]}
   n_test_cases=$((n_cases - 1))
@@ -337,3 +391,6 @@ else
   echo "Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!"
   echo
 fi
+
+# COPY THIS RUN SCRIPT TO THE $plots_dir FOR PROVENANCE
+cp $0 $log_dir/run_aprime_$uniqueID.bash

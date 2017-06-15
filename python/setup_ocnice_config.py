@@ -88,12 +88,12 @@ if check_env('generate_moc'):
 
 for field in ['sst', 'sss', 'mld']:
     if check_env('generate_{}_climo'.format(field)):
-        generate.append('regridded{}'.format(field.upper()))
+        generate.append('climatologyMap{}'.format(field.upper()))
 
 if check_env('generate_seaice_trends'):
     generate.append('timeSeriesSeaIceAreaVol')
 if check_env('generate_seaice_climo'):
-    generate.append('regriddedSeaIceConcThick')
+    generate.append('climatologyMapSeaIceConcThick')
 
 generateString = ', '.join(["'{}'".format(element)
                             for element in generate])

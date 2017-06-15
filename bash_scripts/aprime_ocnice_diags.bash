@@ -10,11 +10,12 @@ cd $tmp_gittopdir
 #
 git submodule update --init
 #
+echo
 echo "MPAS-Analysis submodule: "`git submodule status`
 cd $tmp_currentdir
 unset tmp_currentdir tmp_gittopdir
 
-export config_file="config.ocnice.$uniqueID"
+export config_file="$log_dir/config.ocnice.$uniqueID"
 python python/setup_ocnice_config.py
 if [ $? -ne 0 ]; then
   echo "Failed to build config.ocnice"
