@@ -1,4 +1,5 @@
 #!/bin/bash -l
+
 #SBATCH --partition=regular
 #SBATCH --nodes=1
 #SBATCH --time=01:00:00

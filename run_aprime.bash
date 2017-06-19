@@ -275,9 +275,9 @@ if [ $generate_atm_diags -eq 1 ]; then
 
     else
 
-      if [ $machname == "nersc" ]; then
-        batch_script="$log_dir/batch_atm.NERSC.$uniqueID.bash"
-        sed 's@output=.*@output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' ./bash_scripts/batch_atm.NERSC.bash > $batch_script
+      if [ $machname == "nersc" || $machname == "olcf" || $machname == "lanl" ]; then
+        batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
+        sed 's@output=.*@output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
         sed -i 's@error=.*@error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
         echo
         echo "**** Submitting atm batch script: $batch_script"
@@ -332,9 +332,9 @@ if [ $generate_ocnice_diags -eq 1 ]; then
 
     else
 
-      if [ $machname == "nersc" ]; then # NERSC
-        batch_script="$log_dir/batch_ocnice.NERSC.$uniqueID.bash"
-        sed 's@output=.*@output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' ./bash_scripts/batch_ocnice.NERSC.bash > $batch_script
+      if [ $machname == "nersc" || $machname == "olcf" || $machname == "lanl" ]; then
+        batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
+        sed 's@output=.*@output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
         sed -i 's@error=.*@error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
         sed -i 's@nodes=.*@nodes='$mpas_analysis_tasks'@' $batch_script
         echo
