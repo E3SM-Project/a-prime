@@ -49,6 +49,7 @@ else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
 fi
+# Define project and www directories
 if [ $machname == "nersc" ]; then
   # Project directory
   projdir=/global/project/projectdirs/acme
@@ -56,7 +57,7 @@ if [ $machname == "nersc" ]; then
   export www_dir=/global/project/projectdirs/acme/www/$USER
 elif [ $machname == "olcf" ]; then
   projdir=$PROJWORK/cli115
-  export www_dir=$HOME/www
+  export www_dir=/ccs/proj/cli115/www/$USER
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   projdir=/space2
   export www_dir=/var/www/acme/acme-diags/$USER
@@ -65,9 +66,10 @@ elif [ $machname == "lanl" ]; then
   export www_dir=$output_base_dir/www
 fi
 
-# Test case variables
-export test_casename=20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
-export test_archive_dir=/scratch2/scratchdirs/golaz/ACME_simulations
+# Variables relevant for main test case
+export test_casename=casename
+# NB: $test_casename will be appended to $test_archive_dir
+export test_archive_dir=/dir/to/data
 export test_short_term_archive=0
 #
 # Atmosphere grid resolution name (e.g. ne30, ne60, ne120) 
@@ -97,17 +99,36 @@ export test_remap_ts=1
 
 # Reference case variables (similar to test_case variables)
 export ref_case=obs
-export ref_archive_dir=$projdir/obs_for_diagnostics
-#export ref_case=20160520.A_WCYCL1850.ne30_oEC.edison.alpha6_01
-#export ref_archive_dir=/scratch1/scratchdirs/golaz/ACME_simulations
+if [ $machname == "nersc" ]; then
+  export ref_archive_dir=$projdir/obs_for_diagnostics
+elif [ $machname == "olcf" ]; then
+  export ref_archive_dir=/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
+elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
+  export ref_archive_dir=/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostics
+elif [ $machname == "lanl" ]; then
+  export ref_archive_dir=$projdir/obs_for_diagnostics
+fi
+#export ref_case=casename
+#export ref_archive_dir=dir/to/refcase_data	# $ref_case will be appended to this
 export ref_short_term_archive=0
 
 # ACMEv0 ref_case info for ocn/ice diags
 #  IMPORTANT: the ACMEv0 model data MUST have been pre-processed.
 #  If this pre-processed data is not available, set ref_case_v0 to None.
 export ref_case_v0=B1850C5_ne30_v0.4
-export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+if [ $machname == "nersc" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "olcf" ]; then
+  export ref_archive_v0_ocndir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
+  export ref_archive_v0_ocndir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "lanl" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+fi
 
 # The following are ignored if ref_case=obs
 export ref_atm_res=ne30
@@ -148,14 +169,17 @@ export generate_html=1
 # Set options to run a-prime in parallel
 #   If run_batch_script=false, aprime_atm_diags.bash and aprime_ocnice_diags.bash are called directly.
 #   If run_batch_script=true, aprime_atm_diags.bash and aprime_ocnice_diags.bash are called within
-#     a machine-specific batch script. In this case, atmosphere diagnostics are run in background
-#     mode onto a single compute node. Ocean/ice diagnostics, on the other hand, grab a number of
-#     compute nodes set by 'mpas_analysis_tasks': each ocn/ice task is run on a different node.
-#     If all ocn/ice diagnostics are run (by activating all the 'generate' options above), the total
-#     number of tasks is equal to 10, hence the default here is 10. The user can decide to reduce
-#     mpas_analysis_tasks accordingly, if asking to compute a reduced set of ocn/ice diagnostics.
+#     a machine-specific batch script (one script for atm and one for ocn/ice diags). In this case,
+#     atmosphere diagnostics are run in background mode onto a single compute node. Ocean/ice
+#     diagnostics, on the other hand, grab a number of compute nodes set by 'mpas_analysis_tasks':
+#     each ocn/ice task is run on a different node. If all ocn/ice diagnostics are run (by activating
+#     all the 'generate' options above), the total number of tasks is equal to 10, hence the default
+#     here is 10. The user can decide to reduce mpas_analysis_tasks accordingly, if asking to compute
+#     a reduced set of ocn/ice diagnostics. Finally, the user can set the walltime (default is 1hr
+#     for atm and 1hr for ocn/ice diags, which is fine to compute ~20 year climatology at low-resolution).
 export run_batch_script=false
 export mpas_analysis_tasks=10
+export batch_walltime="01:00:00" # HH:MM:SS
 
 ###############################################################################################
 
@@ -188,12 +212,26 @@ export ERS_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-ERS.conservati
 export mpas_remapfile=$projdir/mpas_analysis/mapping/map_${test_mpas_mesh_name}_to_0.5x0.5degree_bilinear.nc
 #     MPAS-O region mask files containing masking information for the Atlantic basin
 #     NB: this file, instead, *needs* to be present 
-export mpaso_regions_file=$projdir/mapping/grids/${test_mpas_mesh_name}_SingleRegionAtlanticWTransportTransects_masks.nc
-#export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
+if [ $machname == "lanl" ] || [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
+  export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
+else
+  export mpaso_regions_file=$projdir/mapping/grids/${test_mpas_mesh_name}_SingleRegionAtlanticWTransportTransects_masks.nc
+fi
 
 # Set ocn/ice specific paths to data file names and locations
-export obs_ocndir=$projdir/observations/Ocean
-export obs_seaicedir=$projdir/observations/SeaIce
+if [ $machname == "nersc" ]; then
+  export obs_ocndir=$projdir/observations/Ocean
+  export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "olcf" ]; then
+  export obs_ocndir=$projdir/observations
+  export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
+  export obs_ocndir=$projdir/diagnostics/observations/Ocean
+  export obs_seaicedir=$projdir/diagnostics/observations/SeaIce
+elif [ $machname == "lanl" ]; then
+  export obs_ocndir=$projdir/observations
+  export obs_seaicedir=$projdir/observations/SeaIce
+fi
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
 export obs_mlddir=$obs_ocndir/MLD
@@ -224,22 +262,22 @@ fi
 chmod a+r $www_dir/$plots_dir_name
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
+source $MODULESHOME/init/bash  
 if [ $machname == "nersc" ]; then
-  source /opt/modules/default/init/bash  
   module unload python
   module unload python_base
   module use $projdir/software/modulefiles/all
   module load python/anaconda-2.7-acme
 elif [ $machname == "olcf" ]; then
   module unload python
-  module use $projdir/pwolfram/modulefiles/all
+  module use /ccs/proj/cli115/pwolfram/modulefiles/all
   module load python/anaconda-2.7-climate
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   echo
-  echo "Need to set/run the following:"
-  echo "  export PATH=/usr/local/anaconda2/bin:$PATH"
-  echo "  source activate ACME-UNIFIED   # (on aims4)"
-  echo "  source activate ACME_UNIFIED   # (on acme1)"
+  echo "*** Need to set/run the following:"
+  echo "***  export PATH=/usr/local/anaconda2/bin:$PATH"
+  echo "***  source activate ACME-UNIFIED   # (on aims4)"
+  echo "***  source activate ACME_UNIFIED   # (on acme1)"
   echo
 elif [ $machname == "llnl" ]; then
   module unload python
@@ -266,7 +304,7 @@ if [ $generate_atm_diags -eq 1 ]; then
 
       if [ $atm_status -eq 0 ]; then
         # Update www/plots directory with newly generated plots
-        rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
+        cp -u $plots_dir/* $www_dir/$plots_dir_name
 
         echo
         echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
@@ -275,20 +313,33 @@ if [ $generate_atm_diags -eq 1 ]; then
 
     else
 
-      if [ $machname == "nersc" || $machname == "olcf" || $machname == "lanl" ]; then
-        batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
-        sed 's@output=.*@output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
-        sed -i 's@error=.*@error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
+      batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
+      if [ $machname == "nersc" ]; then
+        sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+        sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
+        sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
         echo
-        echo "**** Submitting atm batch script: $batch_script"
+        echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
+        echo "**** $batch_script"
+        echo "**** jobID:"
         sbatch $batch_script
+      elif [ $machname == "olcf" ]; then
+        sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+        sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
+        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
         echo
+        echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
+        echo "**** jobID:"
+        qsub $batch_script
       else
         echo
         echo "Batch jobs not supported on current machine"
         echo "Please set $run_batch_script to false"
         echo
+        exit
       fi
+      echo "**** Batch job output/error files aprime_atm_diags.o*/aprime_atm_diags.e* will be available in log directory:"
+      echo "**** $log_dir"
       atm_status=-2
 
     fi
@@ -323,7 +374,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
 
       if [ $ocnice_status -eq 0 ]; then
         # Update www/plots directory with newly generated plots
-        rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
+        cp -u $plots_dir/* $www_dir/$plots_dir_name
 
         echo
         echo "Updated ocn/ice plots in website directory: $www_dir/$plots_dir_name"
@@ -332,21 +383,34 @@ if [ $generate_ocnice_diags -eq 1 ]; then
 
     else
 
-      if [ $machname == "nersc" || $machname == "olcf" || $machname == "lanl" ]; then
-        batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
-        sed 's@output=.*@output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
-        sed -i 's@error=.*@error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
-        sed -i 's@nodes=.*@nodes='$mpas_analysis_tasks'@' $batch_script
+      batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
+      if [ $machname == "nersc" ]; then
+        sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+        sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
+        sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
+        sed -i 's@SBATCH --nodes=.*@SBATCH --nodes='$mpas_analysis_tasks'@' $batch_script
         echo
-        echo "**** Submitting ocn/ice batch script: $batch_script"
+        echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
+        echo "**** jobID:"
         sbatch $batch_script
+      elif [ $machname == "olcf" ]; then
+        sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+        sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
+        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
+        sed -i 's@PBS -l nodes=.*@PBS -l nodes='$mpas_analysis_tasks'@' $batch_script
         echo
+        echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
+        echo "**** jobID:"
+        qsub $batch_script
       else
         echo
         echo "Batch jobs not supported on current machine"
         echo "Please set $run_batch_script to false"
         echo
+        exit
       fi
+      echo "**** Batch job output/error files aprime_ocnice_diags.o*/aprime_ocnice_diags.e* will be available in log directory:"
+      echo "**** $log_dir"
       ocnice_status=-2
 
     fi
@@ -371,6 +435,10 @@ echo " (0-->success, -1-->diags not invoked, -2-->batch_script, 3-->init error)"
 echo "Status of ocean/ice diagnostics: $ocnice_status"
 echo " (0-->success, -1-->diags not invoked, -2-->batch_script, 3-->init error)"
 echo
+echo "All log files, batch scripts, MPAS-Analysis config files available in log directory:"
+echo $log_dir
+echo "All climo and remapping files for this a-prime run available in scratch directory:"
+echo $test_scratch_dir
 
 # GENERATE HTML PAGE IF ASKED
 if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||

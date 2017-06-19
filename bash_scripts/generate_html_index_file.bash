@@ -63,14 +63,22 @@ cat > index.html << EOF
 <TITLE>ACME Coupled Diagnostic Plots</TITLE>
 </HEAD>
 
-<p><img src="acme-banner_1.jpg" style="float:right;width:590px;height:121px;">
+<br>
+<p><img src="acme-banner_1.jpg" style="float:right;width:500px;height:100px;">
 </p>
 
+<br>
+<br>
 <div style="text-align:center">
 <font color=seagreen size=+3><b>ACME Coupled Priority Metrics</b></font><br>
+</div>
 
+<br>
+<br>
+<br>
+<div style="text-align:center">
 <font color=sienna size=+2><b>
-${casename} (Years: $begin_yr_climo-$end_yr_climo)<br>vs.<br>$ref_case_text
+${casename}<br>(Climatological years: $begin_yr_climo-$end_yr_climo) vs. $ref_case_text
 </b></font>
 </div>
 EOF
@@ -474,8 +482,7 @@ cat >> index.html << EOF
   </HTML>
 EOF
 
-unalias cp
-cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
+cp -u $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
 mv index.html $www_dir/$plots_dir_name
 chmod -R a+rx $www_dir/$plots_dir_name
 
@@ -488,7 +495,7 @@ echo "Viewable at:"
 if [ $machname == "nersc" ]; then
   echo "http://portal.nersc.gov/project/acme/$USER/$plots_dir_name"
 elif [ $machname == "olcf" ]; then
-  echo "http://users.nccs.gov/~$USER/$plots_dir_name"
+  echo "http://projects.olcf.ornl.gov/acme/$USER/$plots_dir_name"
 elif  [ $machname == "aims4" ]; then
   echo "https://aims4.llnl.gov/$USER/$plots_dir_name"
   echo "*** The name and password to view the plots is acme/acme, respectively ***"

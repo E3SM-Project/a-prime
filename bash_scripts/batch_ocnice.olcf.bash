@@ -9,6 +9,7 @@
 #PBS -N aprime_ocnice_diags
 #PBS -o aprime_ocnice_diags.o$PBS_JOBID
 #PBS -e aprime_ocnice_diags.e$PBS_JOBID
+#PBS -V
 
 cd $PBS_O_WORKDIR
 
@@ -17,17 +18,8 @@ export command_prefix="aprun -b -N 1 -n 1"
 
 ./bash_scripts/aprime_ocnice_diags.bash
 
-exitCode=`qstat -f $PBS_JOBID | grep "exit_status" | grep -Eo '\<[0-9]{1,}\>'`
-if [ $exitCode -eq 0 ]; then
-  # Update www/plots directory with newly generated plots
-  rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
-  chmod a+r $www_dir/$plots_dir_name/*
+batch_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
+sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' ./bash_scripts/batch_update_wwwdir.$machname.bash > $batch_script
+sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $batch_script
 
-  echo
-  echo "Updated ocn/ice plots in website directory: $www_dir/$plots_dir_name"
-  echo
-else
-  echo
-  echo "Something went wrong with the ocn/ice diagnostics: website plots NOT updated!"
-  echo
-fi
+qsub -W depend=afterok:$PBS_JOBID $batch_script

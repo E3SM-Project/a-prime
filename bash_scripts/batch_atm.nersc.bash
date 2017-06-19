@@ -19,8 +19,8 @@ srun -N 1 -n 1 ./bash_scripts/aprime_atm_diags.bash
 exitCode=`sacct --jobs=$SLURM_JOB_ID --format=ExitCode | awk '{if (NR==3) printf "%d",$1}'`
 if [ $exitCode -eq 0 ]; then
   # Update www/plots directory with newly generated plots
-  rsync -augltq $plots_dir/* $www_dir/$plots_dir_name
-  chmod a+r $www_dir/$plots_dir_name/*
+  cp -u $plots_dir/* $www_dir/$plots_dir_name
+  #chmod a+r $www_dir/$plots_dir_name/*
 
   echo
   echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
