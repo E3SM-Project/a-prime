@@ -28,7 +28,7 @@ if ($casename != obs) then
 		echo
 
 		set ts_file        = ${casename}.cam.h0.$var.$begin_yr-$end_yr.nc
-		set interp_ts_file = ${casename}.cam.h0.${interp_grid}_$interp_method.$var.nc
+		set interp_ts_file = ${casename}.cam.h0.${interp_grid}_$interp_method.$var.$begin_yr-$end_yr.nc
 
 		ncremap -I $scratch_dir \
 			-i $ts_file \

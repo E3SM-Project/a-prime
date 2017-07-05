@@ -22,11 +22,11 @@ def read_monthly_data_ts_field(indir,
 
     if interp_grid == '0':
 	    file_name = indir + '/' + casename + \
-			'.cam.h0.' + field_name + '.nc'
+			'.cam.h0.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
     else:	
 	    file_name = indir + '/' + casename + \
 			'.cam.h0' + '.' + interp_grid + '_' + \
-			interp_method + '.' + field_name + '.nc'
+			interp_method + '.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) +'.nc'
 
     print "file_name: ", file_name
 
@@ -39,6 +39,7 @@ def read_monthly_data_ts_field(indir,
 
     lat = f.variables['lat']
     lon = f.variables['lon']
+    area = f.variables['area']
 
     nt = field.shape[0]
     nyrs = nt/12
@@ -122,6 +123,7 @@ def read_monthly_data_ts_field(indir,
     if debug: print __name__, 'lon_index_reg: ', lon_index_reg
 
     field_in = field[index_time,lat_index_reg,lon_index_reg]	
+    area_reg = area[lat_index_reg, lon_index_reg]
 
     print __name__, 'field.shape: ', field.shape
     print __name__, 'field_in.shape: ', field_in.shape
@@ -132,5 +134,19 @@ def read_monthly_data_ts_field(indir,
 	    field_in = field_in * 86400.0 * 1000.0
 	    units = 'mm/day'
 
+    if field_name[0:2] == 'TS' and field.units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
 
-    return (field_in, lat_reg, lon_reg, units)	
+    if field_name[0:3] == 'SST' and field.units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
+    if field_name[0:3] == 'TAU' and casename != 'ERS':
+	    print 'Flipping sign of atm model wind stress values ...'
+	    field_in = -field_in
+
+
+    return (field_in, lat_reg, lon_reg, area_reg, units)	

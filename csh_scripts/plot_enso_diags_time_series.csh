@@ -6,18 +6,17 @@ set begin_yr = $argv[3]
 set end_yr = $argv[4]
 set ref_scratch_dir = $argv[5]
 set ref_case = $argv[6]
+set var_list_file = $argv[7]
 
 # Read in variable list for plotting climatologies  diagnostics
-if ($ref_case == obs) then
-	source var_list_time_series_model_vs_obs.csh
-else
-	source var_list_time_series_model_vs_model.csh
-endif
+source $var_list_file
 
 set n_var = $#var_set
 
-set regs = ('global' 'NH_high_lats' 'NH_mid_lats' 'tropics' 'SH_mid_lats' 'SH_high_lats')
-set names = ('Global' '90N-50N' '50N-20N' '20N-20S' '20S-50S' '50S-90S')
+set regs = ('Nino3' 'Nino3.4' 'Nino4')
+set names = ('Nino3' 'Nino3.4' 'Nino4')
+
+set index_set_name = NINO
 
 # Generate plots for each field
 
@@ -42,23 +41,22 @@ foreach k (`seq 1 $n_var`)
 		set ref_interp_method = $interp_method
 	endif
 
-	python python/plot_multiple_reg_seasonal_avg.py --indir $scratch_dir \
+	python python/plot_multiple_index.py -d True --indir $scratch_dir \
 							-c $casename \
 							-f $var \
 							--begin_yr $begin_yr \
 							--end_yr $end_yr \
 							--interp_grid $interp_grid \
 							--interp_method $interp_method \
-							--ref_case_dir $ref_scratch_dir \
-							--ref_case $ref_casename \
-							--ref_interp_grid $ref_interp_grid \
-							--ref_interp_method $ref_interp_method \
 							--begin_month 0 \
 							--end_month 11 \
-							--aggregate 1 \
+							--aggregate 0 \
 							--regs $regs \
 							--names $names \
-							--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_$var.log &
+							--index_set_name $index_set_name \
+							--no_ann 1 \
+							--stdize 1 \
+							--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_${var}_$index_set_name.log &
 
 end
 

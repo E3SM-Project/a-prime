@@ -50,6 +50,10 @@ setenv test_begin_yr_climo		16
 setenv test_end_yr_climo		20
 setenv test_begin_yr_ts			1
 setenv test_end_yr_ts			18
+
+setenv test_begin_yr_enso_atm           20
+setenv test_end_yr_enso_atm             49
+
 setenv test_begin_yr_climateIndex_ts	1
 setenv test_end_yr_climateIndex_ts	9
 
@@ -61,11 +65,15 @@ setenv test_end_yr_climateIndex_ts	9
 
 setenv test_condense_field_climo	1
 setenv test_condense_field_ts		1
+
 setenv test_compute_climo		1
 setenv test_remap_climo			1
 setenv test_remap_ts			1
 
-
+setenv test_compute_climo_enso_atm      1
+setenv test_condense_field_enso_atm     1
+setenv test_remap_climo_enso_atm        1
+setenv test_remap_ts_enso_atm           1
 
 # Reference case variables
 
@@ -92,6 +100,10 @@ setenv ref_begin_yr_climo         	1
 setenv ref_end_yr_climo           	5
 setenv ref_begin_yr_ts		  	1
 setenv ref_end_yr_ts		  	5
+
+setenv ref_begin_yr_enso_atm            95
+setenv ref_end_yr_enso_atm              100
+
 setenv ref_begin_yr_climateIndex_ts	1
 setenv ref_end_yr_climateIndex_ts	9999
 
@@ -101,8 +113,15 @@ setenv ref_compute_climo        	1
 setenv ref_remap_climo          	1
 setenv ref_remap_ts			1
 
+setenv ref_condense_field_climo         1
+setenv ref_condense_field_ts            1
+setenv ref_compute_climo                1
+setenv ref_remap_climo                  1
+setenv ref_remap_ts                     1
+
 # Select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_atm_diags 		1
+setenv generate_atm_enso_diags          1
 setenv generate_ocnice_diags 		1
 
 # The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0

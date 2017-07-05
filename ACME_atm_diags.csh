@@ -303,13 +303,248 @@ foreach j (`seq 1 $n_test_cases`)
 	set casename    = $case_set[$j]
 	set scratch_dir = $scratch_dir_set[$j]
 	set begin_yr_ts = $begin_yr_ts_set[$j]
+	set end_yr_ts   = $end_yr_ts_set[$j]
 
 	csh_scripts/plot_time_series.csh $scratch_dir \
 					 $casename \
 					 $begin_yr_ts \
+					 $end_yr_ts \
 					 $ref_scratch_dir \
 					 $ref_case
 end
+
+
+# ENSO DIAGS
+# ENSO DIAGS: TIME SERIES       
+
+if ($generate_atm_enso_diags == 1) then 
+	echo
+	echo Computing ENSO diagnostics ...
+	echo
+
+	#Ensuring a unique set of fields to condense for time series
+	set var_list_file = var_list_enso_diags.csh
+
+	set ts_var_list_file = $log_dir/ts_var_list.csh
+
+	csh_scripts/generate_unique_field_list.csh $var_list_file \
+						   $ts_var_list_file
+
+
+
+	#Condense time series variables into individual files
+	foreach j (`seq 1 $n_cases`)
+		set casename 		= $case_set[$j]
+		set archive_dir 	= $archive_dir_set[$j]
+		set scratch_dir 	= $scratch_dir_set[$j]
+		set short_term_archive 	= $short_term_archive_set[$j]
+		set begin_yr_ts 	= $begin_yr_enso_atm_set[$j]
+		set end_yr_ts   	= $end_yr_enso_atm_set[$j]
+
+		set condense_field_ts   = $condense_field_enso_atm_set[$j]
+
+		set archive_dir_atm = $archive_dir/$casename/run
+
+		if ($short_term_archive == 1) then
+			echo Using ACME short term archiving directory structure!
+			set archive_dir_atm = $archive_dir/$casename/atm/hist
+		endif
+
+		if ($condense_field_ts == 1) then
+			csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
+								$scratch_dir \
+								$casename \
+								$begin_yr_ts \
+								$end_yr_ts \
+								$ts_var_list_file
+		else
+			echo condense_field_ts set to 0 or casename is obs. 
+			echo Not condensing for time series variables for $casename!
+
+		endif
+
+	end
+
+
+
+	# ENSO Diags: Interpolate time series of fields to obs grids
+	foreach j (`seq 1 $n_cases`)
+		set casename    = $case_set[$j]
+		set scratch_dir = $scratch_dir_set[$j]
+		set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts	= $end_yr_enso_atm_set[$j]
+		set native_res  = $native_res_set[$j]
+		set remap_ts    = $remap_ts_enso_atm_set[$j]
+
+		if ($remap_ts == 1) then
+			echo
+			echo Submitting jobs to interpolate time series files for $casename
+			echo Log files in $log_dir/remap_time_series_${casename}...
+			echo
+			csh_scripts/remap_time_series_nco.csh 	$scratch_dir \
+								$casename \
+								$begin_yr_ts \
+								$end_yr_ts \
+								$native_res \
+								$ts_var_list_file 
+		endif
+	end
+
+
+	# Plot Nino3, Nino3.4 and Nino4 index time series
+	echo
+	echo Submitting jobs to plot time series
+	echo Log files in $log_dir/
+	echo
+
+	set ref_case        = $case_set[$n_cases]
+	set ref_scratch_dir = $scratch_dir_set[$n_cases]
+
+	echo Reference Case: $ref_case
+	echo
+
+	@ n_test_cases = $n_cases - 1
+
+	set var_list_file = var_list_enso_diags_nino_index.csh
+
+	foreach j (`seq 1 $n_test_cases`)
+		set casename    = $case_set[$j]
+		set scratch_dir = $scratch_dir_set[$j]
+		set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts   = $end_yr_enso_atm_set[$j]
+
+		csh_scripts/plot_enso_diags_time_series.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_ts \
+						 $end_yr_ts \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $var_list_file
+	end
+
+
+	# ENSO Diags: Plot Meridional Average over the Tropical Pacific
+	#Compute climatology
+	foreach j (`seq 1 $n_cases`)
+		set casename       = $case_set[$j]
+		set scratch_dir    = $scratch_dir_set[$j]
+		set compute_climo  = $compute_climo_enso_atm_set[$j]
+		set begin_yr_climo = $begin_yr_enso_atm_set[$j]
+		set end_yr_climo   = $end_yr_enso_atm_set[$j]
+
+
+		if ($compute_climo == 1) then
+			echo
+			echo Submitting jobs to compute seasonal climatology for $casename
+			echo Log files in $log_dir/climo_$casename...
+			echo
+			csh_scripts/compute_climo.csh 	$scratch_dir \
+							$casename \
+							$ts_var_list_file \
+							$begin_yr_climo \
+							$end_yr_climo
+		else
+			echo compute_climo set to $compute_climo or casename is obs. Not computing climatology for $casename!
+		endif
+	end
+		
+	echo
+
+
+	#Remap climatology
+	foreach j (`seq 1 $n_cases`)
+		set casename    = $case_set[$j]
+		set scratch_dir = $scratch_dir_set[$j]
+		set native_res  = $native_res_set[$j]
+		set remap_climo = $remap_climo_enso_atm_set[$j]
+		set begin_yr_climo = $begin_yr_enso_atm_set[$j]
+		set end_yr_climo = $end_yr_enso_atm_set[$j]
+
+		if ($remap_climo == 1) then
+			echo
+			echo Submitting jobs to remap seasonal climatology files for $casename 
+			echo Log files in $log_dir/remap_climo_$casename...
+			echo
+			csh_scripts/remap_climo_nco.csh $scratch_dir \
+							$casename \
+							$begin_yr_climo \
+							$end_yr_climo \
+							$native_res \
+							$ts_var_list_file
+		else
+			echo remap_climo set to $remap_climo or casename is obs. Not remapping climatology for $casename!
+		endif
+	end
+
+	echo
+	echo
+	echo Submitting jobs to plot meridional average over the Tropical Pacific
+	echo Log files in $log_dir/
+	echo
+
+	set ref_case        = $case_set[$n_cases]
+	set ref_scratch_dir = $scratch_dir_set[$n_cases]
+
+	echo Reference Case: $ref_case
+	echo
+
+	@ n_test_cases = $n_cases - 1
+
+	set var_list_file = var_list_enso_diags.csh
+
+	foreach j (`seq 1 $n_test_cases`)
+		set casename    = $case_set[$j]
+		set scratch_dir = $scratch_dir_set[$j]
+		set begin_yr_climo = $begin_yr_enso_atm_set[$j]
+		set end_yr_climo = $end_yr_enso_atm_set[$j]
+
+		csh_scripts/plot_tropical_pacific_meridional_avg.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_climo \
+						 $end_yr_climo \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $var_list_file
+	end
+
+
+	#ENSO Diags: Plot Regression 
+	set var_list_file = var_list_enso_diags.csh
+
+	set index_field = 'TS'
+	set index_reg = 'Nino3.4'
+	set index_reg_name = 'Nino3.4'
+
+	set field_reg = 'global'
+	set field_reg_name = 'global'
+
+	echo
+	echo Submitting jobs to plot regression of variables against the Nino3.4 index
+	echo Log files in $log_dir/
+	echo
+
+	foreach j (`seq 1 $n_test_cases`)
+                set casename    = $case_set[$j]
+                set scratch_dir = $scratch_dir_set[$j]
+                set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts	= $end_yr_enso_atm_set[$j]
+        	
+	        csh_scripts/plot_regr_nino34_fields.csh $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                 $ref_scratch_dir \
+                                                 $ref_case \
+                                                 $var_list_file
+        end
+
+
+endif
 
 echo
 echo Completed atmosphere diagnostics! 

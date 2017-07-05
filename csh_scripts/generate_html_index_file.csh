@@ -21,6 +21,8 @@ set begin_yr_climo        = $begin_yr_climo_set[$case_no]
 set end_yr_climo          = $end_yr_climo_set[$case_no]
 set begin_yr_ts           = $begin_yr_ts_set[$case_no]
 set end_yr_ts             = $end_yr_ts_set[$case_no]
+set begin_yr_enso_atm     = $begin_yr_enso_atm_set[$case_no]
+set end_yr_enso_atm       = $end_yr_enso_atm_set[$case_no]
 set begin_yr_climateIndex = $begin_yr_climateIndex_set[$case_no]
 set end_yr_climateIndex   = $end_yr_climateIndex_set[$case_no]
 
@@ -176,6 +178,192 @@ EOF
   cat >> index.html << EOF
   </TABLE>
 EOF
+endif
+
+if ($generate_atm_enso_diags == 1) then
+
+  cat >> index.html << EOF
+  <br>
+  <hr noshade size=2 size="100%">
+
+  <font color=red size=+1><b>ENSO Diagnostics (ATM)</b></font><br>
+
+  <div style="text-align:left">
+  <font color=peru size=-1>$casename (Years: $begin_yr_enso_atm-$end_yr_enso_atm)</font><br>
+  <font color=peru size=-1>$ref_case_text_ts</font>
+  </div>
+
+  <hr noshade size=2 size="100%">
+
+  <br>
+  <font color=green size=+1><b>NINO Index</b></font><br>
+  <TABLE>
+	<TR>
+	  <TH ALIGN=LEFT><A HREF="${casename}_TS_ANN_NINO.png">Nino3, Nino3.4, Nino4</a> 
+	<TR>
+	  <TD><BR>
+  </TABLE>
+EOF
+
+
+  if ($ref_case == obs) then
+	source $coupled_diags_home/var_list_enso_diags.csh
+  else
+	source $coupled_diags_home/var_list_enso_diags_model_vs_model.csh
+  endif
+
+  set var_grp_unique_set = ()
+  set grp_interp_grid_set = ()
+
+  @ i = 1
+
+  foreach grp ($var_group_set)
+
+        set add_var = 1
+
+        foreach temp_grp ($var_grp_unique_set)
+                if ($grp =~ $temp_grp) then
+                        set add_var = 0
+                endif
+        end
+
+        if ($add_var == 1) then
+                set var_grp_unique_set = ($var_grp_unique_set $grp)
+                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
+        endif
+
+        @ i = $i + 1
+  end
+
+
+  @ j = 1
+
+
+  cat >> index.html << EOF
+	<br>
+	<font color=green size=+1><b>Meridional Avg. Over Tropical Pacific</b></font><br>
+	<br>
+
+	<TABLE>
+EOF
+
+  foreach grp ($var_grp_unique_set)
+
+	if ($ref_case == obs) then
+		set grp_text = "$grp ($grp_interp_grid_set[$j])"
+	else
+		set grp_text = $grp
+	endif
+
+	cat >> index.html << EOF
+	<TR>
+	  <TH><BR>
+	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
+	  <TH>DJF
+	  <TH>JJA
+	  <TH>ANN
+EOF
+
+	@ i = 1
+	foreach var ($var_set)
+
+		if ($var_group_set[$i] == $grp) then
+
+			if ($ref_case == obs) then
+				set ref_casename_plot = $interp_grid_set[$i]
+			else
+				set ref_casename_plot = $ref_case  
+			endif
+
+			cat >> index.html << EOF
+			<TR>
+			  <TH ALIGN=LEFT>$var 
+			  <TD ALIGN=LEFT>$var_name_set[$i]
+			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_meridional_avg_Tropical_Pacific_DJF.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_meridional_avg_Tropical_Pacific_JJA.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_meridional_avg_Tropical_Pacific_ANN.png">plot</a>
+EOF
+		endif
+		@ i = $i + 1
+	end
+
+	cat >> index.html << EOF
+	<TR>
+	  <TD><BR>
+EOF
+
+	@ j = $j + 1
+  end
+
+
+  @ j = 1
+
+  cat >> index.html << EOF
+	</TABLE>
+	<br>
+	<br>
+	<font color=green size=+1><b>Regression of variables on Nino3.4 Index</b></font><br>
+	<br>
+	<TABLE>
+EOF
+
+  foreach grp ($var_grp_unique_set)
+
+	if ($ref_case == obs) then
+		set grp_text = "$grp ($grp_interp_grid_set[$j])"
+	else
+		set grp_text = $grp
+	endif
+
+	cat >> index.html << EOF
+	<TR>
+	  <TH><BR>
+	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
+	  <TH>DJF
+	  <TH>JJA
+	  <TH>ANN
+EOF
+
+	@ i = 1
+	foreach var ($var_set)
+
+		if ($var_group_set[$i] == $grp) then
+
+			if ($ref_case == obs) then
+				set ref_casename_plot = $interp_grid_set[$i]
+			else
+				set ref_casename_plot = $ref_case  
+			endif
+
+			cat >> index.html << EOF
+			<TR>
+			  <TH ALIGN=LEFT>$var 
+			  <TD ALIGN=LEFT>$var_name_set[$i]
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_DJF_TS_Nino3.4_DJF.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_JJA_TS_Nino3.4_JJA.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_ANN_TS_Nino3.4_ANN.png">plot</a>
+EOF
+		endif
+		@ i = $i + 1
+	end
+
+	cat >> index.html << EOF
+	<TR>
+	  <TD><BR>
+EOF
+
+	@ j = $j + 1
+  end
+
+
+
+
+
+  cat >> index.html << EOF
+  </TABLE>
+EOF
+
+
 endif
 
 if ($generate_ocnice_diags == 1) then

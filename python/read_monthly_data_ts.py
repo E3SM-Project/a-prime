@@ -16,7 +16,7 @@ def read_monthly_data_ts(indir,
 
     if field_name == 'PRECT':
 
-        field_PRECC, lat, lon, units = read_monthly_data_ts_field(indir = indir,
+        field_PRECC, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
                          field_name = 'PRECC',
 			 interp_grid = interp_grid,
@@ -28,7 +28,7 @@ def read_monthly_data_ts(indir,
 			 reg = reg,
                          debug = debug)
 
-        field_PRECL, lat, lon, units = read_monthly_data_ts_field(indir = indir,
+        field_PRECL, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
                          field_name = 'PRECL',
 			 interp_grid = interp_grid,
@@ -44,7 +44,7 @@ def read_monthly_data_ts(indir,
 
     elif field_name == 'RESTOM':
 
-        field_FSNT, lat, lon, units = read_monthly_data_ts_field(indir = indir,
+        field_FSNT, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
                          field_name = 'FSNT',
 			 interp_grid = interp_grid,
@@ -56,7 +56,7 @@ def read_monthly_data_ts(indir,
 			 reg = reg,
                          debug = debug)
 
-        field_FLNT, lat, lon, units = read_monthly_data_ts_field(indir = indir,
+        field_FLNT, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
                          field_name = 'FLNT',
 			 interp_grid = interp_grid,
@@ -72,7 +72,7 @@ def read_monthly_data_ts(indir,
 
     else:
  
-        field_in, lat, lon, units = read_monthly_data_ts_field(indir = indir,
+        field_in, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
                          field_name = field_name,
 			 interp_grid = interp_grid,
@@ -84,4 +84,4 @@ def read_monthly_data_ts(indir,
 			 reg = reg,
                          debug = debug)
 
-    return (field_in, lat, lon, units)
+    return (field_in, lat, lon, area, units)

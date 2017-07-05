@@ -31,7 +31,7 @@ set projdir =                  		/global/project/projectdirs/acme
 # (e.g., plots will go in a specific subdirectory of $output_base_dir,
 # as will log files, generated climatologies, etc)
 
-setenv output_base_dir                  /dir/to/analysis/output
+setenv output_base_dir                  $projdir/$USER
 
 # Test case variables
 setenv test_casename                    20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
@@ -44,10 +44,16 @@ setenv test_mpas_mesh_name              oEC60to30v3
 
 setenv test_archive_dir                 /scratch2/scratchdirs/golaz/ACME_simulations
 setenv test_short_term_archive		0
-setenv test_begin_yr_climo		31
-setenv test_end_yr_climo		40
+
+setenv test_begin_yr_climo		39
+setenv test_end_yr_climo		49
+
 setenv test_begin_yr_ts			1
-setenv test_end_yr_ts			30
+setenv test_end_yr_ts			49
+
+setenv test_begin_yr_enso_atm		20
+setenv test_end_yr_enso_atm		49
+
 setenv test_begin_yr_climateIndex_ts	1
 setenv test_end_yr_climateIndex_ts	9999
 
@@ -63,6 +69,11 @@ setenv test_condense_field_climo	1	#ignored if test_compute_climo = 0
 						#the script will look for a condensed file 
 setenv test_condense_field_ts		1
 setenv test_remap_ts			1
+	
+setenv test_compute_climo_enso_atm	1
+setenv test_condense_field_enso_atm	1
+setenv test_remap_climo_enso_atm	1
+setenv test_remap_ts_enso_atm		1
 
 # Reference case variables (similar to test_case variables)
 setenv ref_case			obs
@@ -84,10 +95,16 @@ setenv ref_archive_v0_seaicedir      $projdir/ACMEv0_lowres/${ref_case_v0}/ice/p
 # The following are ignored if ref_case is obs
 setenv ref_native_res             	ne30
 setenv ref_short_term_archive     	0
+
 setenv ref_begin_yr_climo         	95
 setenv ref_end_yr_climo           	100
+
 setenv ref_begin_yr_ts		  	95
 setenv ref_end_yr_ts		  	100
+
+setenv ref_begin_yr_enso_atm		95
+setenv ref_end_yr_enso_atm		100
+
 setenv ref_begin_yr_climateIndex_ts	1
 setenv ref_end_yr_climateIndex_ts	9999
 
@@ -97,9 +114,15 @@ setenv ref_compute_climo        	1
 setenv ref_remap_climo          	1
 setenv ref_remap_ts			1
 
+setenv ref_compute_climo_enso_atm	0
+setenv ref_condense_field_enso_atm	0
+setenv ref_remap_climo_enso_atm		0
+setenv ref_remap_ts_enso_atm		0
+
 # Select sets of diagnostics to generate (False = 0, True = 1)
 setenv generate_atm_diags 		1
-setenv generate_ocnice_diags 		1
+setenv generate_atm_enso_diags		1
+setenv generate_ocnice_diags 		0
 
 # The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
 setenv generate_ohc_trends 		1
@@ -145,6 +168,7 @@ setenv remap_files_dir		  $projdir/mapping/maps
 setenv GPCP_regrid_wgt_file 	  $projdir/mapping/maps/$test_native_res-to-GPCP.conservative.wgts.nc
 setenv CERES_EBAF_regrid_wgt_file $projdir/mapping/maps/$test_native_res-to-CERES-EBAF.conservative.wgts.nc
 setenv ERS_regrid_wgt_file        $projdir/mapping/maps/$test_native_res-to-ERS.conservative.wgts.nc
+setenv HadISST_regrid_wgt_file    $projdir/mapping/maps/$test_native_res-to-HadISST.conservative.wgts.nc
 
 # Set ocn/ice specific paths to mapping and region masking file locations
 #     remap from MPAS mesh to regular 0.5degx0.5deg grid

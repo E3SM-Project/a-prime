@@ -26,6 +26,10 @@ echo "set begin_yr_climo_set            = ($test_begin_yr_climo $ref_begin_yr_cl
 echo "set end_yr_climo_set              = ($test_end_yr_climo $ref_end_yr_climo)" >> $log_dir/case_info.temp
 echo "set begin_yr_ts_set               = ($test_begin_yr_ts $ref_begin_yr_ts)" >> $log_dir/case_info.temp
 echo "set end_yr_ts_set                 = ($test_end_yr_ts $ref_end_yr_ts)" >> $log_dir/case_info.temp
+
+echo "set begin_yr_enso_atm_set         = ($test_begin_yr_enso_atm $ref_begin_yr_enso_atm)" >> $log_dir/case_info.temp
+echo "set end_yr_enso_atm_set           = ($test_end_yr_enso_atm $ref_end_yr_enso_atm)" >> $log_dir/case_info.temp
+
 echo "set begin_yr_climateIndex_set     = ($test_begin_yr_climateIndex_ts $ref_begin_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 echo "set end_yr_climateIndex_set       = ($test_end_yr_climateIndex_ts $ref_end_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 
@@ -38,13 +42,25 @@ if ($ref_case == obs) then
         echo "set compute_climo_set             = ($test_compute_climo 0)" >> $log_dir/case_info.temp
         echo "set remap_climo_set               = ($test_remap_climo 0)" >> $log_dir/case_info.temp
         echo "set remap_ts_set                  = ($test_remap_ts 0)" >> $log_dir/case_info.temp
+
+        echo "set condense_field_enso_atm_set   = ($test_condense_field_enso_atm 0)" >> $log_dir/case_info.temp
+        echo "set compute_climo_enso_atm_set    = ($test_compute_climo_enso_atm 0)" >> $log_dir/case_info.temp
+        echo "set remap_climo_enso_atm_set      = ($test_remap_climo_enso_atm 0)" >> $log_dir/case_info.temp
+        echo "set remap_ts_enso_atm_set         = ($test_remap_ts_enso_atm 0)" >> $log_dir/case_info.temp
+
 else
+
         echo "set scratch_dir_set               = ($test_scratch_dir_atm $ref_scratch_dir_atm)" >> $log_dir/case_info.temp
         echo "set condense_field_climo_set      = ($test_condense_field_climo $ref_condense_field_climo)" >> $log_dir/case_info.temp
         echo "set condense_field_ts_set         = ($test_condense_field_ts $ref_condense_field_ts)" >> $log_dir/case_info.temp
         echo "set compute_climo_set             = ($test_compute_climo $ref_compute_climo)" >> $log_dir/case_info.temp
         echo "set remap_climo_set               = ($test_remap_climo $ref_remap_climo)" >> $log_dir/case_info.temp
         echo "set remap_ts_set                  = ($test_remap_ts $ref_remap_ts)" >> $log_dir/case_info.temp
+
+        echo "set condense_field_enso_atm_set   = ($test_condense_field_enso_atm $ref_condense_field_enso_atm)" >> $log_dir/case_info.temp
+        echo "set compute_climo_enso_atm_set    = ($test_compute_climo_enso_atm $ref_compute_climo_enso_atm)" >> $log_dir/case_info.temp
+        echo "set remap_climo_enso_atm_set      = ($test_remap_climo_enso_atm $ref_remap_climo_enso_atm)" >> $log_dir/case_info.temp
+        echo "set remap_ts_enso_atm_set         = ($test_remap_ts_enso_atm $ref_remap_ts_enso_atm)" >> $log_dir/case_info.temp
 endif
 
 echo
