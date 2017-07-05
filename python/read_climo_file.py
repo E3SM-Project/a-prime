@@ -37,6 +37,12 @@ def read_climo_file (indir, \
 		field = f.variables[field_name]
 		lat = f.variables['lat']
 		lon = f.variables['lon']
+	
+		try:
+			area = f.variables['area']
+		except:
+			gw = f.variables['gw']
+
 		try:
 			units = field.units
 		except AttributeError:
@@ -75,6 +81,12 @@ def read_climo_file (indir, \
 				units = field_temp.units
 				lat = f.variables['lat']
 				lon = f.variables['lon']
+
+				try:
+					area = f.variables['area']
+				except:
+					gw = f.variables['gw']
+
 			else:
 				field_list = [field_list, field_temp[:]]
 	
@@ -87,9 +99,23 @@ def read_climo_file (indir, \
 	print __name__, 'field.shape: ', field.shape
 	print field
 
-	#Getting the requested region
+
 	nlon = lon.shape[0]
 	nlat = lat.shape[0]
+
+
+	#Getting area tile from gw if "area" is not available in the climo file
+
+	if 'gw' in locals():
+		print __name__, 'Computing area weights from gw'
+
+		area_tile = numpy.tile(gw[:], (nlon))
+                area_transpose = numpy.reshape(area_tile, (nlon, nlat))
+
+                area = numpy.transpose(area_transpose)
+
+
+	#Getting the requested region
 
 	lat_ll, lat_ul, lon_ll, lon_ul = get_reg_box(reg) 
 
@@ -143,6 +169,31 @@ def read_climo_file (indir, \
 			field_in = field[0,lat_index_reg,lon_index_reg] 
 
 
+	if type(area) == numpy.ndarray:
+		area_reg = area[lat_index_reg[:, None],lon_index_reg[None, :]]
+	else:
+		area_reg = area[lat_index_reg,lon_index_reg]
+
+
 	print __name__, "field_in.shape: ", field_in.shape
 
-	return field_in, lat_reg, lon_reg, units		
+	if field_name[0:4] == 'PREC' and units == 'm/s':
+	    print 'A precipitation field in m/s units! Changing units from m/s to mm/day!...'
+	    field_in = field_in * 86400.0 * 1000.0
+	    units = 'mm/day'
+
+	if field_name[0:2] == 'TS' and field.units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
+	if field_name[0:3] == 'SST' and field.units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
+	if field_name[0:3] == 'TAU' and casename != 'ERS':
+	    print 'Flipping sign of atm model wind stress values ...'
+	    field_in = -field_in
+
+	return field_in, lat_reg, lon_reg, area_reg, units		

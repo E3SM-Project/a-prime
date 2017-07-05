@@ -107,7 +107,7 @@ if field_name == 'TAU':
 
 #Read x and y components of vector field and mask field
 #Reading mask field
-field_mask, lat, lon, units = read_climo_file(indir = indir, \
+field_mask, lat, lon, area, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_mask_name, \
@@ -118,7 +118,7 @@ field_mask, lat, lon, units = read_climo_file(indir = indir, \
 					 reg = 'global')
 
 #Reading X component and masking grid boxes
-field_X, lat, lon, units = read_climo_file(indir = indir, \
+field_X, lat, lon, area, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_X_name, \
@@ -134,7 +134,7 @@ field_X_plot[:,:] = field_X[:,:]
 field_X_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
 
 #Reading Y component and masking grid boxes
-field_Y, lat, lon, units = read_climo_file(indir = indir, \
+field_Y, lat, lon, area, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_Y_name, \
@@ -160,7 +160,7 @@ print
 print 'Reading climo file for case: ', ref_case
 print
 
-field_ref_case_X, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+field_ref_case_X, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
 					 casename = ref_case, \
 					 season = season, \
 					 field_name = field_X_name, \
@@ -170,7 +170,7 @@ field_ref_case_X, lat, lon, units = read_climo_file(indir = ref_case_dir, \
 					 interp_method = ref_interp_method, \
 					 reg = 'global')
 
-field_ref_case_Y, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+field_ref_case_Y, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
 					 casename = ref_case, \
 					 season = season, \
 					 field_name = field_Y_name, \
@@ -192,9 +192,6 @@ field_ref_case_Y_plot[:,:] = field_ref_case_Y[:,:]
 if ref_case != 'ERS':
 	field_ref_case_X_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
 	field_ref_case_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
-
-	field_ref_case_X_plot = -field_ref_case_X_plot
-	field_ref_case_Y_plot = -field_ref_case_Y_plot
 	
 #Computing an approximation of field magnitude
 field_ref_case_XY = numpy.ma.sqrt(numpy.ma.power(field_ref_case_X_plot, 2.0) + numpy.ma.power(field_ref_case_Y_plot, 2.0))
