@@ -69,16 +69,13 @@ if __name__ == "__main__":
                         help = "end_month", default = 11)
 
     parser.add_argument("--aggregate", dest = "aggregate", type = int,
-                        help = "flag to aggregate data", default = 1)
-
-    parser.add_argument("--lag", dest = "lag", type = int,
-                        help = "lag for regression analysis", default = 0)
+                        help = "end_month", default = 1)
 
     parser.add_argument("--no_ann", dest = "no_ann", type = int,
-                        help = "flag to remove annual cycle", default = 0)
+                        help = "end_month", default = 0)
 
     parser.add_argument("--stdize", dest = "stdize", type = int,
-                        help = "flag to standardize index", default = 0)
+                        help = "end_month", default = 0)
 
     parser.add_argument("--reg", dest = "reg", nargs = '+',
                         help = "regions to be analyzed/plotted")
@@ -106,7 +103,6 @@ end_yr      		= args.end_yr
 begin_month 		= args.begin_month
 end_month   		= args.end_month
 aggregate   		= args.aggregate
-lag	   		= args.lag
 no_ann			= args.no_ann
 stdize			= args.stdize
 reg			= args.reg
@@ -119,7 +115,7 @@ colors = ['b', 'g', 'r', 'c', 'm', 'y']
 x = mpl.get_backend()
 print 'backend: ', x
  
-def plot_regress_index_field (indir,
+def plot_regress_lead_lag_index_field (indir,
 			   casename,
 			   field_name,
 			   interp_grid,
@@ -133,9 +129,6 @@ def plot_regress_index_field (indir,
 			   begin_month,
 			   end_month,
 			   aggregate,
-			   lag,
-			   no_ann,
-			   stdize,
 			   reg,
 			   reg_name,
 			   debug = False):
@@ -144,25 +137,39 @@ def plot_regress_index_field (indir,
 	print __name__, 'casename: ', casename
 	print __name__, 'field_name: ', field_name
 
-	regr_matrix, corr_matrix, t_test_matrix, lat_reg, lon_reg, units = get_regress_index_field (
-							  indir 	= indir,
-							  casename 	= casename, 
-							  field_name 	= field_name,
-							  interp_grid 	= interp_grid,
-							  interp_method = interp_method,
-							  begin_yr 	= begin_yr,
-							  end_yr 	= end_yr,
-							  begin_month 	= begin_month,
-							  end_month 	= end_month,
-							  aggregate	= aggregate,
-							  lag		= lag,
-							  no_ann	= no_ann,
-							  stdize	= stdize,
-							  reg 		= reg,
-							  reg_name	= reg_name,
-							  debug 	= debug)
+	lags = range(-12, 12, 4)
+	n_lags = len(lags)
 
-	plot_field =  regr_matrix
+	for i, lag in enumerate(lags):
+		regr_matrix, corr_matrix, t_test_matrix, lat_reg, lon_reg, units = get_regress_index_field (
+								  indir 	= indir,
+								  casename 	= casename, 
+								  field_name 	= field_name,
+								  interp_grid 	= interp_grid,
+								  interp_method = interp_method,
+								  begin_yr 	= begin_yr,
+								  end_yr 	= end_yr,
+								  begin_month 	= begin_month,
+								  end_month 	= end_month,
+								  aggregate	= 0,
+								  no_ann	= 1,
+								  stdize	= stdize,
+								  lag 		= lag,
+								  reg 		= reg,
+								  reg_name	= reg_name,
+								  debug 	= debug)
+	
+		if i == 0: 
+			regr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			corr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			t_test_matrix_lag = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+
+		regr_matrix_lag[i, ::]   = regr_matrix
+		corr_matrix_lag[i, ::]   = corr_matrix
+		t_test_matrix_lag[i, ::] = t_test_matrix
+
+
+	plot_field =  regr_matrix_lag
 
 
 	if ref_case == 'CERES-EBAF':
@@ -186,9 +193,10 @@ def plot_regress_index_field (indir,
 #                                                          end_yr        = end_yr,
 #                                                          begin_month   = begin_month,
 #                                                          end_month     = end_month,
-#							   aggregate	= aggregate,
-#							   no_ann	= no_ann,
-#							   stdize	= stdize,
+#							   aggregate	 = aggregate,
+#							   no_ann	 = no_ann,
+#							   stdize	 = stdize,
+#							   lag		 = lag
 #                                                          reg           = reg,
 #							   reg_name	 = reg_name,
 #                                                          debug         = debug)
@@ -221,40 +229,55 @@ def plot_regress_index_field (indir,
 
 	f = plt.figure(figsize=(11, 8.5))
 
-	title_txt = 'Regression Coefficients \n' + field_name[0] + ' (' + season_field + ') on ' \
-				   + reg_name[1] + ' ' + field_name[1] + ' index' + ' (' + season_index + ')'
+	title_txt = casename + '\nLead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
+				   + reg_name[1] + ' ' + field_name[1] + ' index' 
 
 	if stdize == 1:
-		title_txt = 'Regression Coefficients \n' + field_name[0] + ' (' + season_field + ') on ' \
-				+ reg_name[1] + ' ' + field_name[1] + ' index' + ' (' + season_index + \
-				', standardized (mean = 0, std. dev. = 1))' \
+		title_txt = casename + '\nLead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
+				+ reg_name[1] + ' ' + field_name[1] + ' index'  + \
+				', (standardized (mean = 0, std. dev. = 1))' \
 
-	f.suptitle(title_txt, fontsize = 12) 
+	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12) 
 
-	ax = f.add_subplot(1,1,1)
-
-	ax.set_title(casename)
-
-	m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
-            llcrnrlon=0,urcrnrlon=360,resolution='c')
-
-	m.drawcoastlines()
+	f.text(0.15, 0.93, title_txt, va='center', rotation='horizontal', fontsize = 10)
 
 	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
-	x, y = m(lons,lats)
 
-	c = m.contourf(x, y, plot_field[:, :], cmap = 'seismic', levels = levels, extend = 'both')
-	cb = m.colorbar(c)
+	for i, lag in enumerate(lags):
+		ax = f.add_subplot(3, 2, i+1)
+		ax.set_title('lag = ' + str(lag) + ' months', fontsize = 10)
 
-	#plotting hatches representing statistical significance
-	m.contourf(x, y, t_test_matrix, 2, colors = 'none', extend = 'both', hatches = [None, '////'])
+		m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+		    llcrnrlon=0,urcrnrlon=360,resolution='c')
+
+		m.drawcoastlines()
+
+		x, y = m(lons,lats)
+
+		c = m.contourf(x, y, plot_field[i, :, :], cmap = 'seismic', levels = levels, extend = 'both')
+
+		#plotting hatches representing statistical significance
+		m.contourf(x, y, t_test_matrix_lag[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
+
+		#ax.text(0, -100, text_data, transform = ax.transData, fontsize = 6)
+
+
 
 	text_data = 'Units = ' + units + ', ' + \
 		    'min = '  + str(round(plot_field_min, 2)) + ', ' + \
 		    'max = '  + str(round(plot_field_max, 2)) + ', ' + \
-		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level'
+		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level. \n' + \
+		    'Positive lags indicate Nino 3.4 index leading.'
 
-	ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
+	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 10)
+
+
+	plt.subplots_adjust(hspace=0.2)
+
+	f.subplots_adjust(right = 0.85)
+
+	cbar_ax = f.add_axes([0.9, 0.15, 0.01, 0.5])
+	f.colorbar(c, cax=cbar_ax)
 
 	mpl.rcParams['savefig.dpi']=300
 
@@ -262,14 +285,14 @@ def plot_regress_index_field (indir,
 	print __name__, 'begin_month: ', begin_month
 	print __name__, 'end_month: ', end_month
 
-	outfile = plots_dir + '/' + casename + '_regr_' \
+	outfile = plots_dir + '/' + casename + '_ENSO_evolution_' \
 			   + field_name[0] + '_' + reg[0] + '_' + season_field + '_' \
 			   + field_name[1] + '_' + reg[1] + '_' + season_index + '.png'
 
 	plt.savefig(outfile)
 
 if __name__ == "__main__":
-	plot_regress_index_field (indir = indir,
+	plot_regress_lead_lag_index_field (indir = indir,
 			       casename = casename,
                                field_name = field_name,
 			       interp_grid = interp_grid,
@@ -285,7 +308,4 @@ if __name__ == "__main__":
                                reg = reg,
 			       reg_name = reg_name,
 			       aggregate = aggregate,
-			       lag = lag,
-			       no_ann = no_ann,
-			       stdize = stdize,
                                debug = debug)

@@ -22,12 +22,19 @@ echo
 
 foreach var ($var_set)
 	echo $var
-	csh_scripts/condense_field.csh  $archive_dir \
-					$scratch_dir \
-					$casename \
-					$var \
-					$begin_yr \
-					$end_yr >& $log_dir/condense_field_${casename}_$var.log &
+
+	set outfile = $scratch_dir/$casename.cam.h0.$var.$begin_yr-$end_yr.nc
+
+	if (-f $outfile) then
+		echo file $outfile exists! Not condensing.
+	else
+		csh_scripts/condense_field.csh  $archive_dir \
+						$scratch_dir \
+						$casename \
+						$var \
+						$begin_yr \
+						$end_yr >& $log_dir/condense_field_${casename}_$var.log &
+	endif
 end
 
 wait

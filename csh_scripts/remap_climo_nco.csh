@@ -36,11 +36,15 @@ if ($casename != obs) then
 			set climo_file        = ${casename}_${season_name}_climo.$var.$begin_yr-$end_yr.nc
 			set interp_climo_file = ${casename}_${season_name}_climo.${interp_grid}_$interp_method.$var.$begin_yr-$end_yr.nc
 
-			ncremap -I $scratch_dir \
-				-i $climo_file \
-				-m $regrid_wgt_file \
-				-O $scratch_dir \
-				-o $interp_climo_file >& $log_dir/remap_climo_${casename}_${var}_$season_name.log &
+			if (-f $interp_climo_file) then
+				echo file $interp_climo_file exists! Not remapping.
+			else
+				ncremap -I $scratch_dir \
+					-i $climo_file \
+					-m $regrid_wgt_file \
+					-O $scratch_dir \
+					-o $interp_climo_file >& $log_dir/remap_climo_${casename}_${var}_$season_name.log &
+			endif
 
 		end
 

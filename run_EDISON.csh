@@ -34,7 +34,10 @@ set projdir =                  		/global/project/projectdirs/acme
 setenv output_base_dir                  $projdir/$USER
 
 # Test case variables
-setenv test_casename                    20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
+#setenv test_casename                    20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
+#setenv test_casename                    20170502.beta1_05-IEFLX.A_WCYCL1850S.ne30_oECv3_ICG.edison
+setenv test_casename                    20170502.beta1_05-v0atm-v0tuned.A_WCYCL1850S.ne30_oECv3_ICG.edison
+
 setenv test_native_res                  ne30
 
 # one of the supported MPAS mesh names (e.g. oEC60to30v1, oEC60to30v3, oRRS18to6v1)
@@ -42,10 +45,13 @@ setenv test_native_res                  ne30
 
 setenv test_mpas_mesh_name              oEC60to30v3
 
-setenv test_archive_dir                 /scratch2/scratchdirs/golaz/ACME_simulations
+#setenv test_archive_dir                 /scratch2/scratchdirs/golaz/ACME_simulations
+#setenv test_archive_dir                 /global/cscratch1/sd/tang30/ACME_simulations
+setenv test_archive_dir                 /global/cscratch1/sd/petercal/ACME_simulations
+
 setenv test_short_term_archive		0
 
-setenv test_begin_yr_climo		39
+setenv test_begin_yr_climo		20
 setenv test_end_yr_climo		49
 
 setenv test_begin_yr_ts			1

@@ -55,7 +55,7 @@ foreach k (`seq 1 $n_var`)
 							--names $names \
 							--index_set_name $index_set_name \
 							--no_ann 1 \
-							--stdize 1 \
+							--stdize 0 \
 							--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_${var}_$index_set_name.log &
 
 end

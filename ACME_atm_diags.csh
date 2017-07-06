@@ -530,6 +530,42 @@ if ($generate_atm_enso_diags == 1) then
 		set end_yr_ts	= $end_yr_enso_atm_set[$j]
         	
 	        csh_scripts/plot_regr_nino34_fields.csh $scratch_dir \
+                                                $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                $ref_scratch_dir \
+                                                 $ref_case \
+                                                $var_list_file
+        end
+
+
+	#ENSO Diags: ENSO Evolution
+	set var_list_file = var_list_enso_evolution.csh
+
+	set index_field = 'TS'
+	set index_reg = 'Nino3.4'
+	set index_reg_name = 'Nino3.4'
+
+	set field_reg = 'global'
+	set field_reg_name = 'global'
+
+	echo
+	echo Submitting jobs to plot ENSO evolution: Lead lag regression of TAUX and TS against the Nino3.4 index
+	echo Log files in $log_dir/
+	echo
+
+	foreach j (`seq 1 $n_test_cases`)
+                set casename    = $case_set[$j]
+                set scratch_dir = $scratch_dir_set[$j]
+                set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts	= $end_yr_enso_atm_set[$j]
+        	
+	        csh_scripts/plot_enso_evolution.csh $scratch_dir \
                                                  $casename \
                                                  $begin_yr_ts \
 						 $end_yr_ts \
@@ -542,8 +578,6 @@ if ($generate_atm_enso_diags == 1) then
                                                  $ref_case \
                                                  $var_list_file
         end
-
-
 endif
 
 echo

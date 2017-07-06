@@ -1,10 +1,10 @@
 from scipy import stats
 import numpy
 
-def regress_index_field(index, field):
+def regress_index_field(index, field, lag = 0):
 	nlon = field.shape[2]
 	nlat = field.shape[1]
-	ntime = field.shape[0]
+	nt = field.shape[0]
 
 	regr_matrix   = numpy.zeros((nlat, nlon)) + numpy.nan
 	const_matrix  = numpy.zeros((nlat, nlon)) + numpy.nan
@@ -15,8 +15,13 @@ def regress_index_field(index, field):
 
 	for i in range(0, nlon):
 		for j in range (0, nlat):
-			regr_matrix[j, i], const_matrix[j, i], corr_matrix[j, i], \
-			p_val_matrix[j, i], stderr_matrix[j, i] = stats.linregress(index, field[:, j, i])
+			if lag < 0:
+				regr_matrix[j, i], const_matrix[j, i], corr_matrix[j, i], \
+				p_val_matrix[j, i], stderr_matrix[j, i] = stats.linregress(index[abs(lag):nt], field[0:nt-abs(lag), j, i])
+			else:
+				regr_matrix[j, i], const_matrix[j, i], corr_matrix[j, i], \
+				p_val_matrix[j, i], stderr_matrix[j, i] = stats.linregress(index[0:nt-lag], field[abs(lag):nt, j, i])
+				
 	
 		
 	t_test_matrix[numpy.where(p_val_matrix < 0.05)] = 1 

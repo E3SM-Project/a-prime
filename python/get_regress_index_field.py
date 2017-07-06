@@ -25,6 +25,7 @@ def get_regress_index_field (indir,
 			   begin_month,
 			   end_month,
 			   aggregate,
+			   lag,
 			   reg,
 			   reg_name,
 			   no_ann,
@@ -80,14 +81,15 @@ def get_regress_index_field (indir,
 		
 		field = field_seasonal_avg
 
-	regr_matrix, const_matrix, corr_matrix, t_test_matrix, stderr_matrix = regress_index_field(index, field)
+
+	regr_matrix, const_matrix, corr_matrix, t_test_matrix, stderr_matrix = regress_index_field(index, field, lag)
 
 	units = units_out + '/' + units_index
 
 	if stdize == 1:
 		units = units_out
 
-	return regr_matrix, t_test_matrix, lat_reg, lon_reg, units
+	return regr_matrix, corr_matrix, t_test_matrix, lat_reg, lon_reg, units
 
 if __name__ == "__main__":
 	get_regress_index_field (indir = indir,
@@ -102,6 +104,7 @@ if __name__ == "__main__":
                                reg = reg,
 			       reg_name = reg_name,
 			       aggregate = aggregate,
+			       lag = lag,
 			       no_ann = no_ann,
 			       stdize = stdize,
                                debug = debug)

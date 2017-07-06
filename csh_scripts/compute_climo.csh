@@ -29,14 +29,20 @@ if ($casename != obs) then
 			set begin_month = $begin_month_set[$i]
 			set end_month   = $end_month_set[$i]
 			set season_name = $season_name_set[$i]
+		
+			set outfile = $scratch_dir/${casename}_${season_name}_climo.$var.$begin_yr-$end_yr.nc
 
-			python python/create_climatology.py 	--indir $scratch_dir \
-								-c $casename \
-								-f $var \
-								--begin_month $begin_month \
-								--end_month $end_month \
-								--begin_yr $begin_yr \
-								--end_yr $end_yr >& $log_dir/climo_${casename}_${var}_$season_name.log &
+			if (-f $outfile) then 
+				echo file $outfile exists! Not computing climatology.
+			else
+				python python/create_climatology.py 	--indir $scratch_dir \
+									-c $casename \
+									-f $var \
+									--begin_month $begin_month \
+									--end_month $end_month \
+									--begin_yr $begin_yr \
+									--end_yr $end_yr >& $log_dir/climo_${casename}_${var}_$season_name.log &
+			endif
 		end
 	end
 endif
