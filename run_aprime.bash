@@ -324,9 +324,14 @@ if [ $generate_atm_diags -eq 1 ]; then
         echo "**** jobID:"
         sbatch $batch_script
       elif [ $machname == "olcf" ]; then
+        update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
         sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
         sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
         sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
+        sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+        sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+         ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
         echo
         echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
         echo "**** jobID:"
@@ -394,10 +399,15 @@ if [ $generate_ocnice_diags -eq 1 ]; then
         echo "**** jobID:"
         sbatch $batch_script
       elif [ $machname == "olcf" ]; then
+        update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
         sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
         sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
         sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
         sed -i 's@PBS -l nodes=.*@PBS -l nodes='$mpas_analysis_tasks'@' $batch_script
+        sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+        sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+         ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
         echo
         echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
         echo "**** jobID:"

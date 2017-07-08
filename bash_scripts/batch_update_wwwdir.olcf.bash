@@ -16,15 +16,3 @@ cp -u $plots_dir/* $www_dir/$plots_dir_name
 echo
 echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
 echo
-
-# This didn't work because the job was still running when using checkjob:
-#exit_code=`checkjob $PBS_JOBID | grep -oE "Completion Code: [0-9]*" | awk '{print $3}'`
-#if [ $exit_code -eq 0 ]; then
-#  echo
-#  echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
-#  echo
-#else
-#  echo
-#  echo "Something went wrong with the current diagnostics and/or the www_dir update: website plots NOT updated!"
-#  echo
-#fi
