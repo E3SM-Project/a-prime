@@ -40,8 +40,10 @@ def get_reg_box(reg):
 		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 160, 210
 
 	if reg == "Tropical_Pacific":
-		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 120, 270
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 160, 270
 		
+	if reg == "Greater_Tropical_Pacific":
+		lat_ll, lat_ul, lon_ll, lon_ul = -30, 30, 120, 290
 
 	return (lat_ll, lat_ul, lon_ll, lon_ul)
 

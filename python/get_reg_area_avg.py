@@ -51,6 +51,7 @@ def get_reg_area_avg(field, lat, lon, area_wgts, debug = False):
 		    area_average[i] = numpy.sum(field[i, :, :] * area_wgts[:, :])/numpy.sum(area_wgts)
 
 	print __name__, 'area_average.shape: ', area_average.shape
+        if debug: print __name__, 'area weights: ', area_wgts
         if debug: print __name__, 'area weighted total_field: ', area_average
 
 

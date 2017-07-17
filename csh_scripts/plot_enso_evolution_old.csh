@@ -11,9 +11,7 @@ set field_reg = $argv[8]
 set field_reg_name = $argv[9]
 set ref_scratch_dir = $argv[10]
 set ref_case = $argv[11]
-set ref_begin_yr = $argv[12]
-set ref_end_yr = $argv[13]
-set var_list_file = $argv[14]
+set var_list_file = $argv[12]
 
 # Read in variable list for plotting climatologies  diagnostics
 source $var_list_file
@@ -47,29 +45,27 @@ foreach k (`seq 1 $n_var`)
 	echo
 
 	if ($ref_case == obs) then
-		set ref_casename = ($interp_grid $interp_grid_index)
-		set ref_interp_grid   = (0 0)
-		set ref_interp_method = (0 0)
+		set ref_casename = $interp_grid
+		set ref_interp_grid   = 0
+		set ref_interp_method = 0
 	else
-		set ref_casename = ($ref_case $ref_case)
-		set ref_interp_grid   = ($interp_grid $interp_grid_index)
-		set ref_interp_method = ($interp_method $interp_method_index)
+		set ref_casename = $ref_case
+		set ref_interp_grid   = $interp_grid
+		set ref_interp_method = $interp_method
 	endif
 
-        set begin_month = 0
-        set end_month   = 11
-        set season_name = ANN
+	set begin_month = 0
+	set end_month   = 11
+	set season_name = ANN
 
-	python python/plot_regress_lead_lag_index_field.py -d True --indir $scratch_dir $scratch_dir\
-							-c $casename $casename\
+	python python/plot_regress_lead_lag_index_field.py -d True --indir $scratch_dir \
+							-c $casename \
 							-f $var $index_field\
 							--begin_yr $begin_yr \
 							--end_yr $end_yr \
 							--interp_grid $interp_grid $interp_grid_index\
 							--interp_method $interp_method $interp_method_index\
-							--ref_begin_yr $ref_begin_yr \
-							--ref_end_yr $ref_end_yr \
-							--ref_case_dir $ref_scratch_dir $ref_scratch_dir\
+							--ref_case_dir $ref_scratch_dir \
 							--ref_case $ref_casename \
 							--ref_interp_grid $ref_interp_grid \
 							--ref_interp_method $ref_interp_method \

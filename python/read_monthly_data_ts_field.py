@@ -27,12 +27,23 @@ def read_monthly_data_ts_field(indir,
 
     print indir, casename, interp_grid,interp_method, field_name
 
+    if casename == 'COREv2' or casename == 'COREv2_flux' or casename == 'NCEP2' or casename == 'HadISST_ts' or casename == 'HadOIBl':
+	cam_text = '.'
+	begin_yr = 1979
+	end_yr   = 2006
+    else:
+	cam_text = '.cam.h0.'
+
+    if casename == 'HadOIBl':
+	begin_yr = 1979
+	end_yr = 1998
+
     if interp_grid == '0':
-	    file_name = indir + '/' + casename + \
-			'.cam.h0.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
+	    file_name = indir + '/' + casename + cam_text \
+			 + field_name + '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
     else:	
-	    file_name = indir + '/' + casename + \
-			'.cam.h0' + '.' + interp_grid + '_' + \
+	    file_name = indir + '/' + casename + cam_text \
+			+ interp_grid + '_' + \
 			interp_method + '.' + field_name + '.' + str(begin_yr) + '-' + str(end_yr) +'.nc'
 
     print "file_name: ", file_name
@@ -129,6 +140,8 @@ def read_monthly_data_ts_field(indir,
     if debug: print __name__, 'lat_index_reg: ', lat_index_reg
     if debug: print __name__, 'lon_index_reg: ', lon_index_reg
 
+    if debug: print __name__, 'field[0, :, :]: ', field[0, :, :]
+
     field_in = field[index_time,lat_index_reg,lon_index_reg]	
     area_reg = area[lat_index_reg, lon_index_reg]
 
@@ -151,9 +164,10 @@ def read_monthly_data_ts_field(indir,
 	    field_in = field_in - 273.15
 	    units = 'C'
 
-    if field_name[0:3] == 'TAU' and casename != 'ERS':
+    if field_name[0:3] == 'TAU' and casename != 'ERS' and casename != 'COREv2_flux':
 	    print 'Flipping sign of atm model wind stress values ...'
 	    field_in = -field_in
 
+    if debug: print __name__, 'field_in[0,:,:]: ', field_in[0, :, :]
 
     return (field_in, lat_reg, lon_reg, area_reg, units)	

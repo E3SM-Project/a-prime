@@ -8,7 +8,7 @@ else
         set case_no    = $argv[1]
 	set plots_dir   = $argv[2]
         set www_dir  = $argv[3]
-endif
+fi
 
 #Reading case information from file
 source $log_dir/case_info.temp
