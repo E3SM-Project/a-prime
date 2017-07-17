@@ -12,7 +12,7 @@ set source_interp_method_set 	= ()
 
 
 #TS
-set var_interp_grid   		= HadISST
+set var_interp_grid   		= NCEP2
 set var_interp_method 		= conservative_mapping
 set var_group			= Temperature
 

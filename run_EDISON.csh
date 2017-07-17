@@ -36,7 +36,8 @@ setenv output_base_dir                  $projdir/$USER
 # Test case variables
 #setenv test_casename                    20170313.beta1.A_WCYCL1850S.ne30_oECv3_ICG.edison
 #setenv test_casename                    20170502.beta1_05-IEFLX.A_WCYCL1850S.ne30_oECv3_ICG.edison
-setenv test_casename                    20170502.beta1_05-v0atm-v0tuned.A_WCYCL1850S.ne30_oECv3_ICG.edison
+#setenv test_casename                    20170502.beta1_05-v0atm-v0tuned.A_WCYCL1850S.ne30_oECv3_ICG.edison
+setenv test_casename                    20161118.beta0.F20TRCOSP.ne30_ne30.edison
 
 setenv test_native_res                  ne30
 
@@ -47,18 +48,19 @@ setenv test_mpas_mesh_name              oEC60to30v3
 
 #setenv test_archive_dir                 /scratch2/scratchdirs/golaz/ACME_simulations
 #setenv test_archive_dir                 /global/cscratch1/sd/tang30/ACME_simulations
-setenv test_archive_dir                 /global/cscratch1/sd/petercal/ACME_simulations
+#setenv test_archive_dir                 /global/cscratch1/sd/petercal/ACME_simulations
+setenv test_archive_dir                 /global/cscratch1/sd/tang30/ACME_simulations
 
 setenv test_short_term_archive		0
 
-setenv test_begin_yr_climo		20
-setenv test_end_yr_climo		49
+setenv test_begin_yr_climo		1975
+setenv test_end_yr_climo		1999
 
-setenv test_begin_yr_ts			1
-setenv test_end_yr_ts			49
+setenv test_begin_yr_ts			1975
+setenv test_end_yr_ts			1999
 
-setenv test_begin_yr_enso_atm		20
-setenv test_end_yr_enso_atm		49
+setenv test_begin_yr_enso_atm		1975
+setenv test_end_yr_enso_atm		1999
 
 setenv test_begin_yr_climateIndex_ts	1
 setenv test_end_yr_climateIndex_ts	9999

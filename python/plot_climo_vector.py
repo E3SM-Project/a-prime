@@ -145,9 +145,6 @@ field_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
 #Computing an approximation of field magnitude from monthly averages	
 field_XY = numpy.ma.sqrt(numpy.ma.power(field_X_plot, 2.0) + numpy.ma.power(field_Y_plot, 2.0))
 
-if casename != 'ERS':
-	field_X_plot = -field_X_plot
-	field_Y_plot = -field_Y_plot
 
 print
 print 'Reading climo file for case: ', ref_case

@@ -207,7 +207,7 @@ EOF
 
 
   if ($ref_case == obs) then
-	source $coupled_diags_home/var_list_enso_diags.csh
+	source $coupled_diags_home/var_list_enso_diags_climo.csh
   else
 	source $coupled_diags_home/var_list_enso_diags_model_vs_model.csh
   endif
@@ -294,6 +294,101 @@ EOF
 
 	@ j = $j + 1
   end
+  cat >> index.html << EOF
+  </TABLE>
+EOF
+
+
+
+
+# Generating index.html section for std. dev. and ENSO Evolution Plots
+
+  source $coupled_diags_home/var_list_enso_diags_time_series.csh
+
+  set var_grp_unique_set = ()
+  set grp_interp_grid_set = ()
+
+  @ i = 1
+
+  foreach grp ($var_group_set)
+
+        set add_var = 1
+
+        foreach temp_grp ($var_grp_unique_set)
+                if ($grp =~ $temp_grp) then
+                        set add_var = 0
+                endif
+        end
+
+        if ($add_var == 1) then
+                set var_grp_unique_set = ($var_grp_unique_set $grp)
+                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
+        endif
+
+        @ i = $i + 1
+  end
+
+
+  @ j = 1
+
+  cat >> index.html << EOF
+        <br>
+        <br>
+        <font color=green size=+1><b>Tropical Pacific: Inter-annual Std. Dev.</b></font><br>
+        <br>
+        <TABLE>
+EOF
+
+  foreach grp ($var_grp_unique_set)
+
+        if ($ref_case == obs) then
+                set grp_text = "$grp ($grp_interp_grid_set[$j])"
+        else
+                set grp_text = $grp
+        endif
+
+        cat >> index.html << EOF
+        <TR>
+          <TH><BR>
+          <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
+	  <TH>DJF
+	  <TH>JJA
+	  <TH>ANN
+EOF
+
+        @ i = 1
+        foreach var ($var_set)
+
+                if ($var_group_set[$i] == $grp) then
+
+                        if ($ref_case == obs) then
+                                set ref_casename_plot = $interp_grid_set[$i]
+                        else
+                                set ref_casename_plot = $ref_case
+                        endif
+
+                        cat >> index.html << EOF
+                        <TR>
+                          <TH ALIGN=LEFT>$var 
+                          <TD ALIGN=LEFT>$var_name_set[$i]
+                          <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_stddev_Greater_Tropical_Pacific_DJF.png">plot</a>
+                          <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_stddev_Greater_Tropical_Pacific_JJA.png">plot</a>
+                          <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_stddev_Greater_Tropical_Pacific_ANN.png">plot</a>
+EOF
+                endif
+                @ i = $i + 1
+        end
+
+        cat >> index.html << EOF
+        <TR>
+          <TD><BR>
+EOF
+
+        @ j = $j + 1
+  end
+  cat >> index.html << EOF
+  </TABLE>
+EOF
 
 
   @ j = 1
@@ -360,32 +455,6 @@ EOF
 EOF
 
 
-# Generating index.html section for ENSO Evolution Plots
-
-  source $coupled_diags_home/var_list_enso_evolution.csh
-
-  set var_grp_unique_set = ()
-  set grp_interp_grid_set = ()
-
-  @ i = 1
-
-  foreach grp ($var_group_set)
-
-        set add_var = 1
-
-        foreach temp_grp ($var_grp_unique_set)
-                if ($grp =~ $temp_grp) then
-                        set add_var = 0
-                endif
-        end
-
-        if ($add_var == 1) then
-                set var_grp_unique_set = ($var_grp_unique_set $grp)
-                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
-        endif
-
-        @ i = $i + 1
-  end
 
 
   @ j = 1

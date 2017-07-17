@@ -6,7 +6,9 @@ set begin_yr = $argv[3]
 set end_yr = $argv[4]
 set ref_scratch_dir = $argv[5]
 set ref_case = $argv[6]
-set var_list_file = $argv[7]
+set ref_begin_yr = $argv[7]
+set ref_end_yr = $argv[8]
+set var_list_file = $argv[9]
 
 # Read in variable list for plotting climatologies  diagnostics
 source $var_list_file
@@ -48,6 +50,12 @@ foreach k (`seq 1 $n_var`)
 							--end_yr $end_yr \
 							--interp_grid $interp_grid \
 							--interp_method $interp_method \
+							--ref_begin_yr $ref_begin_yr \
+							--ref_end_yr $ref_end_yr \
+							--ref_case_dir $ref_scratch_dir \
+							--ref_case $ref_casename \
+							--ref_interp_grid $ref_interp_grid \
+							--ref_interp_method $ref_interp_method \
 							--begin_month 0 \
 							--end_month 11 \
 							--aggregate 0 \

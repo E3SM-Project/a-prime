@@ -3,17 +3,26 @@
 
 import numpy
 
-def aggregate_time_series_data(data, aggregate_size, wgts):
-    nx = data.shape[2]
-    ny = data.shape[1]
+def aggregate_time_series_data(data, aggregate_size, wgts, debug = False):
     nt = data.shape[0]
 
-    n_aggregates = nt/aggregate_size
+    n_aggregates = int(nt/aggregate_size)
 
-    aggregate_data = numpy.ma.zeros((n_aggregates, ny, nx))
+    # concatenating tuples to create shape for aggregate_data
+    agg_shape = (n_aggregates,) + data.shape[1:]
 
-    for i in range(0, n_aggregates):
-        aggregate_data[i, :, :] = numpy.average(data[i*aggregate_size:(i+1) * aggregate_size, :, :], axis = 0, weights = wgts)
+    print __name__, 'agg_shape: ', agg_shape
+
+    aggregate_data = numpy.ma.zeros((agg_shape))
+    print "aggregate_data.shape: ", aggregate_data.shape
+
+    if data.ndim == 1:
+	    for i in range(0, n_aggregates):
+		aggregate_data[i] = numpy.average(data[i*aggregate_size:(i+1) * aggregate_size], axis = 0, weights = wgts)
+	
+    else:
+	    for i in range(0, n_aggregates):
+		aggregate_data[i, ::] = numpy.average(data[i*aggregate_size:(i+1) * aggregate_size, ::], axis = 0, weights = wgts)
 
     print "aggregate_data.shape: ", aggregate_data.shape
 

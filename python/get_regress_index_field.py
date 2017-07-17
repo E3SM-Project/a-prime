@@ -36,8 +36,8 @@ def get_regress_index_field (indir,
 	print __name__, 'casename: ', casename
 
 	index, n_months_season, units_index = get_reg_seasonal_avg (
-							  indir         = indir,
-							  casename      = casename,
+							  indir         = indir[1],
+							  casename      = casename[1],
 							  field_name    = field_name[1],
 							  interp_grid   = interp_grid[1],
 							  interp_method = interp_method[1],
@@ -59,8 +59,8 @@ def get_regress_index_field (indir,
 		index = index_stddize
 
 
-        field, lat_reg, lon_reg, area_reg, units_out = read_monthly_data_ts(indir = indir,
-                                 casename = casename,
+        field, lat_reg, lon_reg, area_reg, units_out = read_monthly_data_ts(indir = indir[0],
+                                 casename = casename[0],
                                  field_name = field_name[0],
                                  interp_grid = interp_grid[0],
                                  interp_method = interp_method[0],
@@ -71,8 +71,13 @@ def get_regress_index_field (indir,
                                  reg = reg[0],
                                  debug = debug)
 
+	a, n_months_season = get_season_months_index(begin_month[0], end_month[0])
+
+	if aggregate == 0 and no_ann == 1:
+		field_no_ann = remove_seasonal_cycle_monthly_data(field, n_months_season, debug = debug)
+		field = field_no_ann
+
 	if aggregate == 1:
-		a, n_months_season = get_season_months_index(begin_month[0], end_month[0])
 
 		day_wgts = get_days_in_season_months(begin_month[0], end_month[0])
 		if debug: print __name__, 'day_wgts: ', day_wgts

@@ -16,33 +16,73 @@ def read_monthly_data_ts(indir,
 
     if field_name == 'PRECT':
 
-        field_PRECC, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
-			 casename = casename,
-                         field_name = 'PRECC',
-			 interp_grid = interp_grid,
-			 interp_method = interp_method,
-                         begin_yr = begin_yr,
-                         end_yr = end_yr,
-                         begin_month = begin_month,
-                         end_month = end_month,
-			 reg = reg,
-                         debug = debug)
+	try:
+		field_in, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+				 casename = casename,
+				 field_name = field_name,
+				 interp_grid = interp_grid,
+				 interp_method = interp_method,
+				 begin_yr = begin_yr,
+				 end_yr = end_yr,
+				 begin_month = begin_month,
+				 end_month = end_month,
+				 reg = reg,
+				 debug = debug)
+		
+	
+	except:
+		print
+		print "Could not find file for: ", field_name, " Trying to look for PRECC and PRECL files!"
+		print
 
-        field_PRECL, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
-			 casename = casename,
-                         field_name = 'PRECL',
-			 interp_grid = interp_grid,
-			 interp_method = interp_method,
-                         begin_yr = begin_yr,
-                         end_yr = end_yr,
-                         begin_month = begin_month,
-                         end_month = end_month,
-			 reg = reg,
-                         debug = debug)
+		field_PRECC, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+				 casename = casename,
+				 field_name = 'PRECC',
+				 interp_grid = interp_grid,
+				 interp_method = interp_method,
+				 begin_yr = begin_yr,
+				 end_yr = end_yr,
+				 begin_month = begin_month,
+				 end_month = end_month,
+				 reg = reg,
+				 debug = debug)
 
-	field_in = field_PRECC + field_PRECL
+		field_PRECL, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+				 casename = casename,
+				 field_name = 'PRECL',
+				 interp_grid = interp_grid,
+				 interp_method = interp_method,
+				 begin_yr = begin_yr,
+				 end_yr = end_yr,
+				 begin_month = begin_month,
+				 end_month = end_month,
+				 reg = reg,
+				 debug = debug)
+
+		field_in = field_PRECC + field_PRECL
+
+
 
     elif field_name == 'RESTOM':
+
+	try:
+		field_in, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+				 casename = casename,
+				 field_name = field_name,
+				 interp_grid = interp_grid,
+				 interp_method = interp_method,
+				 begin_yr = begin_yr,
+				 end_yr = end_yr,
+				 begin_month = begin_month,
+				 end_month = end_month,
+				 reg = reg,
+				 debug = debug)
+		
+	
+	except:
+		print
+		print "Could not find file for: ", field_name, " Trying to look for FSNT and FLNT files!"
+		print
 
         field_FSNT, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
 			 casename = casename,
