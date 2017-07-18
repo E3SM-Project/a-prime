@@ -353,7 +353,7 @@ if ($generate_atm_enso_diags == 1) then
 			set archive_dir_atm = $archive_dir/$casename/atm/hist
 		endif
 
-		if ($condense_field_ts == 1) then
+		if ($condense_field_climo == 1) then
 			csh_scripts/condense_field_bundle.csh	$archive_dir_atm \
 								$scratch_dir \
 								$casename \
@@ -575,6 +575,8 @@ if ($generate_atm_enso_diags == 1) then
 	echo Submitting jobs to plot regression of variables against the Nino3.4 index
 	echo Log files in $log_dir/
 	echo
+
+	set var_list_file = var_list_enso_diags_time_series.csh
 
 	foreach j (`seq 1 $n_test_cases`)
                 set casename        = $case_set[$j]

@@ -118,7 +118,6 @@ field_mean, field_stddev, lat, lon, units = compute_reg_seasonal_climo_and_stdde
 								aggregate = 1,
 								debug = debug)
  
-plot_field = field_stddev
 
 ref_field_mean, ref_field_stddev, lat, lon, units = compute_reg_seasonal_climo_and_stddev(
 								indir = ref_case_dir,
@@ -134,7 +133,6 @@ ref_field_mean, ref_field_stddev, lat, lon, units = compute_reg_seasonal_climo_a
 								aggregate = 1,
 								debug = debug)
 
-ref_plot_field = ref_field_stddev
 
 #field, lat, lon, area, units = read_climo_file(indir = indir, \
 #					 casename = casename, \
@@ -170,85 +168,148 @@ ref_plot_field = ref_field_stddev
 #field_ref_case_min = numpy.min(field_ref_case[:])
 #field_ref_case_avg = get_reg_area_avg(field_ref_case, lat, lon, area)
 
-field_max = numpy.max(field_stddev[:])
-field_min = numpy.min(field_stddev[:])
-
-ref_field_max = numpy.max(ref_field_stddev[:])
-ref_field_min = numpy.min(ref_field_stddev[:])
 
 
 #Computing levels using mean and standard deviation
 num = 11
 n_stddev = 4
 
-levels = compute_contour_levels(ref_plot_field, n_stddev, num)
-
-
-print
-print 'For std dev. plots: '
-print 'spatial mean, stddev, min, max ref_case: ', \
-        numpy.ma.mean(ref_field_stddev[:]), numpy.ma.std(ref_field_stddev[:]), ref_field_min, ref_field_max
-print 'min, max field: ', field_min, field_max
-print 'levels:', levels
-print
 
 
 #Plot std. dev.
-f = plt.figure(figsize=(11, 8.5))
+f, ax = plt.subplots(3, 2, figsize=(17, 11))
 
-plt.suptitle('Inter-annual Standard Deviation\n' + field_name + ' (' + units + ') ' + season, fontsize = 20)
+plt.suptitle('Climatology and Inter-annual Standard Deviation\n' + field_name + ' (' + units + ') ' + season, fontsize = 14, color = 'blue')
 
-#Plot test_case
-ax = f.add_subplot(2,1,1)
+levels = compute_contour_levels(ref_field_mean, n_stddev, num)
 
-ax.set_title(casename)
+for k in [0, 1, 2]:
+	if k == 0:
+		plot_case = casename
+		plot_field = field_mean
+		cmap_color = 'hot_r'
+	if k == 1:
+		plot_case = ref_case
+		plot_field = ref_field_mean
+		cmap_color = 'hot_r'
+	if k == 2:
+		plot_case = 'Difference'
+		plot_field = field_mean - ref_field_mean
+		cmap_color = 'seismic'
+		levels = compute_contour_levels(plot_field, n_stddev, num)
 
-m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
-            llcrnrlon=lon[0],urcrnrlon=lon[-1],resolution='c')
+	plot_field_min = numpy.min(plot_field[:])
+	plot_field_max = numpy.max(plot_field[:])
+ 
+	#Plot test_case
 
-m.drawcoastlines()
+	ax[k, 0].set_title(plot_case)
 
-lons, lats = numpy.meshgrid(lon,lat)
-x, y = m(lons,lats)
+	m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
+		    llcrnrlon=lon[0],urcrnrlon=lon[-1],resolution='c', ax = ax[k, 0])
+
+	m.drawcoastlines()
+
+	lons, lats = numpy.meshgrid(lon,lat)
+	x, y = m(lons,lats)
 
 
-c = m.contourf(x, y, plot_field[:, :], cmap = 'hot_r', levels = levels, extend = 'both')
+	c = m.contourf(x, y, plot_field[:, :], cmap = cmap_color, levels = levels, extend = 'both')
 
-meridians = numpy.arange(numpy.floor(lon[0]),numpy.ceil(lon[-1]),30)
-parallels = numpy.arange(numpy.floor(lat[0]),numpy.ceil(lat[-1]),30)
+	meridians = numpy.arange(numpy.floor(lon[0]),numpy.ceil(lon[-1]),30)
+	parallels = numpy.arange(numpy.floor(lat[0]),numpy.ceil(lat[-1]),30)
 
-m.drawmeridians(meridians, labels=[0,0,0,1],fontsize=10)
-m.drawparallels(parallels, labels=[1,0,0,0],fontsize=10)
+	m.drawmeridians(meridians, labels=[0,0,0,1],fontsize=10)
+	m.drawparallels(parallels, labels=[1,0,0,0],fontsize=10)
 
-cb = m.colorbar(c)
+	cb = m.colorbar(c)
 
-text_data = 'min = '  + str(round(field_min, 2)) + ', ' + \
-            'max = '  + str(round(field_max, 2))
+	text_data = 'min = '  + str(round(plot_field_min, 2)) + ', ' + \
+		    'max = '  + str(round(plot_field_max, 2))
 
-ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
+	ax[k, 0].text(0.0, -0.15, text_data, transform = ax[k, 0].transAxes, fontsize = 10)
+
+	if k == 0:
+		ax[k, 0].text(0.5, 1.2, 'Mean', ha='center', \
+				fontsize = 14, transform=ax[k, 0].transAxes, color = 'green')
+
+
+levels = compute_contour_levels(ref_field_stddev, n_stddev, num)
+
+for k in [0, 1, 2]:
+	if k == 0:
+		plot_case = casename
+		plot_field = field_stddev
+		cmap_color = 'hot_r'
+	if k == 1:
+		plot_case = ref_case
+		plot_field = ref_field_stddev
+		cmap_color = 'hot_r'
+	if k == 2:
+		plot_case = 'Difference'
+		plot_field = field_stddev - ref_field_stddev
+		cmap_color = 'seismic'
+		levels = compute_contour_levels(plot_field, n_stddev, num)
+
+	plot_field_min = numpy.min(plot_field[:])
+	plot_field_max = numpy.max(plot_field[:])
+ 
+	#Plot test_case
+
+	ax[k, 1].set_title(plot_case)
+
+	m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
+		    llcrnrlon=lon[0],urcrnrlon=lon[-1],resolution='c', ax = ax[k, 1])
+
+	m.drawcoastlines()
+
+	lons, lats = numpy.meshgrid(lon,lat)
+	x, y = m(lons,lats)
+
+
+	c = m.contourf(x, y, plot_field[:, :], cmap = cmap_color, levels = levels, extend = 'both')
+
+	meridians = numpy.arange(numpy.floor(lon[0]),numpy.ceil(lon[-1]),30)
+	parallels = numpy.arange(numpy.floor(lat[0]),numpy.ceil(lat[-1]),30)
+
+	m.drawmeridians(meridians, labels=[0,0,0,1],fontsize=10)
+	m.drawparallels(parallels, labels=[1,0,0,0],fontsize=10)
+
+	cb = m.colorbar(c)
+
+	text_data = 'min = '  + str(round(plot_field_min, 2)) + ', ' + \
+		    'max = '  + str(round(plot_field_max, 2))
+
+	ax[k, 1].text(0.0, -0.15, text_data, transform = ax[k, 1].transAxes, fontsize = 10)
+
+	if k == 0:
+		ax[k, 1].text(0.5, 1.2, 'Std. Dev.', ha='center', \
+				fontsize = 14, transform=ax[k, 1].transAxes, color = 'green')
+
+plt.subplots_adjust(hspace=0.25)
 
 
 #Plot ref_case
-ax = f.add_subplot(2,1,2)
-
-ax.set_title(ref_case)
-
-m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
-            llcrnrlon=lon[0],urcrnrlon=lon[-1],resolution='c')
-
-m.drawcoastlines()
-
-c = m.contourf(x, y, ref_plot_field[:, :], cmap = 'hot_r', levels = levels, extend = 'both')
-
-m.drawmeridians(meridians, labels=[0,0,0,1],fontsize=10)
-m.drawparallels(parallels, labels=[1,0,0,0],fontsize=10)
-
-cb = m.colorbar(c)
-
-text_data = 'min = '  + str(round(ref_field_min, 2)) + ', ' + \
-            'max = '  + str(round(ref_field_max, 2))
-
-ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
+#ax = f.add_subplot(2,1,2)
+#
+#ax.set_title(ref_case)
+#
+#m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
+#            llcrnrlon=lon[0],urcrnrlon=lon[-1],resolution='c')
+#
+#m.drawcoastlines()
+#
+#c = m.contourf(x, y, ref_plot_field[:, :], cmap = 'hot_r', levels = levels, extend = 'both')
+#
+#m.drawmeridians(meridians, labels=[0,0,0,1],fontsize=10)
+#m.drawparallels(parallels, labels=[1,0,0,0],fontsize=10)
+#
+#cb = m.colorbar(c)
+#
+#text_data = 'min = '  + str(round(ref_field_min, 2)) + ', ' + \
+#            'max = '  + str(round(ref_field_max, 2))
+#
+#ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 
 
 ##Computing levels for diff plot using mean and standard deviation

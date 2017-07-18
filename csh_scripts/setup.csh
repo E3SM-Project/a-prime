@@ -78,5 +78,3 @@ cat $log_dir/season_info.temp
 
 
 
-
-

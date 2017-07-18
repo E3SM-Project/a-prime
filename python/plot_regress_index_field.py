@@ -233,15 +233,17 @@ def plot_regress_index_field (indir,
 
 	f = plt.figure(figsize=(8.5, 11))
 
-	title_txt = 'Regression Coefficients \n' + field_name[0] + ' (' + season_field + ') on ' \
+	title_txt = field_name[0] + ' (' + season_field + ') on ' \
 				   + reg_name[1] + ' ' + field_name[1] + ' index' + ' (' + season_index + ')'
 
 	if stdize == 1:
-		title_txt = 'Regression Coefficients \n' + field_name[0] + ' (' + season_field + ') on ' \
+		title_txt = field_name[0] + ' (' + season_field + ') on ' \
 				+ reg_name[1] + ' ' + field_name[1] + ' index' + ' (' + season_index + \
 				', standardized (mean = 0, std. dev. = 1))' \
 
-	f.suptitle(title_txt, fontsize = 14) 
+	f.suptitle('Regression Coefficients:' + field_name[0], fontsize = 14, color = 'blue') 
+
+	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 12)
 
 	ax = f.add_subplot(2,1,1)
 

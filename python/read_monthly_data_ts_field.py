@@ -159,6 +159,11 @@ def read_monthly_data_ts_field(indir,
 	    field_in = field_in - 273.15
 	    units = 'C'
 
+    if field_name[0:2] == 'TS' and field.units == 'degK':
+	    print 'A temperature field in degK units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
     if field_name[0:3] == 'SST' and field.units == 'K':
 	    print 'A temperature field in K units! Changing units from K to C!...'
 	    field_in = field_in - 273.15

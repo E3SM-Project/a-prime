@@ -77,7 +77,7 @@ foreach k (`seq 1 $n_var`)
 								--begin_month $begin_month $begin_month\
 								--end_month $end_month $end_month\
 								--aggregate 1 \
-								--stdize 1 \
+								--stdize 0 \
 								--reg $reg \
 								--reg_name $reg_name \
 								--plots_dir $plots_dir >& $log_dir/plot_regr_${casename}_${var}_vs_${index_reg_name}_$season_name.log &

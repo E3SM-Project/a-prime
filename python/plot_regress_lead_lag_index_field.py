@@ -235,6 +235,7 @@ def plot_regress_lead_lag_index_field (indir,
 	plot_field_max  = numpy.max(plot_field) 
 
 
+	n_stddev = 5
 	num      = 11
 	max_plot = round_to_first(5.0 * numpy.ma.std(ref_plot_field))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
@@ -252,7 +253,7 @@ def plot_regress_lead_lag_index_field (indir,
 	print 'contour levels: ', levels
 
 
-
+	#PLOT REGRESSIONS
 	f, ax = plt.subplots(n_lags, 2, figsize=(8.5, 11))
 
 	title_txt = 'Lead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
@@ -263,9 +264,9 @@ def plot_regress_lead_lag_index_field (indir,
 				'standardized ' + reg_name[1] + ' ' + field_name[1] + ' index'  + \
 				' (mean = 0, std. dev. = 1)'
 
-	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12) 
+	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12, color = 'blue') 
 
-	f.text(0.15, 0.93, title_txt, va='center', rotation='horizontal', fontsize = 10)
+	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 10)
 
 	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
 
@@ -299,7 +300,7 @@ def plot_regress_lead_lag_index_field (indir,
 
                         if i == 0:
                                 ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
-                                                fontsize = 10, transform=ax[i, k].transAxes)
+                                                fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
 
 
 	text_data = 'Units = ' + units + ', ' + \
@@ -308,7 +309,7 @@ def plot_regress_lead_lag_index_field (indir,
 		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level. \n' + \
 		    'Positive lags indicate Nino 3.4 index leading.'
 
-	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 10)
+	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 8)
 
 
 	plt.subplots_adjust(hspace=0.25)
@@ -324,7 +325,89 @@ def plot_regress_lead_lag_index_field (indir,
 	print __name__, 'begin_month: ', begin_month
 	print __name__, 'end_month: ', end_month
 
-	outfile = plots_dir + '/' + casename[0] + '_ENSO_evolution_' \
+	outfile = plots_dir + '/' + casename[0] + '_ENSO_evolution_regr_' \
+			   + field_name[0] + '_' + reg[0] + '_' + season_field + '_' \
+			   + field_name[1] + '_' + reg[1] + '_' + season_index + '.png'
+
+	plt.savefig(outfile)
+
+
+
+	#PLOT CORRELATIONS
+	max_plot = round_to_first(5.0 * numpy.ma.std(ref_corr_matrix_lag))
+	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
+
+	f, ax = plt.subplots(n_lags, 2, figsize=(8.5, 11))
+
+	title_txt = 'Lead-lag Correlations: ' + field_name[0] + ' on ' \
+				   + reg_name[1] + ' ' + field_name[1] + ' index' 
+
+	if stdize == 1:
+		title_txt = 'Lead-lag Correlations: ' + field_name[0] + ' on ' \
+				'standardized ' + reg_name[1] + ' ' + field_name[1] + ' index'  + \
+				' (mean = 0, std. dev. = 1)'
+
+	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12, color = 'blue') 
+
+	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 10)
+
+	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
+
+	for k in [0, 1]:
+                if k == 0:
+                        plot_case = casename[0]
+                        plot_field = corr_matrix_lag
+			plot_t_test = t_test_matrix_lag
+
+                if k == 1:
+                        plot_case = ref_case[0]
+                        plot_field = ref_corr_matrix_lag
+			plot_t_test = ref_t_test_matrix_lag
+
+
+
+		for i, lag in enumerate(lags):
+			ax[i, k].set_title('lag = ' + str(lag) + ' months', fontsize = 10)
+
+			m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+			    llcrnrlon=0,urcrnrlon=360,resolution='c', ax = ax[i, k])
+
+			m.drawcoastlines()
+
+			x, y = m(lons,lats)
+
+			c = m.contourf(x, y, plot_field[i, :, :], cmap = 'seismic', levels = levels, extend = 'both')
+
+			#plotting hatches representing statistical significance
+		#	m.contourf(x, y, plot_t_test[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
+
+                        if i == 0:
+                                ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
+                                                fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
+
+
+	text_data = 'Units = ' + units + ', ' + \
+		    'min = '  + str(round(numpy.ma.min(ref_corr_matrix_lag), 2)) + ', ' + \
+		    'max = '  + str(round(numpy.ma.max(ref_corr_matrix_lag), 2)) + ', ' + \
+		    'Positive lags indicate Nino 3.4 index leading.'
+
+	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 8)
+
+
+	plt.subplots_adjust(hspace=0.25)
+
+	f.subplots_adjust(right = 0.85)
+
+	cbar_ax = f.add_axes([0.9, 0.25, 0.01, 0.5])
+	f.colorbar(c, cax=cbar_ax)
+
+	mpl.rcParams['savefig.dpi']=300
+
+
+	print __name__, 'begin_month: ', begin_month
+	print __name__, 'end_month: ', end_month
+
+	outfile = plots_dir + '/' + casename[0] + '_ENSO_evolution_corr_' \
 			   + field_name[0] + '_' + reg[0] + '_' + season_field + '_' \
 			   + field_name[1] + '_' + reg[1] + '_' + season_index + '.png'
 
