@@ -397,7 +397,7 @@ EOF
 	</TABLE>
 	<br>
 	<br>
-	<font color=green size=+1><b>Regression of variables on Nino3.4 Index</b></font><br>
+	<font color=green size=+1><b>Regression on Nino3.4 Index</b></font><br>
 	<br>
 	<TABLE>
 EOF
@@ -462,7 +462,7 @@ EOF
   cat >> index.html << EOF
 	<br>
 	<br>
-	<font color=green size=+1><b>ENSO Evolution: Lead-lag regression of variables on Nino3.4 Index</b></font><br>
+	<font color=green size=+1><b>ENSO Evolution: Lead-lag Regression/Correlation on Nino3.4 Index</b></font><br>
 	<br>
 	<TABLE>
 EOF
@@ -479,6 +479,8 @@ EOF
 	<TR>
 	  <TH><BR>
 	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
+	  <TH>Regression
+	  <TH>Correlation
 EOF
 
 	@ i = 1
@@ -496,7 +498,8 @@ EOF
 			<TR>
 			  <TH ALIGN=LEFT>$var 
 			  <TD ALIGN=LEFT>$var_name_set[$i]
-			  <TD ALIGN=LEFT><A HREF="${casename}_ENSO_evolution_${var}_global_ANN_TS_Nino3.4_ANN.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_ENSO_evolution_regr_${var}_global_ANN_TS_Nino3.4_ANN.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_ENSO_evolution_corr_${var}_global_ANN_TS_Nino3.4_ANN.png">plot</a>
 EOF
 		endif
 		@ i = $i + 1

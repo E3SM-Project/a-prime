@@ -75,8 +75,8 @@ foreach k (`seq 1 $n_var`)
 							--ref_interp_method $ref_interp_method \
 							--begin_month $begin_month $begin_month\
 							--end_month $end_month $end_month\
-							--aggregate 1 \
-							--stdize 1 \
+							--aggregate 0 \
+							--stdize 0 \
 							--reg $reg \
 							--reg_name $reg_name \
 							--plots_dir $plots_dir >& $log_dir/plot_regr_lead_lag_${casename}_${var}_vs_${index_reg_name}_$season_name.log &

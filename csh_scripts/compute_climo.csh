@@ -6,7 +6,6 @@ set compute_climo_var_list_file = $argv[3]
 set begin_yr = $argv[4]
 set end_yr = $argv[5]
 
-
 # Read in variable list for  diagnostics e.g FLUT, FSNT etc.
 source $compute_climo_var_list_file
 set n_var = $#var_set
