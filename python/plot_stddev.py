@@ -188,10 +188,14 @@ for k in [0, 1, 2]:
 		plot_case = casename
 		plot_field = field_mean
 		cmap_color = 'hot_r'
+		if numpy.ma.min(ref_field_mean) < 0 and numpy.ma.max(ref_field_mean) > 0:
+			cmap_color = 'seismic'
 	if k == 1:
 		plot_case = ref_case
 		plot_field = ref_field_mean
 		cmap_color = 'hot_r'
+		if numpy.ma.min(ref_field_mean) < 0 and numpy.ma.max(ref_field_mean) > 0:
+			cmap_color = 'seismic'
 	if k == 2:
 		plot_case = 'Difference'
 		plot_field = field_mean - ref_field_mean

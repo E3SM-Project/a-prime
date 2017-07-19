@@ -241,7 +241,7 @@ EOF
 
   cat >> index.html << EOF
 	<br>
-	<font color=green size=+1><b>Meridional Avg. Over Tropical Pacific</b></font><br>
+	<font color=green size=+1><b>Meridional Avg. Over Tropical Pacific (5S-5N)</b></font><br>
 	<br>
 
 	<TABLE>
