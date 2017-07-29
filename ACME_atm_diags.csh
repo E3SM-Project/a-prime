@@ -88,7 +88,7 @@ foreach j (`seq 1 $n_cases`)
 
 	if ($short_term_archive == 1) then
 		echo Using ACME short term archiving directory structure!
-		set archive_dir_atm = $archive_dir/$casename/atm/hist
+		set archive_dir_atm = $archive_dir/$casename/atm
 	endif
 
 	if ($casename == obs) then
@@ -241,7 +241,7 @@ foreach j (`seq 1 $n_cases`)
 
 	if ($short_term_archive == 1) then
 		echo Using ACME short term archiving directory structure!
-		set archive_dir_atm = $archive_dir/$casename/atm/hist
+		set archive_dir_atm = $archive_dir/$casename/atm
 	endif
 
 	if ($condense_field_ts == 1) then
@@ -350,7 +350,7 @@ if ($generate_atm_enso_diags == 1) then
 
 		if ($short_term_archive == 1) then
 			echo Using ACME short term archiving directory structure!
-			set archive_dir_atm = $archive_dir/$casename/atm/hist
+			set archive_dir_atm = $archive_dir/$casename/atm
 		endif
 
 		if ($condense_field_climo == 1) then
@@ -483,7 +483,7 @@ if ($generate_atm_enso_diags == 1) then
 
 		if ($short_term_archive == 1) then
 			echo Using ACME short term archiving directory structure!
-			set archive_dir_atm = $archive_dir/$casename/atm/hist
+			set archive_dir_atm = $archive_dir/$casename/atm
 		endif
 
 		if ($condense_field_ts == 1) then
