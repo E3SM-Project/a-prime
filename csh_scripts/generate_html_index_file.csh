@@ -203,6 +203,16 @@ if ($generate_atm_enso_diags == 1) then
 	<TR>
 	  <TD><BR>
   </TABLE>
+
+
+  <br>
+  <font color=green size=+1><b>ENSO Seasonality</b></font><br>
+  <TABLE>
+	<TR>
+	  <TH ALIGN=LEFT><A HREF="${casename}_TS_seasonality_NINO.png">Nino3, Nino3.4, Nino4</a> 
+	<TR>
+	  <TD><BR>
+  </TABLE>
 EOF
 
 
