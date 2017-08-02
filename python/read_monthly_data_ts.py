@@ -1,4 +1,8 @@
 from read_monthly_data_ts_field import read_monthly_data_ts_field
+from get_derived_var_expr import get_derived_var_expr 
+
+import numpy
+from sympy import *
 
 
 def read_monthly_data_ts(indir,
@@ -14,7 +18,62 @@ def read_monthly_data_ts(indir,
                          debug = False):
 
 
-    if field_name == 'PRECT':
+    if field_name == 'RESSURF':
+
+	try:
+		field_in, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+				 casename = casename,
+				 field_name = field_name,
+				 interp_grid = interp_grid,
+				 interp_method = interp_method,
+				 begin_yr = begin_yr,
+				 end_yr = end_yr,
+				 begin_month = begin_month,
+				 end_month = end_month,
+				 reg = reg,
+				 debug = debug)
+		
+	
+	except:
+
+                print
+                print field_name, 'not found! Checking derived variables list for ', field_name
+
+                var_expr, var_expr_numpy = get_derived_var_expr(field_name)
+
+                for i, field_name_temp in enumerate(var_expr.atoms(Symbol)):
+
+                        print field_name_temp
+                        field_name_temp_str = str(field_name_temp)
+                        print field_name_temp_str
+
+
+			field_temp, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
+					 casename = casename,
+					 field_name = field_name_temp_str,
+					 interp_grid = interp_grid,
+					 interp_method = interp_method,
+					 begin_yr = begin_yr,
+					 end_yr = end_yr,
+					 begin_month = begin_month,
+					 end_month = end_month,
+					 reg = reg,
+					 debug = debug)
+
+			if i == 0:
+				field_list = [field_temp]
+			else:
+                                field_list.append(field_temp)
+
+
+		print
+                print 'field_list length: ', len(field_list)
+
+                field_in = var_expr_numpy(*field_list)
+                print __name__, 'field_in.shape: ', field_in.shape
+
+
+    elif field_name == 'PRECT':
 
 	try:
 		field_in, lat, lon, area, units = read_monthly_data_ts_field(indir = indir,
