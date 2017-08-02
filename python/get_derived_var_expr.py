@@ -17,6 +17,12 @@ def get_derived_var_expr (field_name):
 	elif field_name == 'RESTOM':
 		FSNT, FLNT = symbols('FSNT, FLNT')
 		var_expr = FSNT - FLNT
+	elif field_name == 'FLNS':
+		FLUS, FLDS = symbols('FLUS, FLDS')
+		var_expr = FLUS - FLDS
+	elif field_name == 'RESSURF':
+		FLNS, FSNS, LHFLX, SHFLX = symbols('FLNS, FSNS, LHFLX, SHFLX')
+		var_expr = FLNS - FSNS + LHFLX + SHFLX
 	else:
 		print
 		print 'No derived variable list found for ', field_name

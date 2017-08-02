@@ -27,7 +27,7 @@ def read_monthly_data_ts_field(indir,
 
     print indir, casename, interp_grid,interp_method, field_name
 
-    if casename == 'COREv2' or casename == 'COREv2_flux' or casename == 'NCEP2' or casename == 'HadISST_ts' or casename == 'HadOIBl':
+    if casename == 'COREv2' or casename == 'COREv2_flux' or casename == 'NCEP2' or casename == 'NCEP2_surface' or casename == 'HadISST_ts' or casename == 'HadOIBl':
 	cam_text = '.'
 	begin_yr = 1979
 	end_yr   = 2006
@@ -171,6 +171,14 @@ def read_monthly_data_ts_field(indir,
 
     if field_name[0:3] == 'TAU' and casename != 'ERS' and casename != 'COREv2_flux':
 	    print 'Flipping sign of atm model wind stress values ...'
+	    field_in = -field_in
+
+    if field_name == 'LHFLX' and casename == 'COREv2_flux':
+	    print 'Flipping sign of COREv2_flux LHFLX to define positive values for upward fluxes (ocean to atm) ...'
+	    field_in = -field_in
+
+    if field_name == 'SHFLX' and casename == 'COREv2_flux':
+	    print 'Flipping sign of COREv2_flux SHFLX to define positive values for upward fluxes (ocean to atm) ...'
 	    field_in = -field_in
 
     if debug: print __name__, 'field_in[0,:,:]: ', field_in[0, :, :]
