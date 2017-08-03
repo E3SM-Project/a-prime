@@ -121,18 +121,13 @@ no_ann			= args.no_ann
 stdize			= args.stdize
 plots_dir   		= args.plots_dir
 
-#regs = ['global', 'NH_high_lats', 'NH_mid_lats', 'tropics', 'SH_mid_lats', 'SH_high_lats']
-#names = ['Global', '90N-50N', '50N-20N', '20N-20S', '20S-50S', '50S-90S']
-
-print 'salil', regs
-print 'salil', names
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
 x = mpl.get_backend()
 print 'backend: ', x
  
-def plot_multiple_index_seasonality   (indir,
+def plot_diff_index   (indir,
 			   casename,
 			   field_name,
 			   interp_grid,
@@ -173,126 +168,65 @@ def plot_multiple_index_seasonality   (indir,
 								  aggregate 	= aggregate,
 								  debug 	= debug)
 
-		if i == 0: 
-			test_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
-			test_stddev_ts = numpy.zeros((n_reg, 12)) 
-			nyrs = area_seasonal_avg.shape[0]/12
+		if i == 0: test_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
 
 		test_ts[i, :] = area_seasonal_avg 
-	
-		if debug: print __name__, 'test_stddev_ts.shape: ', test_stddev_ts.shape
-		if debug: print __name__, 'nyrs: ', nyrs
+
+		if aggregate == 0 and no_ann == 1:
+			area_seasonal_avg_no_ann = remove_seasonal_cycle_monthly_data(test_ts[i, :], n_months_season, debug = debug)
+			test_ts[i, :] = area_seasonal_avg_no_ann
 		
-		for month in range(0, 12):
-		    j = numpy.arange(0,nyrs) * 12 + month
-		    test_stddev_ts[i, month] = numpy.std(test_ts[i, j])
+		if stdize == 1:
+			area_seasonal_avg_stddize = standardize_time_series(test_ts[i, :])
+			test_ts[i, :] = area_seasonal_avg_stddize
 
-
+	
         if debug: print __name__, 'test_ts: ', test_ts
 
 
-	for i,reg in enumerate(regs):
-		print __name__, 'casename: ', casename
-		area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
-								  indir 	= ref_case_dir,
-								  casename 	= ref_case, 
-								  field_name 	= field_name,
-								  interp_grid 	= ref_interp_grid,
-								  interp_method = ref_interp_method,
-								  begin_yr 	= ref_begin_yr,
-								  end_yr 	= ref_end_yr,
-								  begin_month 	= begin_month,
-								  end_month 	= end_month,
-								  reg 		= reg,
-								  aggregate 	= aggregate,
-								  debug 	= debug)
+	test_plot_ts = test_ts[0, :] - test_ts[-1, :]
 
 
-		if i == 0: 
-			ref_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
-			ref_stddev_ts = numpy.zeros((n_reg, 12)) 
-			nyrs = area_seasonal_avg.shape[0]/12
 
-		ref_ts[i, :] = area_seasonal_avg 
+	if aggregate == 1: 
+		plot_time = numpy.arange(0,nt) + plot_begin_yr
+	else:
+		time = numpy.arange(0,nt)
 
-		for month in range(0, 12):
-		    j = numpy.arange(0,nyrs) * 12 + month
-		    ref_stddev_ts[i, month] = numpy.std(ref_ts[i, j])
+	season = get_season_name(begin_month, end_month)
 
-        if debug: print __name__, 'ref_stddev_ts: ', ref_stddev_ts
+	index_name = index_set_name
+
+	#Writing netcdf file
+	outfile = outdir + '/'+ casename + '_' + index_name + '_' + field_name + '_' + season \
+		    '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
+
+	if aggregate == 1:
+		outfile = outdir + '/'+ casename + '_' + index_name + '_' + field_name + '_' + season \
+			    '_aggregated.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
 	
 
-	f, ax = plt.subplots(n_reg, 1, figsize=(4,8.5))
+	print "Writing ", outfile
+	print ""
 
-	f.text(0.0, 0.5, 'Std. dev. ' + field_name + ' (' + units + ')', va='center', rotation='vertical', fontsize = 14)
+	f_write = Dataset(outfile, 'w', format = 'NETCDF4')
+	
+	time_dim_outfile = f_write.createDimension('time', time)
 
-	plt.suptitle('ENSO Seasonality: ' + index_set_name + ' index', fontsize = 16)
+	field_outfile = f_write.createVariable(index_name, 'f4', ('time'))
+	field_outfile.setncattr('long_name', 'index')
+	field_outfile.setncattr('units', 'unitless')
+	
+	field_outfile[:] = index
 
-	plot_time = numpy.arange(1,13)
-	plot_time_ticks = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
+	time_outfile = f_write.createVariable(time, 'f4', ('time'))
+	time_outfile.setncattr('long_name', 'time')
 
-	k = 0
-		
-	for i,name in enumerate(names):
-		min_plot = numpy.amin(ref_stddev_ts[i, :])
-		max_plot = numpy.amax(ref_stddev_ts[i, :])
-
-		y_axis_ll = max(0, 0.5*min_plot)
-		y_axis_ul = 1.1 * max_plot
-
-		ax[i].axis([plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul])
-
-		print 'plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul: ', \
-			plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul
-
-
-		test_plot, = ax[i].plot(plot_time, test_stddev_ts[i, :], color = colors[i], linewidth = 2.0, label = casename)
-		ref_plot, = ax[i].plot(plot_time, ref_stddev_ts[i, :], color = 'black', linewidth = 2.0, label = ref_case)
-
-		ax[i].set_title(name, fontsize = 10)
-		
-		ax[i].set_xticks(plot_time)
-		ax[i].set_xticklabels(plot_time_ticks)
-
-		if i == 0:
-			ax[i].legend(loc = 'upper right', bbox_to_anchor = (1.1,1.35), 
-				     handles=[test_plot, ref_plot], 
-				     fontsize = 7)
-
-		if i < n_reg-1:
-			ax[i].tick_params(labelbottom='off')
-
-		if i == n_reg-1:
-			ax[i].text(0.5, -0.3, 'Month', ha='center', \
-					fontsize = 14, transform=ax[i].transAxes)
-
-
-		ax[i].get_yaxis().get_major_formatter().set_useOffset(False)
-		ax[i].yaxis.set_major_locator(MaxNLocator(6))
-
-			
-		for tick in ax[i].yaxis.get_major_ticks():
-				tick.label.set_fontsize(10)
-		for tick in ax[i].xaxis.get_major_ticks():
-				tick.label.set_fontsize(10)
-
-
-	plt.subplots_adjust(hspace=0.3)
-	plt.subplots_adjust(wspace=0.3)
-
-	#f.subplots_adjust(left = 0.25)
-
-	mpl.rcParams['savefig.dpi']=300
-
-	outfile = plots_dir + '/' + casename + '_' \
-		   + field_name + '_seasonality_' + index_set_name + '.png'	
-
-	plt.savefig(outfile)
-	#plt.show()
+	time_outfile[:] = time
 
 
 if __name__ == "__main__":
-	plot_multiple_index_seasonality (indir = indir,
+	compute_diff_index (indir = indir,
 			       casename = casename,
                                field_name = field_name,
 			       interp_grid = interp_grid,

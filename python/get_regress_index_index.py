@@ -88,14 +88,14 @@ def get_regress_index_index (indir,
 		field = field_seasonal_avg
 
 
-	regr_coef = stats.linregress(index, field)
+	regr_coef, intercept, r_value, p_value, std_err = stats.linregress(index, field)
 
 	units = units_field + '/' + units_index
 
 	if stdize == 1:
 		units = units_out
 
-	return regr_coef, field, index, units_field, units_index, units
+	return regr_coef, intercept, r_value, p_value, std_err, field, index, units_field, units_index, units
 
 if __name__ == "__main__":
 	get_regress_index_index (indir = indir,
