@@ -524,6 +524,42 @@ if ($generate_atm_enso_diags == 1) then
 		endif
 	end
 
+	# ENSO Diags: Plot Equatorial SOI index time series
+	echo
+	echo Submitting job to plot Equatorial SOI time series
+	echo Log files in $log_dir/
+	echo
+
+	set ref_case        = $case_set[$n_cases]
+	set ref_scratch_dir = $scratch_dir_set[$n_cases]
+
+	echo Reference Case: $ref_case
+	echo
+
+	@ n_test_cases = $n_cases - 1
+
+	set var_list_file = var_list_enso_diags_eqsoi_index.csh
+
+	foreach j (`seq 1 $n_test_cases`)
+		set casename    = $case_set[$j]
+		set scratch_dir = $scratch_dir_set[$j]
+		set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts   = $end_yr_enso_atm_set[$j]
+                set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
+		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
+
+		csh_scripts/plot_eqsoi_time_series.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_ts \
+						 $end_yr_ts \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+						 $var_list_file
+	end
+
+
 
 	# ENSO Diags: Plot Nino3, Nino3.4 and Nino4 index time series
 	echo
@@ -575,16 +611,59 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
 
-		csh_scripts/plot_enso_seasonality.csh $scratch_dir \
-						 $casename \
-						 $begin_yr_ts \
-						 $end_yr_ts \
-						 $ref_scratch_dir \
-						 $ref_case \
-						 $ref_begin_yr_ts \
-						 $ref_end_yr_ts \
-						 $var_list_file
+#		csh_scripts/plot_enso_seasonality.csh $scratch_dir \
+#						 $casename \
+#						 $begin_yr_ts \
+#						 $end_yr_ts \
+#						 $ref_scratch_dir \
+#						 $ref_case \
+#						 $ref_begin_yr_ts \
+#						 $ref_end_yr_ts \
+#						 $var_list_file
 	end
+
+
+
+	#ENSO Diags: Plot Heat Flux - SST Feedbacks 
+
+	set index_field = 'TS'
+	set index_reg = 'Nino3'
+	set index_reg_name = 'Nino3'
+
+	set field_reg = 'Nino3'
+	set field_reg_name = 'Nino3'
+
+	echo
+	echo Submitting jobs to plot Nino3 heat flux-SST feedbacks
+	echo Log files in $log_dir/
+	echo
+
+	set var_list_file = var_list_enso_diags_heat_flux-sst_feedbacks.csh
+
+	foreach j (`seq 1 $n_test_cases`)
+                set casename        = $case_set[$j]
+                set scratch_dir     = $scratch_dir_set[$j]
+                set begin_yr_ts     = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts	    = $end_yr_enso_atm_set[$j]
+                set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
+		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
+        	
+#	        csh_scripts/plot_enso_heat_flux-sst_feedbacks.csh $scratch_dir \
+#                                                 $casename \
+#                                                 $begin_yr_ts \
+#						 $end_yr_ts \
+#						 $index_field \
+#						 $index_reg \
+#						 $index_reg_name \
+#						 $field_reg \
+#						 $field_reg_name \
+#                                                 $ref_scratch_dir \
+#                                                 $ref_case \
+#                                                 $ref_begin_yr_ts \
+#						 $ref_end_yr_ts \
+#                                                 $var_list_file
+        end
+
 
 
 

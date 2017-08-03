@@ -61,7 +61,7 @@ foreach k (`seq 1 $n_var`)
                 set end_month   = $end_month_set[$i]
                 set season_name = $season_name_set[$i]
 
-		python python/plot_regress_index_field.py -d True --indir $scratch_dir $scratch_dir\
+		python python/plot_regress_index_index.py -d True --indir $scratch_dir $scratch_dir\
 								-c $casename $casename\
 								-f $var $index_field\
 								--begin_yr $begin_yr \
@@ -81,7 +81,7 @@ foreach k (`seq 1 $n_var`)
 								--stdize 0 \
 								--reg $reg \
 								--reg_name $reg_name \
-								--plots_dir $plots_dir >& $log_dir/plot_regr_${casename}_${var}_vs_${index_reg_name}_$season_name.log &
+								--plots_dir $plots_dir >& $log_dir/plot_flux_sst_feedbacks_${casename}_${var}_vs_${index_reg_name}_$season_name.log &
 	end
 end
 

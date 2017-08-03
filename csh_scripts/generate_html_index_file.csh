@@ -195,6 +195,17 @@ if ($generate_atm_enso_diags == 1) then
 
   <hr noshade size=2 size="100%">
 
+
+  <br>
+  <font color=green size=+1><b>Equatorial SOI Index</b></font><br>
+  <TABLE>
+	<TR>
+	  <TH ALIGN=LEFT><A HREF="${casename}_PSL_ANN_EQSOI.png">EQSOI</a> 
+	<TR>
+	  <TD><BR>
+  </TABLE>
+
+
   <br>
   <font color=green size=+1><b>NINO Index</b></font><br>
   <TABLE>
@@ -308,6 +319,77 @@ EOF
   </TABLE>
 EOF
 
+
+# Generating index.html section for ENSO heat flux-SST feedbacks plots
+
+  set var_list_file = $coupled_diags_home/var_list_enso_diags_heat_flux-sst_feedbacks.csh
+  source $var_list_file
+
+  set temp_unique_grp_list_file = $log_dir/temp_unique_grp_list_file.csh
+
+  csh $coupled_diags_home/csh_scripts/generate_unique_group_list.csh $var_list_file $temp_unique_grp_list_file
+
+  source $temp_unique_grp_list_file
+
+
+  @ j = 1
+
+  cat >> index.html << EOF
+        <br>
+        <br>
+        <font color=green size=+1><b>Heat Flux-SST Feedbacks: Nino3 Region</b></font><br>
+        <br>
+        <TABLE>
+EOF
+
+  foreach grp ($var_grp_unique_set)
+
+	if $grp != 'Temperature' then
+		if ($ref_case == obs) then
+			set grp_text = "$grp ($grp_interp_grid_set[$j])"
+		else
+			set grp_text = $grp
+		endif
+
+		cat >> index.html << EOF
+		<TR>
+		  <TH><BR>
+		  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
+		  <TH>Scatter Plot
+EOF
+
+		@ i = 1
+		foreach var ($var_set)
+
+			if ($var_group_set[$i] == $grp) then
+
+				if ($ref_case == obs) then
+					set ref_casename_plot = $interp_grid_set[$i]
+				else
+					set ref_casename_plot = $ref_case
+				endif
+				
+				cat >> index.html << EOF
+				<TR>
+				  <TH ALIGN=LEFT>$var 
+				  <TD ALIGN=LEFT>$var_name_set[$i]
+				  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_feedback_${var}_Nino3_ANN_TS_Nino3_ANN.png">plot</a>
+EOF
+			endif
+			@ i = $i + 1
+		end
+
+		cat >> index.html << EOF
+		<TR>
+		  <TD><BR>
+EOF
+
+		@ j = $j + 1
+	endif
+  end
+  cat >> index.html << EOF
+  </TABLE>
+EOF
 
 
 

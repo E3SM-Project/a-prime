@@ -38,6 +38,12 @@ def get_reg_box(reg):
 	if reg == "Greater_Tropical_Pacific":
 		lat_ll, lat_ul, lon_ll, lon_ul = -30, 30, 120, 290
 
+	if reg == "EPAC":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 230, 280
+
+	if reg == "INDO":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 90, 140
+
 	return (lat_ll, lat_ul, lon_ll, lon_ul)
 
 
