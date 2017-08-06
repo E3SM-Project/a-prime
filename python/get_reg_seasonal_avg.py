@@ -27,6 +27,7 @@ def get_reg_seasonal_avg (indir,
 			  aggregate,
 			  debug = False):
 
+
 	field, lat_reg, lon_reg, area_reg, units_out = read_monthly_data_ts(indir = indir,
 				 casename = casename,
 				 field_name = field_name,

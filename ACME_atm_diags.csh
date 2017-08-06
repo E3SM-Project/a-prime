@@ -188,6 +188,10 @@ set ref_end_yr_climo   = $end_yr_climo_set[$j]
 echo Reference Case: $ref_case
 echo
 
+if $ref_case == obs then
+	set ref_scratch_dir = $archive_dir_set[$n_cases]
+endif
+
 @ n_test_cases = $n_cases - 1
 
 foreach j (`seq 1 $n_test_cases`)
@@ -196,14 +200,14 @@ foreach j (`seq 1 $n_test_cases`)
         set begin_yr_climo = $begin_yr_climo_set[$j]
         set end_yr_climo = $end_yr_climo_set[$j]
 
-#	csh_scripts/plot_climo.csh $scratch_dir \
-#				   $casename \
-#				   $begin_yr_climo \
-#				   $end_yr_climo \
-#				   $ref_scratch_dir \
-#				   $ref_case \
-#				   $ref_begin_yr_climo \
-#				   $ref_end_yr_climo \
+	csh_scripts/plot_climo.csh $scratch_dir \
+				   $casename \
+				   $begin_yr_climo \
+				   $end_yr_climo \
+				   $ref_scratch_dir \
+				   $ref_case \
+				   $ref_begin_yr_climo \
+				   $ref_end_yr_climo \
 end
 
 
@@ -297,6 +301,10 @@ set ref_scratch_dir = $scratch_dir_set[$n_cases]
 echo Reference Case: $ref_case
 echo
 
+if $ref_case == obs then
+	set ref_scratch_dir = $archive_dir_set[$n_cases]
+endif
+
 @ n_test_cases = $n_cases - 1
 
 foreach j (`seq 1 $n_test_cases`)
@@ -305,12 +313,12 @@ foreach j (`seq 1 $n_test_cases`)
 	set begin_yr_ts = $begin_yr_ts_set[$j]
 	set end_yr_ts   = $end_yr_ts_set[$j]
 
-#	csh_scripts/plot_time_series.csh $scratch_dir \
-#					 $casename \
-#					 $begin_yr_ts \
-#					 $end_yr_ts \
-#					 $ref_scratch_dir \
-#					 $ref_case
+	csh_scripts/plot_time_series.csh $scratch_dir \
+					 $casename \
+					 $begin_yr_ts \
+					 $end_yr_ts \
+					 $ref_scratch_dir \
+					 $ref_case
 end
 
 
@@ -433,6 +441,10 @@ if ($generate_atm_enso_diags == 1) then
 	echo Reference Case: $ref_case
 	echo
 
+	if $ref_case == obs then
+		set ref_scratch_dir = $archive_dir_set[$n_cases]
+	endif
+
 	@ n_test_cases = $n_cases - 1
 
 	foreach j (`seq 1 $n_test_cases`)
@@ -441,13 +453,13 @@ if ($generate_atm_enso_diags == 1) then
 		set begin_yr_climo = $begin_yr_enso_atm_set[$j]
 		set end_yr_climo = $end_yr_enso_atm_set[$j]
 
-#		csh_scripts/plot_tropical_pacific_meridional_avg.csh $scratch_dir \
-#						 $casename \
-#						 $begin_yr_climo \
-#						 $end_yr_climo \
-#						 $ref_scratch_dir \
-#						 $ref_case \
-#						 $var_list_file
+		csh_scripts/plot_tropical_pacific_meridional_avg.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_climo \
+						 $end_yr_climo \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $var_list_file
 	end
 
 
@@ -524,21 +536,75 @@ if ($generate_atm_enso_diags == 1) then
 		endif
 	end
 
-	# ENSO Diags: Plot Equatorial SOI index time series
-	echo
-	echo Submitting job to plot Equatorial SOI time series
-	echo Log files in $log_dir/
-	echo
+	# ENSO Diags: Compute Nino and EQSOI indices
+        echo
+        echo Submitting jobs to compute Nino and EQSOI index
+        echo Log files in $log_dir/
+        echo
 
-	set ref_case        = $case_set[$n_cases]
-	set ref_scratch_dir = $scratch_dir_set[$n_cases]
+        set ref_case        = $case_set[$n_cases]
+        set ref_scratch_dir = $scratch_dir_set[$n_cases]
 
-	echo Reference Case: $ref_case
-	echo
+        echo Reference Case: $ref_case
+        echo
 
-	@ n_test_cases = $n_cases - 1
+        @ n_test_cases = $n_cases - 1
+
+        set var_list_file = var_list_enso_diags_time_series.csh
+
+        foreach j (`seq 1 $n_cases`)
+                set casename    = $case_set[$j]
+		set archive_dir = $archive_dir_set[$j]
+                set scratch_dir = $scratch_dir_set[$j]
+                set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+                set end_yr_ts   = $end_yr_enso_atm_set[$j]
+
+		if ($casename != obs) then
+			set archive_dir = $scratch_dir
+		else
+			set archive_dir = $archive_dir
+		endif
+
+                csh_scripts/compute_indices.csh $archive_dir \
+						$scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+                                                 $end_yr_ts \
+                                                 $var_list_file
+        end	
 
 	set var_list_file = var_list_enso_diags_eqsoi_index.csh
+
+        foreach j (`seq 1 $n_cases`)
+                set casename    = $case_set[$j]
+		set archive_dir = $archive_dir_set[$j]
+                set scratch_dir = $scratch_dir_set[$j]
+                set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+                set end_yr_ts   = $end_yr_enso_atm_set[$j]
+
+		if ($casename != obs) then
+			set archive_dir = $scratch_dir
+		else
+			set archive_dir = $archive_dir
+		endif
+
+                csh_scripts/compute_eqsoi_index.csh $archive_dir \
+						 $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+                                                 $end_yr_ts \
+                                                 $var_list_file
+        end	
+
+
+	# ENSO Diags: Plot Nino and EQSOI time series
+
+        echo
+        echo Submitting job to plot Nino and EQSOI index
+        echo Log files in $log_dir/
+        echo
+
+        set var_list_file = var_list_enso_diags_time_series.csh
 
 	foreach j (`seq 1 $n_test_cases`)
 		set casename    = $case_set[$j]
@@ -548,7 +614,7 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
 
-		csh_scripts/plot_eqsoi_time_series.csh $scratch_dir \
+		csh_scripts/plot_multiple_index_same_plot.csh $scratch_dir \
 						 $casename \
 						 $begin_yr_ts \
 						 $end_yr_ts \
@@ -558,6 +624,46 @@ if ($generate_atm_enso_diags == 1) then
 						 $ref_end_yr_ts \
 						 $var_list_file
 	end
+	
+
+	# ENSO Diags: Plot Equatorial SOI index time series
+#	echo
+#	echo Submitting job to plot Equatorial SOI time series
+#	echo Log files in $log_dir/
+#	echo
+#
+#	set ref_case        = $case_set[$n_cases]
+#	set ref_scratch_dir = $scratch_dir_set[$n_cases]
+#
+#	echo Reference Case: $ref_case
+#	echo
+#
+#	if $ref_case == obs then
+#		set ref_scratch_dir = $archive_dir_set[$n_cases]
+#	endif
+#
+#	@ n_test_cases = $n_cases - 1
+#
+#	set var_list_file = var_list_enso_diags_eqsoi_index.csh
+#
+#	foreach j (`seq 1 $n_test_cases`)
+#		set casename    = $case_set[$j]
+#		set scratch_dir = $scratch_dir_set[$j]
+#		set begin_yr_ts = $begin_yr_enso_atm_set[$j]
+#		set end_yr_ts   = $end_yr_enso_atm_set[$j]
+#                set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
+#		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
+#
+#		csh_scripts/plot_eqsoi_time_series.csh $scratch_dir \
+#						 $casename \
+#						 $begin_yr_ts \
+#						 $end_yr_ts \
+#						 $ref_scratch_dir \
+#						 $ref_case \
+#						 $ref_begin_yr_ts \
+#						 $ref_end_yr_ts \
+#						 $var_list_file
+#	end
 
 
 
@@ -573,6 +679,10 @@ if ($generate_atm_enso_diags == 1) then
 	echo Reference Case: $ref_case
 	echo
 
+	if $ref_case == obs then
+		set ref_scratch_dir = $archive_dir_set[$n_cases]
+	endif
+
 	@ n_test_cases = $n_cases - 1
 
 	set var_list_file = var_list_enso_diags_nino_index.csh
@@ -585,15 +695,15 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
 
-#		csh_scripts/plot_enso_diags_time_series.csh $scratch_dir \
-#						 $casename \
-#						 $begin_yr_ts \
-#						 $end_yr_ts \
-#						 $ref_scratch_dir \
-#						 $ref_case \
-#						 $ref_begin_yr_ts \
-#						 $ref_end_yr_ts \
-#						 $var_list_file
+		csh_scripts/plot_enso_diags_time_series.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_ts \
+						 $end_yr_ts \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+						 $var_list_file
 	end
 
 
@@ -611,18 +721,60 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
 
-#		csh_scripts/plot_enso_seasonality.csh $scratch_dir \
-#						 $casename \
-#						 $begin_yr_ts \
-#						 $end_yr_ts \
-#						 $ref_scratch_dir \
-#						 $ref_case \
-#						 $ref_begin_yr_ts \
-#						 $ref_end_yr_ts \
-#						 $var_list_file
+		csh_scripts/plot_enso_seasonality.csh $scratch_dir \
+						 $casename \
+						 $begin_yr_ts \
+						 $end_yr_ts \
+						 $ref_scratch_dir \
+						 $ref_case \
+						 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+						 $var_list_file
 	end
 
 
+	#ENSO Diags: Plot Bjerknes Feedback (Nino4 TAUX vs. Nino3 SST) 
+
+	set index_field = 'TS'
+	set index_reg = 'Nino3'
+	set index_reg_name = 'Nino3'
+
+	set field_reg = 'Nino4'
+	set field_reg_name = 'Nino4'
+
+	set split_yfit_x_0 = 0
+
+	echo
+	echo Submitting jobs to plot Bjerkenes feedback
+	echo Log files in $log_dir/
+	echo
+
+	set var_list_file = var_list_enso_diags_bjerknes_feedback.csh
+
+	foreach j (`seq 1 $n_test_cases`)
+                set casename        = $case_set[$j]
+                set scratch_dir     = $scratch_dir_set[$j]
+                set begin_yr_ts     = $begin_yr_enso_atm_set[$j]
+		set end_yr_ts	    = $end_yr_enso_atm_set[$j]
+                set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
+		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
+        	
+	        csh_scripts/plot_enso_feedbacks.csh $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                 $ref_scratch_dir \
+                                                 $ref_case \
+                                                 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+						 $split_yfit_x_0 \
+                                                 $var_list_file
+        end
 
 	#ENSO Diags: Plot Heat Flux - SST Feedbacks 
 
@@ -632,6 +784,8 @@ if ($generate_atm_enso_diags == 1) then
 
 	set field_reg = 'Nino3'
 	set field_reg_name = 'Nino3'
+
+	set split_yfit_x_0 = 1
 
 	echo
 	echo Submitting jobs to plot Nino3 heat flux-SST feedbacks
@@ -648,20 +802,21 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
         	
-#	        csh_scripts/plot_enso_heat_flux-sst_feedbacks.csh $scratch_dir \
-#                                                 $casename \
-#                                                 $begin_yr_ts \
-#						 $end_yr_ts \
-#						 $index_field \
-#						 $index_reg \
-#						 $index_reg_name \
-#						 $field_reg \
-#						 $field_reg_name \
-#                                                 $ref_scratch_dir \
-#                                                 $ref_case \
-#                                                 $ref_begin_yr_ts \
-#						 $ref_end_yr_ts \
-#                                                 $var_list_file
+	        csh_scripts/plot_enso_feedbacks.csh $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                 $ref_scratch_dir \
+                                                 $ref_case \
+                                                 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+						 $split_yfit_x_0 \
+                                                 $var_list_file
         end
 
 
@@ -724,16 +879,16 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
         	
-#		csh_scripts/plot_stddev.csh $scratch_dir \
-#					   $casename \
-#					   $reg \
-#					   $begin_yr_ts \
-#					   $end_yr_ts \
-#					   $ref_scratch_dir \
-#					   $ref_case \
-#					   $ref_begin_yr_ts \
-#					   $ref_end_yr_ts \
-#					   $var_list_file 
+		csh_scripts/plot_stddev.csh $scratch_dir \
+					   $casename \
+					   $reg \
+					   $begin_yr_ts \
+					   $end_yr_ts \
+					   $ref_scratch_dir \
+					   $ref_case \
+					   $ref_begin_yr_ts \
+					   $ref_end_yr_ts \
+					   $var_list_file 
 
 
 	#ENSO Diags: ENSO Evolution

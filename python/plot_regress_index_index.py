@@ -93,6 +93,9 @@ if __name__ == "__main__":
     parser.add_argument("--reg_name", dest = "reg_name", nargs = '+',
                         help = "names of regions to be placed in plots")
 
+    parser.add_argument("--split_yfit_x_0", dest = "split_yfit_x_0", type = int,
+                        help = "flag to split yfit at x=0", default = 0)
+
     parser.add_argument("--plots_dir", dest = "plots_dir",
                         help = "filepath to GPCP directory")
 
@@ -120,6 +123,7 @@ no_ann			= args.no_ann
 stdize			= args.stdize
 reg			= args.reg
 reg_name		= args.reg_name
+split_yfit_x_0		= args.split_yfit_x_0
 plots_dir   		= args.plots_dir
 
 
@@ -149,6 +153,8 @@ def plot_regress_index_index (indir,
 			   stdize,
 			   reg,
 			   reg_name,
+			   split_yfit_x_0,
+			   plots_dir,
 			   debug = False):
 
 
@@ -183,19 +189,24 @@ def plot_regress_index_index (indir,
 	units_index = x[8]
 	units = x[9]
 
+	if split_yfit_x_0 == 1:
+		posit_index = index[numpy.where(index >= 0)]
+		field_posit_index = field[numpy.where(index >= 0)]
 
-	posit_index = index[numpy.where(index >= 0)]
-	field_posit_index = field[numpy.where(index >= 0)]
-
-	m = stats.linregress(posit_index, field_posit_index)
-	yfit_posit = m[0] * posit_index + m[1]
+		m = stats.linregress(posit_index, field_posit_index)
+		yfit_posit = m[0] * posit_index + m[1]
 
 
-	neg_index = index[numpy.where(index < 0)]
-	field_neg_index = field[numpy.where(index < 0)]
+		neg_index = index[numpy.where(index < 0)]
+		field_neg_index = field[numpy.where(index < 0)]
 
-	n = stats.linregress(neg_index, field_neg_index)
-	yfit_neg = n[0] * neg_index + n[1]
+		n = stats.linregress(neg_index, field_neg_index)
+		yfit_neg = n[0] * neg_index + n[1]
+
+	else:
+		m = stats.linregress(index, field)
+		yfit = m[0] * index + m[1]
+
 
 
         field_name_ref = [] + field_name
@@ -235,20 +246,24 @@ def plot_regress_index_index (indir,
 	ref_units_index = x[8]
 	ref_units = x[9]
 
+	if split_yfit_x_0 == 1:
+		posit_ref_index 	  = ref_index[numpy.where(ref_index >= 0)]
+		ref_field_posit_ref_index = ref_field[numpy.where(ref_index >= 0)]
 
-	posit_ref_index 	  = ref_index[numpy.where(ref_index >= 0)]
-	ref_field_posit_ref_index = ref_field[numpy.where(ref_index >= 0)]
-
-	m_ref 		= stats.linregress(posit_ref_index, ref_field_posit_ref_index)
-	ref_yfit_posit  = m_ref[0] * posit_ref_index + m_ref[1]
+		m_ref 		= stats.linregress(posit_ref_index, ref_field_posit_ref_index)
+		ref_yfit_posit  = m_ref[0] * posit_ref_index + m_ref[1]
 
 
-	neg_ref_index 		= ref_index[numpy.where(ref_index <= 0)]
-	ref_field_neg_ref_index = ref_field[numpy.where(ref_index <= 0)]
+		neg_ref_index 		= ref_index[numpy.where(ref_index <= 0)]
+		ref_field_neg_ref_index = ref_field[numpy.where(ref_index <= 0)]
 
-	n_ref	     = stats.linregress(neg_ref_index, ref_field_neg_ref_index)
-	ref_yfit_neg = n_ref[0] * neg_ref_index + n_ref[1]
+		n_ref	     = stats.linregress(neg_ref_index, ref_field_neg_ref_index)
+		ref_yfit_neg = n_ref[0] * neg_ref_index + n_ref[1]
 
+	else:
+		m = stats.linregress(ref_index, ref_field)
+		ref_yfit = m[0] * ref_index + m[1]
+		
 
 
 
@@ -268,7 +283,8 @@ def plot_regress_index_index (indir,
 
 
 
-	f.suptitle('Scatter Plot: ' + field_name[0] + ' vs. ' + field_name[1] + ' (' + reg[0] + ' Region Avg.)', fontsize = 14, color = 'blue') 
+	f.suptitle('Scatter Plot: ' + field_name[0] + ' (' + reg[0] + ') vs. ' + \
+			field_name[1] + ' (' + reg[0] + ')', fontsize = 14, color = 'blue') 
 
 	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 12)
 
@@ -286,34 +302,50 @@ def plot_regress_index_index (indir,
 	plt.axvline(x = 0, c = 'black', linewidth = 1)
 
 
-
 	test_scatter = plt.scatter(index, field, s = 10, c = 'red', marker = 's', \
 					alpha = 0.7, edgecolors = 'face', label = casename[0])
 
 	ref_scatter  = plt.scatter(ref_index, ref_field, s = 20, c = 'black', \
-					alpha = 0.3, edgecolors = 'face', label = ref_case[0])
+					alpha = 0.3, edgecolors = 'face', \
+					label = ref_case[0] + ' (' + field_name[0] + ') vs. ' + ref_case[1] + ' (' + field_name[1] + ')')
 
 
-	posit_index_line, = plt.plot(posit_index, yfit_posit, c = 'red', linewidth = 3, \
-					label = 'Linear fit for positive ' + field_name[1] + \
-					' anomalies (slope = ' + str(round(m[0], 2)) + ')')
+	if split_yfit_x_0 == 1:
 
-	neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 3, alpha = 0.5, \
-					label = 'Linear fit for negative ' + field_name[1] + \
-					' anomalies (slope = ' + str(round(n[0], 2)) + ')')
+		posit_index_line, = plt.plot(posit_index, yfit_posit, c = 'red', linewidth = 3, \
+						label = 'Linear fit for positive ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
 
-	ref_posit_line,   = plt.plot(posit_ref_index, ref_yfit_posit, c = 'black', linewidth = 3, \
-					label = 'Linear fit for positive ' + field_name[1] + \
-					' anomalies (slope = ' + str(round(m_ref[0], 2)) + ')')
+		neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 3, alpha = 0.5, \
+						label = 'Linear fit for negative ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(n[0], 2)) + ')')
+
+		ref_posit_line,   = plt.plot(posit_ref_index, ref_yfit_posit, c = 'black', linewidth = 3, \
+						label = 'Linear fit for positive ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(m_ref[0], 2)) + ')')
 
 
-	ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 3, alpha = 0.5, \
-					label = 'Linear fit for negative ' + field_name[1] + \
-					' anomalies (slope = ' + str(round(n_ref[0], 2)) + ')')
+		ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 3, alpha = 0.5, \
+						label = 'Linear fit for negative ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(n_ref[0], 2)) + ')')
 
-	plt.legend(handles = [test_scatter, ref_scatter, posit_index_line, neg_index_line, ref_posit_line, ref_neg_line],
-		   loc = 'upper left',
-		   fontsize = 10)
+		plt.legend(handles = [test_scatter, ref_scatter, posit_index_line, neg_index_line, ref_posit_line, ref_neg_line],
+			   loc = 'upper left',
+			   fontsize = 10)
+
+	else:
+		
+		yfit_line, = plt.plot(index, yfit, c = 'red', linewidth = 3, \
+						label = 'Linear fit for positive ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
+
+		ref_yfit_line, = plt.plot(ref_index, ref_yfit, c = 'black', linewidth = 3, \
+						label = 'Linear fit for positive ' + field_name[1] + \
+						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
+
+		plt.legend(handles = [test_scatter, ref_scatter, yfit_line, ref_yfit_line],
+			   loc = 'upper left',
+			   fontsize = 10)
 
 	mpl.rcParams['savefig.dpi']=300
 
@@ -349,4 +381,6 @@ if __name__ == "__main__":
 			       lag = lag,
 			       no_ann = no_ann,
 			       stdize = stdize,
+			       split_yfit_x_0 = split_yfit_x_0,
+			       plots_dir = plots_dir,
                                debug = debug)

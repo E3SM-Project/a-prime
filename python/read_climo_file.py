@@ -77,7 +77,7 @@ def read_climo_file (indir, \
 			print 'field_temp.shape: ', field_temp.shape
 
 			if i == 0:
-				field_list = [field_temp]			
+				field_list = [field_temp[:]]			
 				units = field_temp.units
 				lat = f.variables['lat']
 				lon = f.variables['lon']
@@ -88,7 +88,9 @@ def read_climo_file (indir, \
 					gw = f.variables['gw']
 
 			else:
-				field_list.append(field_temp)
+				field_list.append(field_temp[:])
+			
+			f.close()
 	
 		print
 		print 'field_list length: ', len(field_list)
