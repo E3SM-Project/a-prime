@@ -254,7 +254,7 @@ def plot_regress_lead_lag_index_field (indir,
 
 
 	#PLOT REGRESSIONS
-	f, ax = plt.subplots(n_lags, 2, figsize=(8.5, 11))
+	f, ax = plt.subplots(n_lags, 3, figsize=(12, 11))
 
 	title_txt = 'Lead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
 				   + reg_name[1] + ' ' + field_name[1] + ' index' 
@@ -270,7 +270,7 @@ def plot_regress_lead_lag_index_field (indir,
 
 	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
 
-	for k in [0, 1]:
+	for k in [0, 1, 2]:
                 if k == 0:
                         plot_case = casename[0]
                         plot_field = regr_matrix_lag
@@ -280,6 +280,11 @@ def plot_regress_lead_lag_index_field (indir,
                         plot_case = ref_case[0]
                         plot_field = ref_regr_matrix_lag
 			plot_t_test = ref_t_test_matrix_lag
+
+		if k == 2:
+                        plot_case = 'Difference'
+                        plot_field = regr_matrix_lag - ref_regr_matrix_lag
+
 
 
 
@@ -296,7 +301,8 @@ def plot_regress_lead_lag_index_field (indir,
 			c = m.contourf(x, y, plot_field[i, :, :], cmap = 'seismic', levels = levels, extend = 'both')
 
 			#plotting hatches representing statistical significance
-			m.contourf(x, y, plot_t_test[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
+			if k != 2:
+				m.contourf(x, y, plot_t_test[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
 
                         if i == 0:
                                 ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
@@ -337,7 +343,7 @@ def plot_regress_lead_lag_index_field (indir,
 	max_plot = round_to_first(5.0 * numpy.ma.std(ref_corr_matrix_lag))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
-	f, ax = plt.subplots(n_lags, 2, figsize=(8.5, 11))
+	f, ax = plt.subplots(n_lags, 3, figsize=(12, 11))
 
 	title_txt = 'Lead-lag Correlations: ' + field_name[0] + ' on ' \
 				   + reg_name[1] + ' ' + field_name[1] + ' index' 
@@ -353,7 +359,7 @@ def plot_regress_lead_lag_index_field (indir,
 
 	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
 
-	for k in [0, 1]:
+	for k in [0, 1, 2]:
                 if k == 0:
                         plot_case = casename[0]
                         plot_field = corr_matrix_lag
@@ -364,6 +370,9 @@ def plot_regress_lead_lag_index_field (indir,
                         plot_field = ref_corr_matrix_lag
 			plot_t_test = ref_t_test_matrix_lag
 
+		if k == 2:
+                        plot_case = 'Difference'
+                        plot_field = corr_matrix_lag - ref_corr_matrix_lag
 
 
 		for i, lag in enumerate(lags):
@@ -386,8 +395,7 @@ def plot_regress_lead_lag_index_field (indir,
                                                 fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
 
 
-	text_data = 'Units = ' + units + ', ' + \
-		    'min = '  + str(round(numpy.ma.min(ref_corr_matrix_lag), 2)) + ', ' + \
+	text_data = 'min = '  + str(round(numpy.ma.min(ref_corr_matrix_lag), 2)) + ', ' + \
 		    'max = '  + str(round(numpy.ma.max(ref_corr_matrix_lag), 2)) + ', ' + \
 		    'Positive lags indicate Nino 3.4 index leading.'
 

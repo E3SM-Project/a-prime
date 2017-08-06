@@ -60,13 +60,10 @@ if __name__ == "__main__":
     parser.add_argument("--end_month", dest = "end_month", type = int,
                         help = "end_month", default = 11)
 
-    parser.add_argument("--regs", dest = "regs", nargs = '+', 
-                        help = "regions to be analyzed/plotted")
+    parser.add_argument("--reg", dest = "reg", 
+                        help = "region to be analyzed/plotted")
 
-    parser.add_argument("--names", dest = "names", nargs = '+', 
-                        help = "names of regions to be placed in plots")
-
-    parser.add_argument("--index_set_name", dest = "index_set_name", 
+    parser.add_argument("--index_name", dest = "index_name", 
                         help = "name of the index set for naming plot files")
 
     parser.add_argument("--aggregate", dest = "aggregate", type = int,
@@ -79,7 +76,7 @@ if __name__ == "__main__":
 			help = "flag (0/1) to standardize index, default is off (0)", default = 0)
 
     parser.add_argument("--write_netcdf", dest = "write_netcdf", type = int,
-			help = "flag (0/1) to write netcdf file of index, default is on (1)", default = 1)
+			help = "flag (0/1) to write netcdf file of the index, default is on (1)", default = 1)
 
     args = parser.parse_args()
 
@@ -94,9 +91,8 @@ begin_yr    		= args.begin_yr
 end_yr      		= args.end_yr
 begin_month 		= args.begin_month
 end_month   		= args.end_month
-regs			= args.regs
-names			= args.names
-index_set_name		= args.index_set_name
+reg			= args.reg
+index_name		= args.index_name
 aggregate   		= args.aggregate
 no_ann			= args.no_ann
 stdize			= args.stdize
@@ -108,7 +104,7 @@ colors = ['b', 'g', 'r', 'c', 'm', 'y']
 x = mpl.get_backend()
 print 'backend: ', x
  
-def compute_diff_index   (archive_dir,
+def compute_index   (archive_dir,
 			   indir,
 			   casename,
 			   field_name,
@@ -118,99 +114,92 @@ def compute_diff_index   (archive_dir,
 			   end_yr,
 			   begin_month,
 			   end_month,
-			   regs,
-			   names,
-			   index_set_name,
+			   reg,
+			   index_name,
 			   aggregate,
 			   no_ann,
 			   stdize,
 			   write_netcdf,
 			   debug = False):
 
-	n_reg = len(regs)
+	print __name__, 'casename: ', casename
+	print __name__, 'reg: ', reg
+	area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
+							  indir 	= archive_dir,
+							  casename 	= casename, 
+							  field_name 	= field_name,
+							  interp_grid 	= interp_grid,
+							  interp_method = interp_method,
+							  begin_yr 	= begin_yr,
+							  end_yr 	= end_yr,
+							  begin_month 	= begin_month,
+							  end_month 	= end_month,
+							  reg 		= reg,
+							  aggregate 	= aggregate,
+							  debug 	= debug)
 
-	for i,reg in enumerate(regs):
-		print __name__, 'casename: ', casename
-		area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
-								  indir 	= archive_dir,
-								  casename 	= casename, 
-								  field_name 	= field_name,
-								  interp_grid 	= interp_grid,
-								  interp_method = interp_method,
-								  begin_yr 	= begin_yr,
-								  end_yr 	= end_yr,
-								  begin_month 	= begin_month,
-								  end_month 	= end_month,
-								  reg 		= reg,
-								  aggregate 	= aggregate,
-								  debug 	= debug)
 
-		if i == 0: test_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
+	index = area_seasonal_avg 
 
-		test_ts[i, :] = area_seasonal_avg 
-
-		if aggregate == 0 and no_ann == 1:
-			area_seasonal_avg_no_ann = remove_seasonal_cycle_monthly_data(test_ts[i, :], n_months_season, debug = debug)
-			test_ts[i, :] = area_seasonal_avg_no_ann
-		
-		if stdize == 1:
-			area_seasonal_avg_stddize = standardize_time_series(test_ts[i, :])
-			test_ts[i, :] = area_seasonal_avg_stddize
-			units = 'unitless'
-
+	if aggregate == 0 and no_ann == 1:
+		area_seasonal_avg_no_ann = remove_seasonal_cycle_monthly_data(index, n_months_season, debug = debug)
+		index = area_seasonal_avg_no_ann
 	
-        if debug: print __name__, 'test_ts: ', test_ts
+	if stdize == 1:
+		area_seasonal_avg_stddize = standardize_time_series(index)
+		index = area_seasonal_avg_stddize
+		units = 'unitless'
 
-
-	index = test_ts[0, :] - test_ts[-1, :]
-
-	nt = index.shape[0]
+	nt = index.shape[0]	
 
 	time = numpy.arange(0,nt)
 
 	season = get_season_name(begin_month, end_month)
 
-	index_name = index_set_name
+	index_name = index_name
 
 	#Writing netcdf file
 
-	outfile = get_index_filename (	  indir         = indir,
-					  casename      = casename,
-					  index_name    = index_name,
-					  field_name    = field_name,
-					  interp_grid   = interp_grid,
-					  interp_method = interp_method,
-					  begin_yr      = begin_yr,
-					  end_yr        = end_yr,
-					  begin_month   = begin_month,
-					  end_month     = end_month,
-					  aggregate     = aggregate,
-					  no_ann	= no_ann, 
-					  stdize	= 0,
-					  debug         = debug)
+	if write_netcdf == 1:
+		outfile = get_index_filename (	  indir         = indir,
+						  casename      = casename,
+						  index_name    = index_name,
+						  field_name    = field_name,
+						  interp_grid   = interp_grid,
+						  interp_method = interp_method,
+						  begin_yr      = begin_yr,
+						  end_yr        = end_yr,
+						  begin_month   = begin_month,
+						  end_month     = end_month,
+						  aggregate     = aggregate,
+						  no_ann	= no_ann,
+						  stdize	= stdize,
+						  debug         = debug)
 
 
-	print "Writing ", outfile
-	print ""
+		print "Writing ", outfile
+		print ""
 
-	f_write = Dataset(outfile, 'w', format = 'NETCDF4')
-	
-	time_dim_outfile = f_write.createDimension('time', None)
+		f_write = Dataset(outfile, 'w', format = 'NETCDF4')
+		
+		time_dim_outfile = f_write.createDimension('time', None)
 
-	field_outfile = f_write.createVariable('index', 'f4', ('time'))
-	field_outfile.setncattr('long_name', index_name + ' index')
-	field_outfile.setncattr('units', units)
-	
-	field_outfile[:] = index
+		field_outfile = f_write.createVariable('index', 'f4', ('time'))
+		field_outfile.setncattr('long_name', index_name + ' index')
+		field_outfile.setncattr('units', units)
+		
+		field_outfile[:] = index
 
-	time_outfile = f_write.createVariable('time', 'f4', ('time'))
-	time_outfile.setncattr('long_name', 'time')
+		time_outfile = f_write.createVariable('time', 'f4', ('time'))
+		time_outfile.setncattr('long_name', 'time')
 
-	time_outfile[:] = time
+		time_outfile[:] = time
+
+	return index, units
 
 
 if __name__ == "__main__":
-	compute_diff_index (   archive_dir = archive_dir,
+	compute_index (	archive_dir = archive_dir,
 			       indir = indir,
 			       casename = casename,
                                field_name = field_name,
@@ -220,9 +209,8 @@ if __name__ == "__main__":
                                end_yr = end_yr,
                                begin_month = begin_month,
                                end_month = end_month,
-                               regs = regs,
-			       names = names,
-			       index_set_name = index_set_name,
+                               reg = reg,
+			       index_name = index_name,
 			       aggregate = aggregate,
 			       no_ann = no_ann,
 			       stdize = stdize,

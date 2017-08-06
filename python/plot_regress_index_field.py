@@ -172,9 +172,6 @@ def plot_regress_index_field (indir,
 							  reg_name	= reg_name,
 							  debug 	= False)
 
-	plot_field =  regr_matrix
-	plot_t_test = t_test_matrix
-
 
         field_name_ref = [] + field_name
 
@@ -203,30 +200,21 @@ def plot_regress_index_field (indir,
 							  reg_name	 = reg_name,
                                                           debug         = debug)
 
-	ref_plot_field = ref_regr_matrix
-	ref_plot_t_test = ref_t_test_matrix
 
-	if debug: print __name__, 'ref_plot_field.shape ', ref_plot_field.shape
-
-        if debug: print __name__, 'plot_field: ', plot_field
-        if debug: print __name__, 'ref_plot_field: ', ref_plot_field
 
 	season_field = get_season_name(begin_month[0], end_month[0])
 	season_index = get_season_name(begin_month[1], end_month[1])
 
 	#Computing levels using mean and standard deviation
-	plot_field_min  = numpy.min(ref_plot_field)
-	plot_field_max  = numpy.max(ref_plot_field) 
-
 
 	num      = 21
-	max_plot = round_to_first(5.0 * numpy.ma.std(plot_field))
+	max_plot = round_to_first(5.0 * numpy.ma.std(ref_regr_matrix))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	print
 	print 'mean, stddev, max_plot: ', \
-		numpy.ma.mean(plot_field), numpy.ma.std(plot_field), max_plot
-	print 'min, max: ', numpy.ma.min(plot_field), numpy.ma.max(plot_field)
+		numpy.ma.mean(ref_regr_matrix), numpy.ma.std(ref_regr_matrix), max_plot
+	print 'min, max: ', numpy.ma.min(ref_regr_matrix), numpy.ma.max(ref_regr_matrix)
 	print 'contour levels: ', levels
 
 
@@ -245,9 +233,17 @@ def plot_regress_index_field (indir,
 
 	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 12)
 
-	ax = f.add_subplot(2,1,1)
 
-	ax.set_title(casename[0])
+	#Plot test case
+	ax = f.add_subplot(3,1,1)
+
+	plot_field = regr_matrix
+	plot_t_test = t_test_matrix
+
+	plot_field_min  = numpy.min(plot_field)
+	plot_field_max  = numpy.max(plot_field) 
+
+	ax.set_title(casename[0], fontsize = 12)
 
 	m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=0,urcrnrlon=360,resolution='c')
@@ -266,18 +262,24 @@ def plot_regress_index_field (indir,
 	text_data = 'Units = ' + units + ', ' + \
 		    'min = '  + str(round(plot_field_min, 2)) + ', ' + \
 		    'max = '  + str(round(plot_field_max, 2)) + ', ' + \
-		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level'
+		    'Hatched areas: Significant at 95% confidence level'
 
 	ax.text(0, -100, text_data, transform = ax.transData, fontsize = 8)
 
 
 
+
+	#Plotting ref case
+
 	plot_field = ref_regr_matrix
-	plot_field_t_test = ref_t_test_matrix
+	plot_t_test = ref_t_test_matrix
 
-	ax = f.add_subplot(2,1,2)
+	plot_field_min  = numpy.min(plot_field)
+	plot_field_max  = numpy.max(plot_field) 
 
-	ax.set_title(ref_case[0])
+	ax = f.add_subplot(3,1,2)
+
+	ax.set_title(ref_case[0], fontsize = 12)
 
 	m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=0,urcrnrlon=360,resolution='c')
@@ -287,27 +289,59 @@ def plot_regress_index_field (indir,
 	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
 	x, y = m(lons,lats)
 
-	c = m.contourf(x, y, ref_plot_field[:, :], cmap = 'seismic', levels = levels, extend = 'both')
+	c = m.contourf(x, y, plot_field[:, :], cmap = 'seismic', levels = levels, extend = 'both')
 	cb = m.colorbar(c)
 
 	#plotting hatches representing statistical significance
-	m.contourf(x, y, ref_plot_t_test, 2, colors = 'none', extend = 'both', hatches = [None, '////'])
+	m.contourf(x, y, plot_t_test, 2, colors = 'none', extend = 'both', hatches = [None, '////'])
 
 
 	text_data = 'Units = ' + units + ', ' + \
 		    'min = '  + str(round(plot_field_min, 2)) + ', ' + \
 		    'max = '  + str(round(plot_field_max, 2)) + ', ' + \
-		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level'
+		    'Hatched areas: Significant at 95% confidence level'
 
 	ax.text(0, -100, text_data, transform = ax.transData, fontsize = 8)
 
 
 
+	#Plot diff plots
+
+	plot_field = regr_matrix - ref_regr_matrix
+
+	plot_field_min  = numpy.min(plot_field)
+	plot_field_max  = numpy.max(plot_field) 
+
+	num      = 21
+	max_plot = round_to_first(5.0 * numpy.ma.std(plot_field))
+	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
+
+	ax = f.add_subplot(3,1,3)
+
+	ax.set_title('Difference', fontsize = 12)
+
+	m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+            llcrnrlon=0,urcrnrlon=360,resolution='c')
+
+	m.drawcoastlines()
+
+	lons, lats = numpy.meshgrid(lon_reg,lat_reg)
+	x, y = m(lons,lats)
+
+	c = m.contourf(x, y, plot_field[:, :], cmap = 'seismic', levels = levels, extend = 'both')
+	cb = m.colorbar(c)
+
+
+	text_data = 'Units = ' + units + ', ' + \
+		    'min = '  + str(round(plot_field_min, 2)) + ', ' + \
+		    'max = '  + str(round(plot_field_max, 2))
+
+	ax.text(0, -100, text_data, transform = ax.transData, fontsize = 8)
+
+	f.subplots_adjust(wspace = 0.4)
+
+	#Saving plots
 	mpl.rcParams['savefig.dpi']=300
-
-
-	print __name__, 'begin_month: ', begin_month
-	print __name__, 'end_month: ', end_month
 
 	outfile = plots_dir + '/' + casename[0] + '_regr_' \
 			   + field_name[0] + '_' + reg[0] + '_' + season_field + '_' \
