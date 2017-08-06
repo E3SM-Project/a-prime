@@ -846,20 +846,20 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
         	
-#	        csh_scripts/plot_regr_nino34_fields.csh $scratch_dir \
-#                                                 $casename \
-#                                                 $begin_yr_ts \
-#						 $end_yr_ts \
-#						 $index_field \
-#						 $index_reg \
-#						 $index_reg_name \
-#						 $field_reg \
-#						 $field_reg_name \
-#                                                 $ref_scratch_dir \
-#                                                 $ref_case \
-#                                                 $ref_begin_yr_ts \
-#						 $ref_end_yr_ts \
-#                                                 $var_list_file
+	        csh_scripts/plot_regr_nino34_fields.csh $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                 $ref_scratch_dir \
+                                                 $ref_case \
+                                                 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+                                                 $var_list_file
         end
 
 
@@ -914,20 +914,20 @@ if ($generate_atm_enso_diags == 1) then
                 set ref_begin_yr_ts = $begin_yr_enso_atm_set[$n_cases]
 		set ref_end_yr_ts   = $end_yr_enso_atm_set[$n_cases]
         	
-#	        csh_scripts/plot_enso_evolution.csh $scratch_dir \
-#                                                 $casename \
-#                                                 $begin_yr_ts \
-#						 $end_yr_ts \
-#						 $index_field \
-#						 $index_reg \
-#						 $index_reg_name \
-#						 $field_reg \
-#						 $field_reg_name \
-#                                                $ref_scratch_dir \
-#                                                 $ref_case \
-#                                                 $ref_begin_yr_ts \
-#						 $ref_end_yr_ts \
-#                                                 $var_list_file
+	        csh_scripts/plot_enso_evolution.csh $scratch_dir \
+                                                 $casename \
+                                                 $begin_yr_ts \
+						 $end_yr_ts \
+						 $index_field \
+						 $index_reg \
+						 $index_reg_name \
+						 $field_reg \
+						 $field_reg_name \
+                                                $ref_scratch_dir \
+                                                 $ref_case \
+                                                 $ref_begin_yr_ts \
+						 $ref_end_yr_ts \
+                                                 $var_list_file
         end
 endif
 
