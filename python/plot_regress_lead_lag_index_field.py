@@ -171,9 +171,9 @@ def plot_regress_lead_lag_index_field (indir,
 								  debug 	= debug)
 	
 		if i == 0: 
-			regr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			corr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			t_test_matrix_lag = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			regr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			corr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			t_test_matrix_lag = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
 
 		regr_matrix_lag[i, ::]   = regr_matrix
 		corr_matrix_lag[i, ::]   = corr_matrix
@@ -213,9 +213,9 @@ def plot_regress_lead_lag_index_field (indir,
 								  debug         = debug)
 
 		if i == 0: 
-			ref_regr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			ref_corr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			ref_t_test_matrix_lag = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_regr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_corr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_t_test_matrix_lag = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
 
 		ref_regr_matrix_lag[i, ::]   = ref_regr_matrix
 		ref_corr_matrix_lag[i, ::]   = ref_corr_matrix
@@ -237,17 +237,17 @@ def plot_regress_lead_lag_index_field (indir,
 
 	n_stddev = 5
 	num      = 11
-	max_plot = round_to_first(5.0 * numpy.ma.std(ref_plot_field))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_plot_field))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	print
 	print 'plot_field - mean, stddev: ', \
-		numpy.ma.mean(plot_field), numpy.ma.std(plot_field)
+		numpy.nanmean(plot_field), numpy.nanstd(plot_field)
 	print 'plot_field - min, max: ', numpy.ma.min(plot_field), numpy.ma.max(plot_field)
 
 	print 'ref_plot_field - mean, stddev: ', \
-		numpy.ma.mean(ref_plot_field), numpy.ma.std(ref_plot_field)
-	print 'ref_plot_field - min, max: ', numpy.ma.min(plot_field), numpy.ma.max(plot_field)
+		numpy.nanmean(ref_plot_field), numpy.nanstd(ref_plot_field)
+	print 'ref_plot_field - min, max: ', numpy.nanmin(plot_field), numpy.nanmax(plot_field)
 
 	print 'max_plot: ', max_plot
 	print 'contour levels: ', levels
@@ -257,11 +257,11 @@ def plot_regress_lead_lag_index_field (indir,
 	f, ax = plt.subplots(n_lags, 3, figsize=(12, 11))
 
 	title_txt = 'Lead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
-				   + reg_name[1] + ' ' + field_name[1] + ' index' 
+				   + reg_name[1] + ' (' + field_name[1] + ') index' 
 
 	if stdize == 1:
 		title_txt = 'Lead-lag Regression Coefficients: ' + field_name[0] + ' on ' \
-				'standardized ' + reg_name[1] + ' ' + field_name[1] + ' index'  + \
+				'standardized ' + reg_name[1] + ' (' + field_name[1] + ') index'  + \
 				' (mean = 0, std. dev. = 1)'
 
 	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12, color = 'blue') 
@@ -308,14 +308,16 @@ def plot_regress_lead_lag_index_field (indir,
                                 ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
                                                 fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
 
+			text_data = 'min = '  + str(round(numpy.nanmin(plot_field[i, :, :]), 2)) + ', ' + \
+				    'max = '  + str(round(numpy.nanmax(plot_field[i, :, :]), 2)) 
 
-	text_data = 'Units = ' + units + ', ' + \
-		    'min = '  + str(round(plot_field_min, 2)) + ', ' + \
-		    'max = '  + str(round(plot_field_max, 2)) + ', ' + \
-		    'Hatched areas: Coeff. significantly different from zero at 95% confidence level. \n' + \
+			ax[i, k].text(0, -100, text_data, transform = ax[i, k].transData, fontsize = 6)
+
+	text_data = 'Units = ' + units + '. ' + \
+		    'Hatched areas: Significant at 95% confidence level. ' + \
 		    'Positive lags indicate Nino 3.4 index leading.'
 
-	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 8)
+	f.text(0.05, 0.05, text_data, va='center', rotation='horizontal', fontsize = 8)
 
 
 	plt.subplots_adjust(hspace=0.25)
@@ -323,7 +325,9 @@ def plot_regress_lead_lag_index_field (indir,
 	f.subplots_adjust(right = 0.85)
 
 	cbar_ax = f.add_axes([0.9, 0.25, 0.01, 0.5])
-	f.colorbar(c, cax=cbar_ax)
+
+	cb = f.colorbar(c, cax=cbar_ax)
+	cb.set_label('Regression Coefficient (' + units + ')')
 
 	mpl.rcParams['savefig.dpi']=300
 
@@ -340,17 +344,17 @@ def plot_regress_lead_lag_index_field (indir,
 
 
 	#PLOT CORRELATIONS
-	max_plot = round_to_first(5.0 * numpy.ma.std(ref_corr_matrix_lag))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_corr_matrix_lag))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	f, ax = plt.subplots(n_lags, 3, figsize=(12, 11))
 
 	title_txt = 'Lead-lag Correlations: ' + field_name[0] + ' on ' \
-				   + reg_name[1] + ' ' + field_name[1] + ' index' 
+				   + reg_name[1] + ' (' + field_name[1] + ') index' 
 
 	if stdize == 1:
 		title_txt = 'Lead-lag Correlations: ' + field_name[0] + ' on ' \
-				'standardized ' + reg_name[1] + ' ' + field_name[1] + ' index'  + \
+				'standardized ' + reg_name[1] + ' (' + field_name[1] + ') index'  + \
 				' (mean = 0, std. dev. = 1)'
 
 	f.suptitle('ENSO Evolution: ' +  field_name[0], fontsize = 12, color = 'blue') 
@@ -390,16 +394,19 @@ def plot_regress_lead_lag_index_field (indir,
 			#plotting hatches representing statistical significance
 		#	m.contourf(x, y, plot_t_test[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
 
+			text_data = 'min = '  + str(round(numpy.nanmin(plot_field[i, :, :]), 2)) + ', ' + \
+				    'max = '  + str(round(numpy.nanmax(plot_field[i, :, :]), 2)) 
+
+			ax[i, k].text(0, -100, text_data, transform = ax[i, k].transData, fontsize = 6)
+
                         if i == 0:
                                 ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
                                                 fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
 
 
-	text_data = 'min = '  + str(round(numpy.ma.min(ref_corr_matrix_lag), 2)) + ', ' + \
-		    'max = '  + str(round(numpy.ma.max(ref_corr_matrix_lag), 2)) + ', ' + \
-		    'Positive lags indicate Nino 3.4 index leading.'
+	text_data =  'Positive lags indicate Nino 3.4 index leading.'
 
-	f.text(0.1, 0.04, text_data, va='center', rotation='horizontal', fontsize = 8)
+	f.text(0.05, 0.05, text_data, rotation='horizontal', fontsize = 10)
 
 
 	plt.subplots_adjust(hspace=0.25)
@@ -407,7 +414,9 @@ def plot_regress_lead_lag_index_field (indir,
 	f.subplots_adjust(right = 0.85)
 
 	cbar_ax = f.add_axes([0.9, 0.25, 0.01, 0.5])
-	f.colorbar(c, cax=cbar_ax)
+
+	cb = f.colorbar(c, cax=cbar_ax)
+	cb.set_label('Correlation')
 
 	mpl.rcParams['savefig.dpi']=300
 

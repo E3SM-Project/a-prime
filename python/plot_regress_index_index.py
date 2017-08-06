@@ -189,6 +189,11 @@ def plot_regress_index_index (indir,
 	units_index = x[8]
 	units = x[9]
 
+	if field_name[0] == 'TAUX':
+		field = field * 1000.0
+		regr_coef = regr_coef * 1000.0
+		units_field = '10^3 ' + units_field
+
 	if split_yfit_x_0 == 1:
 		posit_index = index[numpy.where(index >= 0)]
 		field_posit_index = field[numpy.where(index >= 0)]
@@ -246,6 +251,11 @@ def plot_regress_index_index (indir,
 	ref_units_index = x[8]
 	ref_units = x[9]
 
+	if field_name[0] == 'TAUX':
+		ref_field = ref_field * 1000.0
+		ref_regr_coef = ref_regr_coef * 1000.0
+		ref_units_field = '10^3 ' + ref_units_field 
+
 	if split_yfit_x_0 == 1:
 		posit_ref_index 	  = ref_index[numpy.where(ref_index >= 0)]
 		ref_field_posit_ref_index = ref_field[numpy.where(ref_index >= 0)]
@@ -261,8 +271,8 @@ def plot_regress_index_index (indir,
 		ref_yfit_neg = n_ref[0] * neg_ref_index + n_ref[1]
 
 	else:
-		m = stats.linregress(ref_index, ref_field)
-		ref_yfit = m[0] * ref_index + m[1]
+		m_ref = stats.linregress(ref_index, ref_field)
+		ref_yfit = m_ref[0] * ref_index + m_ref[1]
 		
 
 
@@ -284,7 +294,7 @@ def plot_regress_index_index (indir,
 
 
 	f.suptitle('Scatter Plot: ' + field_name[0] + ' (' + reg[0] + ') vs. ' + \
-			field_name[1] + ' (' + reg[0] + ')', fontsize = 14, color = 'blue') 
+			field_name[1] + ' (' + reg[1] + ')', fontsize = 14, color = 'blue') 
 
 	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 12)
 
@@ -316,7 +326,7 @@ def plot_regress_index_index (indir,
 						label = 'Linear fit for positive ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
 
-		neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 3, alpha = 0.5, \
+		neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 4, alpha = 0.7, \
 						label = 'Linear fit for negative ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(n[0], 2)) + ')')
 
@@ -325,7 +335,7 @@ def plot_regress_index_index (indir,
 						' anomalies (slope = ' + str(round(m_ref[0], 2)) + ')')
 
 
-		ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 3, alpha = 0.5, \
+		ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 4, alpha = 0.7, \
 						label = 'Linear fit for negative ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(n_ref[0], 2)) + ')')
 
@@ -336,12 +346,10 @@ def plot_regress_index_index (indir,
 	else:
 		
 		yfit_line, = plt.plot(index, yfit, c = 'red', linewidth = 3, \
-						label = 'Linear fit for positive ' + field_name[1] + \
-						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
+						label = 'Linear fit (slope = ' + str(round(m[0], 2)) + ')')
 
 		ref_yfit_line, = plt.plot(ref_index, ref_yfit, c = 'black', linewidth = 3, \
-						label = 'Linear fit for positive ' + field_name[1] + \
-						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
+						label = 'Linear fit (slope = ' + str(round(m_ref[0], 2)) + ')')
 
 		plt.legend(handles = [test_scatter, ref_scatter, yfit_line, ref_yfit_line],
 			   loc = 'upper left',

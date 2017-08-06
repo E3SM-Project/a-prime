@@ -193,6 +193,8 @@ def plot_multiple_reg_seasonal_avg (indir,
 
 	plot_ts_mean = numpy.mean(plot_ts, axis = 1)
 
+	print __name__, 'int(math.ceil(n_reg/2)):', int(math.ceil(n_reg/2))
+
 	f, ax = plt.subplots(int(math.ceil(n_reg/2)), 2, sharex = True, figsize=(8.5,11))
 
 	nt = area_seasonal_avg.shape[0]

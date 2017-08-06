@@ -573,7 +573,7 @@ EOF
 	</TABLE>
 	<br>
 	<br>
-	<font color=green size=+1><b>Regression on Nino3.4 Index</b></font><br>
+	<font color=green size=+1><b>Regression on Nino3 Index</b></font><br>
 	<br>
 	<TABLE>
 EOF
@@ -610,9 +610,9 @@ EOF
 			<TR>
 			  <TH ALIGN=LEFT>$var 
 			  <TD ALIGN=LEFT>$var_name_set[$i]
-			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_DJF_TS_Nino3.4_DJF.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_JJA_TS_Nino3.4_JJA.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_ANN_TS_Nino3.4_ANN.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_DJF_TS_Nino3_DJF.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_JJA_TS_Nino3_JJA.png">plot</a>
+			  <TD ALIGN=LEFT><A HREF="${casename}_regr_${var}_global_ANN_TS_Nino3_ANN.png">plot</a>
 EOF
 		endif
 		@ i = $i + 1

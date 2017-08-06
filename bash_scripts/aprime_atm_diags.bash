@@ -340,10 +340,12 @@ while [ $j -lt $n_test_cases ]; do
    casename="${case_set[$j]}"
    scratch_dir="${scratch_dir_set[$j]}"
    begin_yr_ts=${begin_yr_ts_set[$j]}
+   end_yr_ts=${end_yr_ts_set[$j]}
 
    ./bash_scripts/plot_time_series.bash $scratch_dir \
 				        $casename \
 				        $begin_yr_ts \
+				        $end_yr_ts \
 				        $ref_scratch_dir \
 				        $ref_case
 

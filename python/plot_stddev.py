@@ -172,8 +172,7 @@ ref_field_mean, ref_field_stddev, lat, lon, units = compute_reg_seasonal_climo_a
 
 #Computing levels using mean and standard deviation
 num = 11
-n_stddev = 4
-
+n_stddev = 5
 
 
 #Plot std. dev.
@@ -200,13 +199,13 @@ for k in [0, 1, 2]:
 		plot_case = 'Difference'
 		plot_field = field_mean - ref_field_mean
 		cmap_color = 'seismic'
-		levels = compute_contour_levels(plot_field, n_stddev, num)
+		max_plot = round_to_first(2.0 * numpy.ma.std(ref_field_mean))
+        	levels   = numpy.linspace(-max_plot, max_plot, num = num)
+		#levels = compute_contour_levels(plot_field, n_stddev, num)
 
 	plot_field_min = numpy.min(plot_field[:])
 	plot_field_max = numpy.max(plot_field[:])
  
-	#Plot test_case
-
 	ax[k, 0].set_title(plot_case)
 
 	m = Basemap(projection='cyl',llcrnrlat=lat[0],urcrnrlat=lat[-1],\
@@ -253,12 +252,12 @@ for k in [0, 1, 2]:
 		plot_case = 'Difference'
 		plot_field = field_stddev - ref_field_stddev
 		cmap_color = 'seismic'
-		levels = compute_contour_levels(plot_field, n_stddev, num)
+		max_plot = round_to_first(2.0 * numpy.ma.std(ref_field_stddev))
+        	levels   = numpy.linspace(-max_plot, max_plot, num = num)
+		#levels = compute_contour_levels(plot_field, n_stddev, num)
 
 	plot_field_min = numpy.min(plot_field[:])
 	plot_field_max = numpy.max(plot_field[:])
- 
-	#Plot test_case
 
 	ax[k, 1].set_title(plot_case)
 

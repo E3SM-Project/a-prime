@@ -1,65 +1,59 @@
-#!/bin/csh -f 
-
+#!/bin/bash
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
+#
 # calling sequence: ./generate_html_index_file.csh casename plots_dir www_dir
+#
 
-if ($#argv == 0) then
-        echo Input arguments not set. Will stop!
+if [ $# -eq 0 ]; then
+  echo "Input arguments not set. Will stop!"
 else
-        set case_no    = $argv[1]
-	set plots_dir   = $argv[2]
-        set www_dir  = $argv[3]
+  case_no=$1
+  plots_dir=$2
+  www_dir=$3
 fi
 
-#Reading case information from file
+# Reading case information from file
 source $log_dir/case_info.temp
-set n_cases = $#case_set
+n_cases=${#case_set[@]}
 
-set casename = $case_set[$case_no]
-set ref_case = $case_set[$n_cases]
+casename="${case_set[$case_no-1]}"
+ref_case="${case_set[$n_cases-1]}"
 
-set begin_yr_climo        = $begin_yr_climo_set[$case_no]
-set end_yr_climo          = $end_yr_climo_set[$case_no]
-set begin_yr_ts           = $begin_yr_ts_set[$case_no]
-set end_yr_ts             = $end_yr_ts_set[$case_no]
-set begin_yr_climateIndex = $begin_yr_climateIndex_set[$case_no]
-set end_yr_climateIndex   = $end_yr_climateIndex_set[$case_no]
+begin_yr_climo=${begin_yr_climo_set[$case_no-1]}
+end_yr_climo=${end_yr_climo_set[$case_no-1]}
+begin_yr_ts=${begin_yr_ts_set[$case_no-1]}
+end_yr_ts=${end_yr_ts_set[$case_no-1]}
+begin_yr_climateIndex=${begin_yr_climateIndex_set[$case_no-1]}
+end_yr_climateIndex=${end_yr_climateIndex_set[$case_no-1]}
 
-set ref_begin_yr_climo 	= $begin_yr_climo_set[$n_cases]
-set ref_end_yr_climo 	= $end_yr_climo_set[$n_cases]
-set ref_begin_yr_ts 	= $begin_yr_ts_set[$n_cases]
-set ref_end_yr_ts   	= $end_yr_ts_set[$n_cases]
-
+ref_begin_yr_climo=${begin_yr_climo_set[$n_cases-1]}
+ref_end_yr_climo=${end_yr_climo_set[$n_cases-1]}
+ref_begin_yr_ts=${begin_yr_ts_set[$n_cases-1]}
+ref_end_yr_ts=${end_yr_ts_set[$n_cases-1]}
 
 # padding begin_yr and end_yr with zeroes
-set begin_yr = $begin_yr_climo
-set end_yr   = $end_yr_climo
-
-
-@ nc = `echo $begin_yr | wc -c` - 1
-while ($nc != 4)
-	set begin_yr = "0"$begin_yr
-	@ nc = `echo $begin_yr | wc -c` - 1
-end
-
-@ nc = `echo $end_yr | wc -c` - 1
-while ($nc != 4)
-	set end_yr = "0"$end_yr
-	@ nc = `echo $end_yr | wc -c` - 1
-end
+begin_yr=`echo $begin_yr_climo | awk '{printf "%04d",$1}'`
+end_yr=`echo $end_yr_climo | awk '{printf "%04d",$1}'`
 
 cd $plots_dir
 
-#Setting up text for ref case
-if $ref_case == obs then
-	set ref_case_text = $ref_case' (climo)' 
-	set ref_case_text_ts = $ref_case' (climo)' 
+# Setting up text for ref case
+if [ "$ref_case" == "obs" ]; then
+  ref_case_text="$ref_case (climo)" 
+  ref_case_text_ts="$ref_case (climo)"
 else
-	set ref_case_text = $ref_case' (Years: '$ref_begin_yr_climo'-'$ref_end_yr_climo')'
-	set ref_case_text_ts = $ref_case' (Years: '$ref_begin_yr_ts'-'$ref_end_yr_ts')'
-endif
+  ref_case_text="$ref_case (Years: $ref_begin_yr_climo-$ref_end_yr_climo)"
+  ref_case_text_ts="$ref_case (Years: $ref_begin_yr_ts-$ref_end_yr_ts)"
+fi
 
 
-#Beginning to write index.html file
+# Beginning to write index.html file
 cat > index.html << EOF
 <HTML>
 
@@ -69,19 +63,27 @@ cat > index.html << EOF
 <TITLE>ACME Coupled Diagnostic Plots</TITLE>
 </HEAD>
 
-<p><img src="acme-banner_1.jpg" style="float:right;width:590px;height:121px;">
+<br>
+<p><img src="acme-banner_1.jpg" style="float:right;width:500px;height:100px;">
 </p>
 
+<br>
+<br>
 <div style="text-align:center">
 <font color=seagreen size=+3><b>ACME Coupled Priority Metrics</b></font><br>
+</div>
 
+<br>
+<br>
+<br>
+<div style="text-align:center">
 <font color=sienna size=+2><b>
-${casename} (Years: $begin_yr_climo-$end_yr_climo)<br>vs.<br>$ref_case_text
+${casename}<br>(Climatological years: $begin_yr_climo-$end_yr_climo) vs. $ref_case_text
 </b></font>
 </div>
 EOF
 
-if ($generate_atm_diags == 1) then
+if [ $generate_atm_diags -eq 1 ]; then
   cat >> index.html << EOF
   <br>
   <br>
@@ -99,87 +101,84 @@ if ($generate_atm_diags == 1) then
   <TABLE>
 EOF
 
-  #Generating time series part of index.html file
-  if ($ref_case == obs) then
-  	source $coupled_diags_home/var_list_time_series_model_vs_obs.csh
+  # Generating time series part of index.html file
+  if [ "$ref_case" == "obs" ]; then
+    source $coupled_diags_home/bash_scripts/var_list_time_series_model_vs_obs.bash
   else
-  	source $coupled_diags_home/var_list_time_series_model_vs_model.csh
-  endif
+    source $coupled_diags_home/bash_scripts/var_list_time_series_model_vs_model.bash
+  fi
 
-  set var_grp_unique_set = ()
-  set grp_interp_grid_set = ()
+  var_grp_unique_set=()
+  grp_interp_grid_set=()
 
-  @ i = 1
+  i=0
+  while [ $i -lt ${#var_group_set[@]} ]; do
 
-  foreach grp ($var_group_set)
+     add_var=1
 
-        set add_var = 1
+     j=0
+     while [ $j -lt ${#var_grp_unique_set[@]} ]; do
+        if [[ "${var_group_set[$i]}" =~ "${var_grp_unique_set[$j]}" ]]; then
+          add_var=0
+        fi
+        j=$((j+1))
+     done
 
-        foreach temp_grp ($var_grp_unique_set)
-                if ($grp =~ $temp_grp) then
-                        set add_var = 0
-                endif
-        end
+     if [ $add_var -eq 1 ]; then
+       var_grp_unique_set=("${var_grp_unique_set[@]}" "${var_group_set[$i]}")
+       grp_interp_grid_set=("${grp_interp_grid_set[@]}" ${interp_grid_set[$i]})
+     fi
 
-        if ($add_var == 1) then
-                set var_grp_unique_set = ($var_grp_unique_set $grp)
-                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
-        endif
+     i=$((i + 1))
+  done
 
-        @ i = $i + 1
-  end
+  i=0
+  while [ $i -lt ${#var_grp_unique_set[@]} ]; do
+     if [ "$ref_case" == "obs" ]; then
+       grp_text="${var_grp_unique_set[$i]} (${grp_interp_grid_set[$i]})"
+     else
+       grp_text="${var_grp_unique_set[$i]}"
+     fi
 
-
-  @ j = 1
-
-  foreach grp ($var_grp_unique_set)
-
-	if ($ref_case == obs) then
-		set grp_text = "$grp ($grp_interp_grid_set[$j])"
-	else
-		set grp_text = $grp
-	endif
-
-	cat >> index.html << EOF
+     cat >> index.html << EOF
 	<TR>
 	  <TH><BR>
 	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
 EOF
 
-	@ i = 1
-	foreach var ($var_set)
+     j=0
+     while [ $j -lt ${#var_set[@]} ]; do
+        var="${var_set[$j]}"
+        if [ "${var_group_set[$j]}" == "${var_grp_unique_set[$i]}" ]; then
+          if [ "$ref_case" == "obs" ]; then
+            ref_casename_plot="${interp_grid_set[$j]}"
+          else
+            ref_casename_plot="$ref_case"
+          fi
 
-		if ($var_group_set[$i] == $grp) then
-
-			if ($ref_case == obs) then
-				set ref_casename_plot = $interp_grid_set[$i]
-			else
-				set ref_casename_plot = $ref_case  
-			endif
-
-			cat >> index.html << EOF
-			<TR>
-			  <TH ALIGN=LEFT><A HREF="${casename}_${var}_ANN_reg_ts.png">$var</a> 
-			  <TD ALIGN=LEFT>$var_name_set[$i]
+          cat >> index.html << EOF
+		<TR>
+		  <TH ALIGN=LEFT><A HREF="${casename}_${var}_ANN_reg_ts.png">$var</a> 
+		  <TD ALIGN=LEFT>${var_name_set[$j]}
 EOF
-		endif
-		@ i = $i + 1
-	end
+        fi
+        j=$((j + 1))
+     done
 
-	cat >> index.html << EOF
+     cat >> index.html << EOF
 	<TR>
 	  <TD><BR>
 EOF
-	@ j = $j + 1
-  end
+     i=$((i + 1))
+  done
 
   cat >> index.html << EOF
   </TABLE>
 EOF
-endif
+fi
 
-if ($generate_ocnice_diags == 1) then
-  #Generating time series ocn/ice part of index.html file
+if [ $generate_ocnice_diags -eq 1 ]; then
+  # Generating time series ocn/ice part of index.html file
   cat >> index.html << EOF
   <br>
   <br>
@@ -205,11 +204,11 @@ if ($generate_ocnice_diags == 1) then
   <TR>
     <TH ALIGN=LEFT><A HREF="iceVolumeSH_${casename}.png">SH Ice Volume</a>
 EOF
-endif
+fi
 
 
-if ($generate_atm_diags == 1) then
-  #Generating climatology (atm) part of index.html file
+if [ $generate_atm_diags -eq 1 ]; then
+  # Generating climatology (atm) part of index.html file
   cat >> index.html << EOF
   <TR>
   <TD><BR>
@@ -227,49 +226,47 @@ if ($generate_atm_diags == 1) then
   <TABLE>
 EOF
 
-
-  if ($ref_case == obs) then
-	source $coupled_diags_home/var_list_climo_model_vs_obs.csh
+  if [ "$ref_case" == "obs" ]; then
+    source $coupled_diags_home/bash_scripts/var_list_climo_model_vs_obs.bash
   else
-	source $coupled_diags_home/var_list_climo_model_vs_model.csh
-  endif
+    source $coupled_diags_home/bash_scripts/var_list_climo_model_vs_model.bash
+  fi
 
-  set var_grp_unique_set = ()
-  set grp_interp_grid_set = ()
+  var_grp_unique_set=()
+  grp_interp_grid_set=()
 
-  @ i = 1
+  i=0
+  while [ $i -lt ${#var_group_set[@]} ]; do
 
-  foreach grp ($var_group_set)
+     add_var=1
 
-        set add_var = 1
+     j=0
+     while [ $j -lt ${#var_grp_unique_set[@]} ]; do
+        if [[ "${var_group_set[$i]}" =~ "${var_grp_unique_set[$j]}" ]]; then
+          add_var=0
+        fi
+        j=$((j+1))
+     done
 
-        foreach temp_grp ($var_grp_unique_set)
-                if ($grp =~ $temp_grp) then
-                        set add_var = 0
-                endif
-        end
+     if [ $add_var -eq 1 ]; then
+       var_grp_unique_set=("${var_grp_unique_set[@]}" "${var_group_set[$i]}")
+       grp_interp_grid_set=("${grp_interp_grid_set[@]}" "${interp_grid_set[$i]}")
+     fi
 
-        if ($add_var == 1) then
-                set var_grp_unique_set = ($var_grp_unique_set $grp)
-                set grp_interp_grid_set  = ($grp_interp_grid_set $interp_grid_set[$i])
-        endif
-
-        @ i = $i + 1
-  end
+     i=$((i + 1))
+  done
 
 
-  @ j = 1
+  i=0
+  while [ $i -lt ${#var_grp_unique_set[@]} ]; do
 
-  foreach grp ($var_grp_unique_set)
+     if [ "$ref_case" == "obs" ]; then
+       grp_text="${var_grp_unique_set[$i]} (${grp_interp_grid_set[$i]})"
+     else
+       grp_text="${var_grp_unique_set[$i]}"
+     fi
 
-	if ($ref_case == obs) then
-		set grp_text = "$grp ($grp_interp_grid_set[$j])"
-	else
-		set grp_text = $grp
-	endif
-
-	cat >> index.html << EOF
-
+     cat >> index.html << EOF
 	<TR>
 	  <TH><BR>
 	  <TH ALIGN=LEFT><font color=brown size=+1>$grp_text</font>
@@ -278,44 +275,44 @@ EOF
 	  <TH>ANN
 EOF
 
-	@ i = 1
-	foreach var ($var_set)
+     j=0
+     while [ $j -lt ${#var_set[@]} ]; do
+        var="${var_set[$j]}"
 
-		if ($var_group_set[$i] == $grp) then
+        if [ "${var_group_set[$j]}" == "${var_grp_unique_set[$i]}" ]; then
+          if [ "$ref_case" == "obs" ]; then
+            ref_casename_plot="${interp_grid_set[$j]}"
+          else
+            ref_casename_plot="$ref_case"  
+          fi
 
-			if ($ref_case == obs) then
-				set ref_casename_plot = $interp_grid_set[$i]
-			else
-				set ref_casename_plot = $ref_case  
-			endif
-
-			cat >> index.html << EOF
-			<TR>
-			  <TH ALIGN=LEFT>$var 
-			  <TD ALIGN=LEFT>$var_name_set[$i]
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_DJF.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_JJA.png">plot</a>
-			  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_ANN.png">plot</a>
+          cat >> index.html << EOF
+		<TR>
+		  <TH ALIGN=LEFT>$var 
+		  <TD ALIGN=LEFT>${var_name_set[$j]}
+		  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_DJF.png">plot</a>
+		  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_JJA.png">plot</a>
+		  <TD ALIGN=LEFT><A HREF="${casename}-${ref_casename_plot}_${var}_climo_ANN.png">plot</a>
 EOF
-		endif
-		@ i = $i + 1
-	end
+        fi
+        j=$((j + 1))
+     done
 
-	cat >> index.html << EOF
+     cat >> index.html << EOF
 	<TR>
 	  <TD><BR>
 EOF
 
-	@ j = $j + 1
-  end
+     i=$((i + 1))
+  done
 
   cat >> index.html << EOF
   </TABLE>
 EOF
-endif
+fi
 
-if ($generate_ocnice_diags == 1) then
-  #Generating climatology (ocn/ice) part of index.html file
+if [ $generate_ocnice_diags -eq 1 ]; then
+  # Generating climatology (ocn/ice) part of index.html file
   cat >> index.html << EOF
   <TR>
   <TD><BR>
@@ -434,7 +431,7 @@ if ($generate_ocnice_diags == 1) then
   </TABLE>
 EOF
 
-  #Generating other ocn/ice part of index.html file
+  # Generating other ocn/ice part of index.html file
   cat >> index.html << EOF
   <hr noshade size=2 size="100%">
   <font color=red size=+1><b>Other OCN/ICE plots</b></font>
@@ -476,7 +473,7 @@ EOF
     <TH><BR>
   </TABLE>
 EOF
-endif
+fi
 
 cat >> index.html << EOF
   <hr noshade size=2 size="100%">
@@ -484,22 +481,13 @@ cat >> index.html << EOF
   </HTML>
 EOF
 
-echo
-echo Standalone HTML file with links to coupled diagnostic plots generated!
-echo $plots_dir/index.html
-echo
-
-if (! -d $www_dir/$plots_dir_name) then
-	mkdir $www_dir/$plots_dir_name
-endif
-
-unalias cp
-cp -fr $plots_dir/* $www_dir/$plots_dir_name
-cp -f $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
-
+cp -u $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
+mv index.html $www_dir/$plots_dir_name
 chmod -R a+rx $www_dir/$plots_dir_name
 
-echo Moved plots and index.html to the website directory: $www_dir/$plots_dir_name
+echo
+echo "Standalone HTML file with links to coupled diagnostic plots generated!"
+echo "$plots_dir/index.html"
 echo
 
 echo "Viewable at:"

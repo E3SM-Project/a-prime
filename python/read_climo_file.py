@@ -123,6 +123,8 @@ def read_climo_file (indir, \
 
 	print
 	print __name__, 'lat_ll, lat_ul, lon_ll, lon_ul: ', lat_ll, lat_ul, lon_ll, lon_ul
+	print __name__, 'lat: ', lat
+	print __name__, 'type(lat[:]): ', type(lat[:])
 
 	lat_reg_boolean = numpy.logical_and(lat[:]>=lat_ll, lat[:]<=lat_ul)
 	lat_index_reg   = numpy.asarray(numpy.where(lat_reg_boolean))[0, :]
