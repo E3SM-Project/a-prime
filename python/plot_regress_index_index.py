@@ -316,7 +316,7 @@ def plot_regress_index_index (indir,
 						label = 'Linear fit for positive ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(m[0], 2)) + ')')
 
-		neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 3, alpha = 0.5, \
+		neg_index_line,   = plt.plot(neg_index, yfit_neg, c = 'red', linewidth = 4, alpha = 0.7, \
 						label = 'Linear fit for negative ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(n[0], 2)) + ')')
 
@@ -325,7 +325,7 @@ def plot_regress_index_index (indir,
 						' anomalies (slope = ' + str(round(m_ref[0], 2)) + ')')
 
 
-		ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 3, alpha = 0.5, \
+		ref_neg_line,     = plt.plot(neg_ref_index, ref_yfit_neg, c = 'black', linewidth = 4, alpha = 0.7, \
 						label = 'Linear fit for negative ' + field_name[1] + \
 						' anomalies (slope = ' + str(round(n_ref[0], 2)) + ')')
 

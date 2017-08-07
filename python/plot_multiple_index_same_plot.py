@@ -279,9 +279,10 @@ def plot_multiple_index_same_plot   (indir,
 			ax[i, k].set_ylabel(field_names[i] + ' (' + units + ')', va='center', rotation='vertical', fontsize = 12)
 
 			if i == 0 and k == 1:
-				ax[i, k].legend(bbox_to_anchor = (1.2,1.55), 
-					     handles=[mean_line, index_line, smooth_line], 
-					     fontsize = 7)
+				plt.legend(bbox_to_anchor = (1.0,1.0), 
+						bbox_transform=plt.gcf().transFigure,
+					     	handles=[mean_line, index_line, smooth_line], 
+					     	fontsize = 7)
 
 		#	if i == 0:
 			ax[i, k].text(0.5, 1.1, plot_case[i], ha='center', \

@@ -224,7 +224,7 @@ def plot_multiple_index_seasonality   (indir,
 
 	f, ax = plt.subplots(n_reg, 1, figsize=(4,8.5))
 
-	f.text(0.0, 0.5, 'Std. dev. ' + field_name + ' (' + units + ')', va='center', rotation='vertical', fontsize = 14)
+	f.text(0.0, 0.5, 'Std. dev. ' + field_name + ' (' + units + ')', va='center', rotation='vertical', fontsize = 12)
 
 	plt.suptitle('ENSO Seasonality: ' + index_set_name + ' index', fontsize = 16)
 
@@ -264,7 +264,7 @@ def plot_multiple_index_seasonality   (indir,
 
 		if i == n_reg-1:
 			ax[i].text(0.5, -0.3, 'Month', ha='center', \
-					fontsize = 14, transform=ax[i].transAxes)
+					fontsize = 12, transform=ax[i].transAxes)
 
 
 		ax[i].get_yaxis().get_major_formatter().set_useOffset(False)
@@ -280,7 +280,7 @@ def plot_multiple_index_seasonality   (indir,
 	plt.subplots_adjust(hspace=0.3)
 	plt.subplots_adjust(wspace=0.3)
 
-	#f.subplots_adjust(left = 0.25)
+	plt.subplots_adjust(left = 0.15)
 
 	mpl.rcParams['savefig.dpi']=300
 
