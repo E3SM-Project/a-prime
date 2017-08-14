@@ -4,7 +4,7 @@ mpl.use('Agg')
 
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
+from matplotlib.ticker import MaxNLocator, LinearLocator, FixedLocator
 
 import numpy
 from netCDF4 import Dataset
@@ -18,6 +18,7 @@ from get_reg_seasonal_avg import get_reg_seasonal_avg
 from get_season_name import get_season_name
 from get_reg_avg_climo import get_reg_avg_climo
 from get_reg_meridional_avg_climo import get_reg_meridional_avg_climo
+from round_to_first import round_to_first
 from optparse import OptionParser
 import argparse
 
@@ -189,11 +190,15 @@ def plot_meridional_avg_climo (indir,
 
 	ref_case_text = ref_case + ' ' + field_name_ref + ' climo'
 
-	min_plot = min(numpy.amin(plot_field), numpy.amin(ref_plot_field))
-	max_plot = max(numpy.amax(plot_field), numpy.amax(ref_plot_field))
+	#min_plot = min(numpy.amin(plot_field), numpy.amin(ref_plot_field))
+	#max_plot = max(numpy.amax(plot_field), numpy.amax(ref_plot_field))
+	min_plot = numpy.amin(ref_plot_field)
+	max_plot = numpy.amax(ref_plot_field)
 
-	y_axis_ll = min_plot - 0.5*numpy.std(plot_field)
-	y_axis_ul = max_plot + 0.5*numpy.std(plot_field)
+	y_axis_ll = round_to_first(min_plot - 0.5*numpy.std(ref_plot_field))
+	y_axis_ul = round_to_first(max_plot + 0.5*numpy.std(ref_plot_field))
+
+	levels   = numpy.linspace(y_axis_ll, y_axis_ul, num = 5)
 
 	ax.axis([lon_reg[0],lon_reg[-1], y_axis_ll, y_axis_ul])
 
@@ -210,8 +215,9 @@ def plot_meridional_avg_climo (indir,
 
 	ax.set_title(field_name, fontsize = 12)
 
-	ax.get_yaxis().get_major_formatter().set_useOffset(False)
-	ax.yaxis.set_major_locator(MaxNLocator(6))
+	#ax.get_yaxis().get_major_formatter().set_useOffset(False)
+	print __name__, 'levels:', levels
+	ax.yaxis.set_major_locator(FixedLocator(levels))
 
 	for tick in ax.yaxis.get_major_ticks():
 			tick.label.set_fontsize(10)

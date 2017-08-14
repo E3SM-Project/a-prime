@@ -825,14 +825,14 @@ if ($generate_atm_enso_diags == 1) then
 	#ENSO Diags: Plot Regression 
 
 	set index_field = 'TS'
-	set index_reg = 'Nino3.4'
-	set index_reg_name = 'Nino3.4'
+	set index_reg = 'Nino3'
+	set index_reg_name = 'Nino3'
 
 	set field_reg = 'global'
 	set field_reg_name = 'global'
 
 	echo
-	echo Submitting jobs to plot regression of variables against the Nino3.4 index
+	echo Submitting jobs to plot regression of variables against the $index_reg index
 	echo Log files in $log_dir/
 	echo
 

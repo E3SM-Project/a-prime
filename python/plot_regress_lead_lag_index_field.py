@@ -171,9 +171,9 @@ def plot_regress_lead_lag_index_field (indir,
 								  debug 	= debug)
 	
 		if i == 0: 
-			regr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			corr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			t_test_matrix_lag = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			regr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			corr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			t_test_matrix_lag = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
 
 		regr_matrix_lag[i, ::]   = regr_matrix
 		corr_matrix_lag[i, ::]   = corr_matrix
@@ -213,9 +213,9 @@ def plot_regress_lead_lag_index_field (indir,
 								  debug         = debug)
 
 		if i == 0: 
-			ref_regr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			ref_corr_matrix_lag   = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
-			ref_t_test_matrix_lag = numpy.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_regr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_corr_matrix_lag   = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
+			ref_t_test_matrix_lag = numpy.ma.zeros((n_lags, lat_reg.shape[0], lon_reg.shape[0]))
 
 		ref_regr_matrix_lag[i, ::]   = ref_regr_matrix
 		ref_corr_matrix_lag[i, ::]   = ref_corr_matrix
@@ -237,17 +237,17 @@ def plot_regress_lead_lag_index_field (indir,
 
 	n_stddev = 5
 	num      = 11
-	max_plot = round_to_first(5.0 * numpy.ma.std(ref_plot_field))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_plot_field))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	print
 	print 'plot_field - mean, stddev: ', \
-		numpy.ma.mean(plot_field), numpy.ma.std(plot_field)
+		numpy.nanmean(plot_field), numpy.nanstd(plot_field)
 	print 'plot_field - min, max: ', numpy.ma.min(plot_field), numpy.ma.max(plot_field)
 
 	print 'ref_plot_field - mean, stddev: ', \
-		numpy.ma.mean(ref_plot_field), numpy.ma.std(ref_plot_field)
-	print 'ref_plot_field - min, max: ', numpy.ma.min(plot_field), numpy.ma.max(plot_field)
+		numpy.nanmean(ref_plot_field), numpy.nanstd(ref_plot_field)
+	print 'ref_plot_field - min, max: ', numpy.nanmin(plot_field), numpy.nanmax(plot_field)
 
 	print 'max_plot: ', max_plot
 	print 'contour levels: ', levels
@@ -308,8 +308,8 @@ def plot_regress_lead_lag_index_field (indir,
                                 ax[i, k].text(0.5, 1.2, plot_case, ha='center', \
                                                 fontsize = 10, transform=ax[i, k].transAxes, color = 'green')
 
-			text_data = 'min = '  + str(round(numpy.ma.min(plot_field[i, :, :]), 2)) + ', ' + \
-				    'max = '  + str(round(numpy.ma.max(plot_field[i, :, :]), 2)) 
+			text_data = 'min = '  + str(round(numpy.nanmin(plot_field[i, :, :]), 2)) + ', ' + \
+				    'max = '  + str(round(numpy.nanmax(plot_field[i, :, :]), 2)) 
 
 			ax[i, k].text(0, -100, text_data, transform = ax[i, k].transData, fontsize = 6)
 
@@ -344,7 +344,7 @@ def plot_regress_lead_lag_index_field (indir,
 
 
 	#PLOT CORRELATIONS
-	max_plot = round_to_first(5.0 * numpy.ma.std(ref_corr_matrix_lag))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_corr_matrix_lag))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	f, ax = plt.subplots(n_lags, 3, figsize=(12, 11))
@@ -394,8 +394,8 @@ def plot_regress_lead_lag_index_field (indir,
 			#plotting hatches representing statistical significance
 		#	m.contourf(x, y, plot_t_test[i, :, :], 2, colors = 'none', extend = 'both', hatches = [None, '////'])
 
-			text_data = 'min = '  + str(round(numpy.ma.min(plot_field[i, :, :]), 2)) + ', ' + \
-				    'max = '  + str(round(numpy.ma.max(plot_field[i, :, :]), 2)) 
+			text_data = 'min = '  + str(round(numpy.nanmin(plot_field[i, :, :]), 2)) + ', ' + \
+				    'max = '  + str(round(numpy.nanmax(plot_field[i, :, :]), 2)) 
 
 			ax[i, k].text(0, -100, text_data, transform = ax[i, k].transData, fontsize = 6)
 

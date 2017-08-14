@@ -294,7 +294,7 @@ def plot_regress_index_index (indir,
 
 
 	f.suptitle('Scatter Plot: ' + field_name[0] + ' (' + reg[0] + ') vs. ' + \
-			field_name[1] + ' (' + reg[0] + ')', fontsize = 14, color = 'blue') 
+			field_name[1] + ' (' + reg[1] + ')', fontsize = 14, color = 'blue') 
 
 	f.text(0.5, 0.95, title_txt, ha = 'center', va='center', rotation='horizontal', fontsize = 12)
 

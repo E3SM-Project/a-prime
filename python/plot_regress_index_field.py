@@ -208,13 +208,13 @@ def plot_regress_index_field (indir,
 	#Computing levels using mean and standard deviation
 
 	num      = 21
-	max_plot = round_to_first(5.0 * numpy.ma.std(ref_regr_matrix))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_regr_matrix))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	print
 	print 'mean, stddev, max_plot: ', \
-		numpy.ma.mean(ref_regr_matrix), numpy.ma.std(ref_regr_matrix), max_plot
-	print 'min, max: ', numpy.ma.min(ref_regr_matrix), numpy.ma.max(ref_regr_matrix)
+		numpy.nanmean(ref_regr_matrix), numpy.nanstd(ref_regr_matrix), max_plot
+	print 'min, max: ', numpy.nanmin(ref_regr_matrix), numpy.nanmax(ref_regr_matrix)
 	print 'contour levels: ', levels
 
 
@@ -240,8 +240,8 @@ def plot_regress_index_field (indir,
 	plot_field = regr_matrix
 	plot_t_test = t_test_matrix
 
-	plot_field_min  = numpy.min(plot_field)
-	plot_field_max  = numpy.max(plot_field) 
+	plot_field_min  = numpy.nanmin(plot_field)
+	plot_field_max  = numpy.nanmax(plot_field) 
 
 	ax.set_title(casename[0], fontsize = 12)
 
@@ -274,8 +274,8 @@ def plot_regress_index_field (indir,
 	plot_field = ref_regr_matrix
 	plot_t_test = ref_t_test_matrix
 
-	plot_field_min  = numpy.min(plot_field)
-	plot_field_max  = numpy.max(plot_field) 
+	plot_field_min  = numpy.nanmin(plot_field)
+	plot_field_max  = numpy.nanmax(plot_field) 
 
 	ax = f.add_subplot(3,1,2)
 
@@ -309,11 +309,12 @@ def plot_regress_index_field (indir,
 
 	plot_field = regr_matrix - ref_regr_matrix
 
-	plot_field_min  = numpy.min(plot_field)
-	plot_field_max  = numpy.max(plot_field) 
+	plot_field_min  = numpy.nanmin(plot_field)
+	plot_field_max  = numpy.nanmax(plot_field) 
 
 	num      = 21
-	max_plot = round_to_first(5.0 * numpy.ma.std(plot_field))
+	#max_plot = round_to_first(5.0 * numpy.ma.std(plot_field))
+	max_plot = round_to_first(5.0 * numpy.nanstd(ref_regr_matrix))
 	levels 	 = numpy.linspace(-max_plot, max_plot, num = num)
 
 	ax = f.add_subplot(3,1,3)
