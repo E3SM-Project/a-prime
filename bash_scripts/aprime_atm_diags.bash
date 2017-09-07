@@ -3,7 +3,7 @@
 # Checking if required mapping files exist, exiting otherwise
 if [ ! -d $remap_files_dir ]; then
   echo "remap_files_dir $remap_files_dir does not exist! Please check." 
-  echo "Exiting atmospheric diagnostics ..."
+  echo "Exiting atmosphere diagnostics ..."
   echo 
   echo
   exit 1
@@ -11,7 +11,7 @@ fi
 
 if [ ! -f $GPCP_regrid_wgt_file ]; then
   echo "GPCP_regrid_wgt_file $GPCP_regrid_wgt_file does not exist! Please check."
-  echo "Exiting atmospheric diagnostics ..."
+  echo "Exiting atmosphere diagnostics ..."
   echo
   echo
   exit 1
@@ -19,7 +19,7 @@ fi
 
 if [ ! -f $CERES_EBAF_regrid_wgt_file ]; then
   echo "CERES_EBAF_regid_wgt_file $CERES_EBAF_regrid_wgt_file does not exist! Please check."
-  echo "Exiting atmospheric diagnostics ..."
+  echo "Exiting atmosphere diagnostics ..."
   echo 
   echo
   exit 1
@@ -27,7 +27,7 @@ fi
 
 if [ ! -f $ERS_regrid_wgt_file ]; then
   echo "ERS_regrid_wgt_file $ERS_regrid_wgt_file does not exist! Please check."
-  echo "Exiting atmospheric diagnostics ..."
+  echo "Exiting atmosphere diagnostics ..."
   echo 
   echo
   exit 1
@@ -65,8 +65,6 @@ compute_climo_var_list_file="$log_dir/var_list_compute_climo.bash"
 ./bash_scripts/generate_unique_field_list.bash $var_list_file \
 	   			               $compute_climo_var_list_file
 
-echo
-
 # Condense climatology fields into individual files
 j=0
 while [ $j -lt $n_cases ]; do
@@ -93,10 +91,27 @@ while [ $j -lt $n_cases ]; do
 
    if [ ! -d $archive_dir_atm ]; then
      echo "$archive_dir_atm for $casename does not exist! Please check."
-     echo "Exiting atmospheric diagnostics..."
+     echo "Exiting atmosphere diagnostics..."
      echo 
-     echo
      exit 1
+   fi
+
+   if [ "$casename" != "obs" ]; then
+     file_list=()
+     for yr in `seq -f "%04g" $begin_yr_climo $end_yr_climo`; do
+        for yr_file in "${archive_dir_atm}/*cam.h0.$yr*.nc"; do
+           file_list=("${file_list[@]}" $yr_file)
+        done
+     done
+     file_list2=`ls ${file_list[@]} 2>/dev/null`
+     if [ -z "$file_list2" ]; then
+       echo "****"
+       echo "Atmosphere file list needed for climatologies is empty."
+       echo "Check that begin_yr_climo is consistent with available data."
+       echo "Exiting atmosphere diagnostics..."
+       echo "****"
+       exit 3
+     fi
    fi
 
    if [ $condense_field_climo -eq 1 ] && [ $compute_climo -eq 1 ]; then
@@ -238,6 +253,24 @@ while [ $j -lt $n_cases ]; do
    if [ $short_term_archive -eq 1 ]; then
      echo "Using ACME short term archiving directory structure!"
      archive_dir_atm="$archive_dir/$casename/atm/hist"
+   fi
+
+   if [ "$casename" != "obs" ]; then
+     file_list=()
+     for yr in `seq -f "%04g" $begin_yr_ts $end_yr_ts`; do
+        for yr_file in "${archive_dir_atm}/*cam.h0.$yr*.nc"; do
+           file_list=("${file_list[@]}" $yr_file)
+        done
+     done
+     file_list2=`ls ${file_list[@]} 2>/dev/null` 
+     if [ -z "$file_list2" ]; then
+       echo "****"
+       echo "Atmosphere file list needed for time series is empty."
+       echo "Check that begin_yr_ts is consistent with available data."
+       echo "Exiting atmosphere diagnostics..."
+       echo "****"
+       exit 3
+     fi
    fi
 
    if [ $condense_field_ts -eq 1 ]; then

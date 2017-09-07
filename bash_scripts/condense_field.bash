@@ -20,7 +20,7 @@ for yr in `seq -f "%04g" $begin_yr $end_yr`; do
    for yr_file in "*cam.h0.$yr*.nc"; do
       file_list=("${file_list[@]}" $yr_file)
    done
-done	
+done
 
 echo "begin_yr, end_yr: $begin_yr $end_yr"
 echo "file_list:"

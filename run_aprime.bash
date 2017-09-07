@@ -315,151 +315,104 @@ fi
 
 # RUN DIAGNOSTICS
 if [ $generate_atm_diags -eq 1 ]; then
-  # Check whether requested files for computing climatologies are available
-  rpointer_file=${test_archive_dir}/${test_casename}/run/rpointer.atm
-  year_max=`grep -m 1 -Eo '\<[0-9]{4}\>' ${rpointer_file} | awk '{print $1-1}'`
+  if ! $run_batch_script; then
+    ./bash_scripts/aprime_atm_diags.bash
+    atm_status=$?
+    if [ $atm_status -eq 0 ]; then
+      # Update www/plots directory with newly generated plots
+      cp -u $plots_dir/* $www_dir/$plots_dir_name
 
-  if [ $test_end_yr_climo -le $year_max ]; then
-
-    if ! $run_batch_script; then
-
-      ./bash_scripts/aprime_atm_diags.bash
-
-      atm_status=$?
-
-      if [ $atm_status -eq 0 ]; then
-        # Update www/plots directory with newly generated plots
-        cp -u $plots_dir/* $www_dir/$plots_dir_name
-
-        echo
-        echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
-        echo
-      fi
-
-    else
-
-      batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
-      if [ $machname == "nersc" ]; then
-        sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
-        sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
-        sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
-        echo
-        echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
-        echo "**** $batch_script"
-        echo "**** jobID:"
-        sbatch $batch_script
-      elif [ $machname == "olcf" ]; then
-        update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
-        sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
-        sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
-        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
-        sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
-        sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-         ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
-        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
-        echo
-        echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
-        echo "**** jobID:"
-        qsub $batch_script
-      else
-        echo
-        echo "Batch jobs not supported on current machine"
-        echo "Please set $run_batch_script to false"
-        echo
-        exit
-      fi
-      echo "**** Batch job output/error files aprime_atm_diags.o*/aprime_atm_diags.e* will be available in log directory:"
-      echo "**** $log_dir"
-      atm_status=-2
-
+      echo
+      echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
+      echo
     fi
-
   else
-
-    echo
-    echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting atm diagnostics..."
-    echo "Please set test_end_yr_climo <= ${year_max}"
-    echo
-    atm_status=3
-
+    batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
+    if [ $machname == "nersc" ]; then
+      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+      sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
+      echo
+      echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
+      echo "**** $batch_script"
+      echo "**** jobID:"
+      sbatch $batch_script
+    elif [ $machname == "olcf" ]; then
+      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
+      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+      sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
+      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+      sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+      sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
+      echo
+      echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
+      echo "**** jobID:"
+      qsub $batch_script
+    else
+      echo
+      echo "Batch jobs not supported on current machine"
+      echo "Please set $run_batch_script to false"
+      echo
+      exit
+    fi
+    echo "**** Batch job output/error files aprime_atm_diags.o*/aprime_atm_diags.e* will be available in log directory:"
+    echo "**** $log_dir"
+    atm_status=-2
   fi
-
 else
   atm_status=-1
 fi
 
-
 if [ $generate_ocnice_diags -eq 1 ]; then
-  # Check whether requested files for computing climatologies are available
-  rpointer_file=${test_archive_dir}/${test_casename}/run/rpointer.ocn
-  year_max=`grep -m 1 -Eo '\<[0-9]{4}\>' ${rpointer_file} | awk '{print $1-1}'`
+  if ! $run_batch_script; then
+    ./bash_scripts/aprime_ocnice_diags.bash
+    ocnice_status=$?
+    if [ $ocnice_status -eq 0 ]; then
+      # Update www/plots directory with newly generated plots
+      cp -u $plots_dir/* $www_dir/$plots_dir_name
 
-  if [ ${test_end_yr_climo} -le ${year_max} ]; then
- 
-    if ! $run_batch_script; then
-
-      ./bash_scripts/aprime_ocnice_diags.bash
-
-      ocnice_status=$?
-
-      if [ $ocnice_status -eq 0 ]; then
-        # Update www/plots directory with newly generated plots
-        cp -u $plots_dir/* $www_dir/$plots_dir_name
-
-        echo
-        echo "Updated ocn/ice plots in website directory: $www_dir/$plots_dir_name"
-        echo
-      fi
-
-    else
-
-      batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
-      if [ $machname == "nersc" ]; then
-        sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
-        sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
-        sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
-        sed -i 's@SBATCH --nodes=.*@SBATCH --nodes='$mpas_analysis_tasks'@' $batch_script
-        echo
-        echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
-        echo "**** jobID:"
-        sbatch $batch_script
-      elif [ $machname == "olcf" ]; then
-        update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
-        sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
-        sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
-        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
-        sed -i 's@PBS -l nodes=.*@PBS -l nodes='$mpas_analysis_tasks'@' $batch_script
-        sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
-        sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-         ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
-        sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
-        echo
-        echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
-        echo "**** jobID:"
-        qsub $batch_script
-      else
-        echo
-        echo "Batch jobs not supported on current machine"
-        echo "Please set $run_batch_script to false"
-        echo
-        exit
-      fi
-      echo "**** Batch job output/error files aprime_ocnice_diags.o*/aprime_ocnice_diags.e* will be available in log directory:"
-      echo "**** $log_dir"
-      ocnice_status=-2
-
+      echo
+      echo "Updated ocn/ice plots in website directory: $www_dir/$plots_dir_name"
+      echo
     fi
-
   else
-
-    echo
-    echo "Requested test_end_yr_climo is larger than the maximum simulation year. Exiting ocn/ice diagnostics..."
-    echo "Please set test_end_yr_climo <= ${year_max}"
-    echo
-    ocnice_status=3
-
+    batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
+    if [ $machname == "nersc" ]; then
+      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+      sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
+      sed -i 's@SBATCH --nodes=.*@SBATCH --nodes='$mpas_analysis_tasks'@' $batch_script
+      echo
+      echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
+      echo "**** jobID:"
+      sbatch $batch_script
+    elif [ $machname == "olcf" ]; then
+      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
+      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+      sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
+      sed -i 's@PBS -l nodes=.*@PBS -l nodes='$mpas_analysis_tasks'@' $batch_script
+      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+      sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+      sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
+      echo
+      echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
+      echo "**** jobID:"
+      qsub $batch_script
+    else
+      echo
+      echo "Batch jobs not supported on current machine"
+      echo "Please set $run_batch_script to false"
+      echo
+      exit
+    fi
+    echo "**** Batch job output/error files aprime_ocnice_diags.o*/aprime_ocnice_diags.e* will be available in log directory:"
+    echo "**** $log_dir"
+    ocnice_status=-2
   fi
-
 else
   ocnice_status=-1
 fi
