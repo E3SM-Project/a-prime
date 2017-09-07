@@ -56,6 +56,8 @@ else:
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'run')
 add_config_option(config, 'input', 'mpasMeshName', 
                   os.environ['test_mpas_mesh_name'])
+add_config_option(config, 'input', 'autocloseFileLimitFraction', 
+                  os.environ['mpasAutocloseFileLimitFraction'])
 
 add_config_option(config, 'output', 'baseDirectory',
                   os.environ['output_base_dir'])
