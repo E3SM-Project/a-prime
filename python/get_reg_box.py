@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 def get_reg_box(reg):
 	if reg == "global":
 		lat_ll, lat_ul, lon_ll, lon_ul = -90, 90, 0, 360

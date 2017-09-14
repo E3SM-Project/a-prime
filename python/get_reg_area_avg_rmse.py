@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 import numpy
 
 def get_reg_area_avg_rmse(field, lat, lon, debug = False):
