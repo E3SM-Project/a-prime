@@ -1,4 +1,11 @@
 #!/bin/csh -f 
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 
 if ($#argv == 0) then
         echo Input arguments not set. Will stop!

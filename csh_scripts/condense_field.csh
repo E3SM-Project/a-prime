@@ -1,4 +1,11 @@
 #!/bin/csh -f 
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 
 # calling sequence: ./condense_field.csh archive_dir scratch_dir casename field_name
 

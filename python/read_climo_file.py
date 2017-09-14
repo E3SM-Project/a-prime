@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 from netCDF4 import Dataset
 from get_reg_box import get_reg_box
 from get_climo_filename import get_climo_filename

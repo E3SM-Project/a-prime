@@ -1,4 +1,11 @@
 #!/bin/csh -f
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 
 # Usage: csh_scripts/rad_climo_plot.csh scratch_dir casename begin_month end_month CERES_EBAF_regrid_wgt_file CERES_EBAF_data_dir plots_dir
 
