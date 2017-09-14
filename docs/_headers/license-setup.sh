@@ -31,13 +31,13 @@ SOURCE_DIR="../.."
 
 CURRENT="Copyright (c)"
 
-ALWAYS_IGNORE=(-not -path "*.git*" -not -path "*docs/*" -not -iname "setup_*" \
+ALWAYS_IGNORE=(-not -path "*.git*" -not -path "*docs/*" -not -iname "setup_*" -not -path "*python/MPAS-Analysis/*" \
                -not -iname "MANIFEST.in")
 
 FILE_IGNORE=(-not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
              -not -iname "*.png" -not -iname "*.jpg" -not -iname "*.svg" \
              -not -iname "config.*" -not -iname "README" -not -iname "*.nc"\
-             -not -iname "streams.*" -not -iname "*.ocean" \
+             -not -iname "streams.*" -not -iname "*.ocean" -not -iname "*.pyc" \
              -not -iname "*.sl" -not -iname "*.ps1" -not -iname "*.yml"    )
 
 PYTHON_IGNORE=(-not -iname "__init__.py" -not -iname "colormaps.py"  \
