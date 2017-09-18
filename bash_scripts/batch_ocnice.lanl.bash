@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 
 # change number of nodes to change the number of parallel tasks
 # (anything between 1 and the total number of tasks to run)

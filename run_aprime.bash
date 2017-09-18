@@ -1,5 +1,12 @@
 #!/bin/bash
 #
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
+#
 # Template driver script to generate A-Prime coupled diagnostics on ACME machines
 #  (Supported machines/HPC centers as of June 2017 are: Edison, OLCF, aims4/acme1
 #   and LANL)

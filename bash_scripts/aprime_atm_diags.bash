@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 
 # Checking if required mapping files exist, exiting otherwise
 if [ ! -d $remap_files_dir ]; then
