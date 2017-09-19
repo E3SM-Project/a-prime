@@ -11,7 +11,7 @@ SOURCE_DIR="../.."
 
 CURRENT="Copyright (c)"
 
-ALWAYS_IGNORE=(-not -path "*.git*" -not -path "*docs/*" -not -iname "setup_*" -not -path "*python/MPAS-Analysis/*" \
+ALWAYS_IGNORE=(-not -path "*.git*" -not -path "*docs/*" -not -path "*python/MPAS-Analysis/*" \
                -not -iname "MANIFEST.in")
 
 FILE_IGNORE=(-not -iname "*.md" -not -iname "*.json" -not -iname "*.txt" \
