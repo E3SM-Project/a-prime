@@ -11,7 +11,7 @@
 #  (Supported machines/HPC centers as of June 2017 are: Edison, OLCF, aims4/acme1
 #   and LANL)
 #
-# Basic usage:
+# Basic usage (also see README for specific instructions on running on different machines):
 #       1. copy this template to something like run_aprime_$user.bash
 #       2. open run_aprime_$user.bash and set user defined, case-specific variables
 #          These are the main variables that the user will likely have to modify
@@ -76,7 +76,7 @@
 # PART I
 # USER DEFINED, CASE-SPECIFIC VARIABLES TO SPECIFY (REQUIRED)
 
-# Main directory where all analysis output is stored
+# Root directory where all analysis output is stored
 # (e.g., plots will go in a specific subdirectory of $output_base_dir,
 # as will log files, generated climatologies, etc)
 export output_base_dir=/dir/to/analysis/output
@@ -316,41 +316,43 @@ export coupled_diags_home=$PWD
 export uniqueID=`date +%Y-%m-%d_%H%M%S`
 
 # Check on www_dir, permissions included
-chmod a+rx $www_dir
+chmod -R ga+rX $www_dir
 # Create www_dir if it does not exist, purge it if it does
 if [ ! -d $www_dir/$plots_dir_name ]; then
   mkdir $www_dir/$plots_dir_name
 else
   rm -f $www_dir/$plots_dir_name/*
 fi
-chmod a+r $www_dir/$plots_dir_name
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
 source $MODULESHOME/init/bash  
 if [ $machname == "nersc" ]; then
   module unload python
   module unload python_base
-  module use $projdir/software/modulefiles/all
+  module use /global/project/projectdirs/acme/software/modulefiles/all
   module load python/anaconda-2.7-acme
+  export NCO_PATH_OVERRIDE=No
 elif [ $machname == "olcf" ]; then
   module unload python
   module use /ccs/proj/cli115/pwolfram/modulefiles/all
-  module load python/anaconda-2.7-climate
-elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  echo
-  echo "*** Need to set/run the following:"
-  echo "***  export PATH=/usr/local/anaconda2/bin:\$PATH"
-  echo "***  source activate ACME-UNIFIED   # (on aims4)"
-  echo "***  source activate ACME_UNIFIED   # (on acme1)"
-  echo
-elif [ $machname == "llnl" ]; then
+  module load python/anaconda-2.7-acme
+  export NCO_PATH_OVERRIDE=No
+elif [ $machname == "acme1" ]; then
+  export PATH=/usr/local/anaconda2/bin:$PATH
+  source activate ACME_UNIFIED
+  export NCO_PATH_OVERRIDE=No
+elif [ $machname == "aims4" ]; then
+  export PATH=/usr/local/anaconda2/bin:$PATH
+  source activate ACME-UNIFIED
+  export NCO_PATH_OVERRIDE=No
+elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
   module load python/anaconda-2.7-climate
 fi
 
-# The following is needed for (low-res) MOC diagnostics to work on aims4/acme1
-if [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
+# The following is needed for rhea, aims4 and acme1
+if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ ${HOSTNAME:0:4} == "rhea" ]; then
   export mpasAutocloseFileLimitFraction=0.02
 else
   export mpasAutocloseFileLimitFraction=0.5 # default value
@@ -383,7 +385,7 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** $batch_script"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ $machname == "olcf" ]; then
+    elif [ ${HOSTNAME:0:5} == "titan" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
@@ -399,7 +401,7 @@ if [ $generate_atm_diags -eq 1 ]; then
     else
       echo
       echo "Batch jobs not supported on current machine"
-      echo "Please set $run_batch_script to false"
+      echo "Please set 'run_batch_script' to false"
       echo
       exit
     fi

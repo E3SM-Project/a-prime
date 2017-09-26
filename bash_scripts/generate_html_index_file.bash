@@ -498,7 +498,7 @@ elif [ $machname == "olcf" ]; then
   echo "http://projects.olcf.ornl.gov/acme/$USER/$plots_dir_name"
 elif  [ $machname == "aims4" ]; then
   echo "https://aims4.llnl.gov/$USER/$plots_dir_name"
-  echo "*** The name and password to view the plots is acme/acme, respectively ***"
+  echo "*** The name and password to view the plots is acme/AwesomeModel, respectively ***"
 elif [ $machname == "acme1" ]; then
   echo "https://acme-viewer.llnl.gov/$USER/$plots_dir_name"
 else
