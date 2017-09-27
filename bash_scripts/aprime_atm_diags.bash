@@ -89,7 +89,7 @@ while [ $j -lt $n_cases ]; do
 
    if [ $short_term_archive -eq 1 ]; then
      echo "Using ACME short term archiving directory structure!"
-     archive_dir_atm="$archive_dir/$casename/atm/hist"
+     archive_dir_atm="$archive_dir/$casename/archive/atm/hist"
    fi
 
    if [ "$casename" == "obs" ]; then
@@ -259,7 +259,7 @@ while [ $j -lt $n_cases ]; do
 
    if [ $short_term_archive -eq 1 ]; then
      echo "Using ACME short term archiving directory structure!"
-     archive_dir_atm="$archive_dir/$casename/atm/hist"
+     archive_dir_atm="$archive_dir/$casename/archive/atm/hist"
    fi
 
    if [ "$casename" != "obs" ]; then

@@ -56,8 +56,8 @@ add_config_option(config, 'input', 'oceanStreamsFileName', 'run/streams.ocean')
 add_config_option(config, 'input', 'seaIceNamelistFileName', 'run/mpas-cice_in')
 add_config_option(config, 'input', 'seaIceStreamsFileName', 'run/streams.cice')
 if check_env('test_short_term_archive'):
-    add_config_option(config, 'input', 'oceanHistorySubdirectory', 'ocn/hist')
-    add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'ice/hist')
+    add_config_option(config, 'input', 'oceanHistorySubdirectory', 'archive/ocn/hist')
+    add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'archive/ice/hist')
 else:
     add_config_option(config, 'input', 'oceanHistorySubdirectory', 'run')
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'run')
