@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 '''
 Creates a config file for ACME ice-ocean analysis given a number of environment
 variables set in one of the run_<machine>.csh scripts and the default config
@@ -27,7 +34,7 @@ def check_env(envVarName):
 
 
 inFileName = 'python/MPAS-Analysis/config.default'
-outFileName = 'config.ocnice'
+outFileName = os.environ['config_file']
 
 config = ConfigParser.RawConfigParser()
 config.read(inFileName)
@@ -56,6 +63,8 @@ else:
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'run')
 add_config_option(config, 'input', 'mpasMeshName', 
                   os.environ['test_mpas_mesh_name'])
+add_config_option(config, 'input', 'autocloseFileLimitFraction', 
+                  os.environ['mpasAutocloseFileLimitFraction'])
 
 add_config_option(config, 'output', 'baseDirectory',
                   os.environ['output_base_dir'])
@@ -88,12 +97,12 @@ if check_env('generate_moc'):
 
 for field in ['sst', 'sss', 'mld']:
     if check_env('generate_{}_climo'.format(field)):
-        generate.append('regridded{}'.format(field.upper()))
+        generate.append('climatologyMap{}'.format(field.upper()))
 
 if check_env('generate_seaice_trends'):
     generate.append('timeSeriesSeaIceAreaVol')
 if check_env('generate_seaice_climo'):
-    generate.append('regriddedSeaIceConcThick')
+    generate.append('climatologyMapSeaIceConcThick')
 
 generateString = ', '.join(["'{}'".format(element)
                             for element in generate])
@@ -144,6 +153,12 @@ add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
 
 add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles', 
                   os.environ['mpaso_regions_file'])
+
+if check_env('run_batch_script'):
+    add_config_option(config, 'execute', 'parallelTaskCount',
+                      os.environ['mpas_analysis_tasks'])
+    add_config_option(config, 'execute', 'commandPrefix',
+                      os.environ['command_prefix'])
 
 filePointer = open(outFileName, 'w')
 config.write(filePointer)

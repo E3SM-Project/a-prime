@@ -1,6 +1,6 @@
-config.ocnice
-run_EDISON_*.csh
-run_EDISON.*.csh
+config.ocnice*
+run_aprime_*.bash
+run_aprime.*.bash
 run_RHEA_*.csh
 run_RHEA.*.csh
 run_OLCF_*.csh
@@ -11,6 +11,13 @@ run_LLNL_*.csh
 run_LLNL.*.csh
 run_LANL_*.csh
 run_LANL.*.csh
+
+batch_atm.*.*.bash
+batch_ocnice.*.*.bash
+aprime_atm_diags.o*
+aprime_atm_diags.e*
+aprime_ocnice_diags.o*
+aprime_ocnice_diags.e*
 
 *~
 *.nc
