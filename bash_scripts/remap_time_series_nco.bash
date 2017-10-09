@@ -44,7 +44,7 @@ if [ "$casename" != "obs" ]; then
 		     -i $ts_file \
 		     -m $regrid_wgt_file \
 		     -O $scratch_dir \
-		     -o $interp_ts_file >& $log_dir/remap_time_series_${casename}_${var}.log &
+		     -o $interp_ts_file >& $log_dir/remap_time_series_${casename}_${var}_years$begin_yr-$end_yr.log &
      fi
 
      i=$((i+1))

@@ -49,7 +49,7 @@ if [ "$casename" != "obs" ]; then
 						    --begin_month $begin_month \
 						    --end_month $end_month \
 						    --begin_yr $begin_yr \
-						    --end_yr $end_yr >& $log_dir/climo_${casename}_${var}_$season_name.log &
+						    --end_yr $end_yr >& $log_dir/climo_${casename}_${var}_${season_name}_years$begin_yr-$end_yr.log &
 
 	fi
 

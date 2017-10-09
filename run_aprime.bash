@@ -109,6 +109,11 @@ export test_end_yr_climo=40
 #  Year start/end for time series
 export test_begin_yr_ts=1
 export test_end_yr_ts=30
+
+#  Year start/end for ATM ENSO Analysis
+export test_begin_yr_enso_atm=20
+export test_end_yr_enso_atm=40
+
 #  Year start/end for ocean Nino3.4 index diagnostics (1-9999 loads in the full
 #  available time series)
 export test_begin_yr_climateIndex_ts=1
@@ -126,6 +131,12 @@ export test_remap_climo=1
 export test_condense_field_climo=1
 export test_condense_field_ts=1
 export test_remap_ts=1
+
+export test_compute_climo_enso_atm=1
+export test_condense_field_enso_atm=1
+export test_remap_climo_enso_atm=1
+export test_remap_ts_enso_atm=1
+
 
 # In the following we define some machine specific variables (such as
 # projdir or the location of observational data) that the user is 
@@ -164,9 +175,11 @@ fi
 # ** Reference case variables (similar to test_case variables) **
 export ref_case=obs
 if [ $machname == "nersc" ]; then
-  export ref_archive_dir=$projdir/obs_for_diagnostics
+  #export ref_archive_dir=$projdir/obs_for_diagnostics
+  export ref_archive_dir=/global/project/projectdirs/acme/salil/obs_time_series_for_diagnostics
 elif [ $machname == "olcf" ]; then
-  export ref_archive_dir=/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
+#  export ref_archive_dir=/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
+  export ref_archive_dir=/lustre/atlas1/cli115/proj-shared/salil/obs_time_series_for_diagnostics
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_dir=/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostics
 elif [ $machname == "lanl" ]; then
@@ -201,6 +214,8 @@ export ref_begin_yr_climo=95
 export ref_end_yr_climo=100
 export ref_begin_yr_ts=95
 export ref_end_yr_ts=100
+
+
 export ref_begin_yr_climateIndex_ts=1
 export ref_end_yr_climateIndex_ts=9999
 export ref_compute_climo=1
@@ -209,8 +224,29 @@ export ref_condense_field_climo=1
 export ref_condense_field_ts=1
 export ref_remap_ts=1
 
+export ref_condense_field_climo=1
+export ref_condense_field_ts=1
+export ref_compute_climo=1
+export ref_remap_climo=1
+export ref_remap_ts=1
+
+export ref_condense_field_enso_atm=1
+export ref_compute_climo_enso_atm=1
+export ref_remap_climo_enso_atm=1
+export ref_remap_ts_enso_atm=1
+
+#ENSO analysis: set begin and end years for ref_case
+#if ref_case=obs then the ENSO obs analysis begin year and end year should be set to 1979 and 2006:
+#export ref_begin_yr_enso_atm=1979
+#export ref_end_yr_enso_atm=2006
+
+export ref_begin_yr_enso_atm=1979
+export ref_end_yr_enso_atm=2006
+
+
 # Select sets of diagnostics to generate (False = 0, True = 1)
 export generate_atm_diags=1
+export generate_atm_enso_diags=1
 export generate_ocnice_diags=1
 
 # The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
@@ -230,6 +266,8 @@ export generate_nino34=1
 
 # Generate standalone html file to view plots on a browser, if required
 export generate_html=1
+
+
 
 # Set options to run a-prime in parallel
 #   If run_batch_script=false, aprime_atm_diags.bash and aprime_ocnice_diags.bash are called directly.

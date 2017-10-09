@@ -20,16 +20,20 @@ if [ ! -d $test_scratch_dir_atm ]; then
   mkdir $test_scratch_dir_atm
 fi
 
-if [ ! -d $ref_scratch_dir ] && [ $ref_case != "obs" ]; then
+#if [ ! -d $ref_scratch_dir ] && [ $ref_case != "obs" ]; then
+#  mkdir $ref_scratch_dir
+#fi
+
+if [ ! -d $ref_scratch_dir ]; then
   mkdir $ref_scratch_dir
 fi
 
-if [ "$ref_case" != "obs" ]; then
+#if [ "$ref_case" != "obs" ]; then
   ref_scratch_dir_atm=$ref_scratch_dir/atm
   if [ ! -d $ref_scratch_dir_atm ]; then
     mkdir $ref_scratch_dir_atm
   fi
-fi
+#fi
 
 if [ ! -d $plots_dir ]; then
   mkdir $plots_dir
@@ -45,28 +49,43 @@ fi
 echo "case_set=($test_casename $ref_case)" > $log_dir/case_info.temp
 echo "archive_dir_set=($test_archive_dir $ref_archive_dir)" >> $log_dir/case_info.temp
 echo "short_term_archive_set=($test_short_term_archive $ref_short_term_archive)" >> $log_dir/case_info.temp
+echo "scratch_dir_set=($test_scratch_dir_atm $ref_scratch_dir_atm)" >> $log_dir/case_info.temp
 echo "begin_yr_climo_set=($test_begin_yr_climo $ref_begin_yr_climo)" >> $log_dir/case_info.temp
 echo "end_yr_climo_set=($test_end_yr_climo $ref_end_yr_climo)" >> $log_dir/case_info.temp
 echo "begin_yr_ts_set=($test_begin_yr_ts $ref_begin_yr_ts)" >> $log_dir/case_info.temp
 echo "end_yr_ts_set=($test_end_yr_ts $ref_end_yr_ts)" >> $log_dir/case_info.temp
+
+echo "begin_yr_enso_atm_set=($test_begin_yr_enso_atm $ref_begin_yr_enso_atm)" >> $log_dir/case_info.temp
+echo "end_yr_enso_atm_set=($test_end_yr_enso_atm $ref_end_yr_enso_atm)" >> $log_dir/case_info.temp
+
 echo "begin_yr_climateIndex_set=($test_begin_yr_climateIndex_ts $ref_begin_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 echo "end_yr_climateIndex_set=($test_end_yr_climateIndex_ts $ref_end_yr_climateIndex_ts)" >> $log_dir/case_info.temp
+
 echo "native_res_set=($test_atm_res $ref_atm_res)" >> $log_dir/case_info.temp
 
 if [ "$ref_case" == "obs" ]; then
-  echo "scratch_dir_set=($test_scratch_dir_atm $ref_archive_dir)" >> $log_dir/case_info.temp
   echo "condense_field_climo_set=($test_condense_field_climo 0)" >> $log_dir/case_info.temp
   echo "condense_field_ts_set=($test_condense_field_ts 0)" >> $log_dir/case_info.temp
   echo "compute_climo_set=($test_compute_climo 0)" >> $log_dir/case_info.temp
   echo "remap_climo_set=($test_remap_climo 0)" >> $log_dir/case_info.temp
   echo "remap_ts_set=($test_remap_ts 0)" >> $log_dir/case_info.temp
+
+  echo "condense_field_enso_atm_set=($test_condense_field_enso_atm 0)" >> $log_dir/case_info.temp
+  echo "compute_climo_enso_atm_set=($test_compute_climo_enso_atm 0)" >> $log_dir/case_info.temp
+  echo "remap_climo_enso_atm_set=($test_remap_climo_enso_atm 0)" >> $log_dir/case_info.temp
+  echo "remap_ts_enso_atm_set=($test_remap_ts_enso_atm 0)" >> $log_dir/case_info.temp
+
 else
-  echo "scratch_dir_set=($test_scratch_dir_atm $ref_scratch_dir_atm)" >> $log_dir/case_info.temp
   echo "condense_field_climo_set=($test_condense_field_climo $ref_condense_field_climo)" >> $log_dir/case_info.temp
   echo "condense_field_ts_set=($test_condense_field_ts $ref_condense_field_ts)" >> $log_dir/case_info.temp
   echo "compute_climo_set=($test_compute_climo $ref_compute_climo)" >> $log_dir/case_info.temp
   echo "remap_climo_set=($test_remap_climo $ref_remap_climo)" >> $log_dir/case_info.temp
   echo "remap_ts_set=($test_remap_ts $ref_remap_ts)" >> $log_dir/case_info.temp
+
+  echo "condense_field_enso_atm_set=($test_condense_field_enso_atm $ref_condense_field_enso_atm)" >> $log_dir/case_info.temp
+  echo "compute_climo_enso_atm_set=($test_compute_climo_enso_atm $ref_compute_climo_enso_atm)" >> $log_dir/case_info.temp
+  echo "remap_climo_enso_atm_set=($test_remap_climo_enso_atm $ref_remap_climo_enso_atm)" >> $log_dir/case_info.temp
+  echo "remap_ts_enso_atm_set=($test_remap_ts_enso_atm $ref_remap_ts_enso_atm)" >> $log_dir/case_info.temp
 fi
 
 echo

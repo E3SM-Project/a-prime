@@ -1,52 +1,54 @@
-#!/bin/csh -f 
+#!/bin/bash 
 
-set scratch_dir = $argv[1]
-set casename = $argv[2]
-set begin_yr = $argv[3]
-set end_yr = $argv[4]
-set ref_scratch_dir = $argv[5]
-set ref_case = $argv[6]
-set var_list_file = $argv[7]
+scratch_dir=$1
+casename=$2
+begin_yr=$3
+end_yr=$4
+ref_scratch_dir=$5
+ref_case=$6
+var_list_file=$7
 
 # Read in variable list for plotting climatologies  diagnostics
 source $var_list_file
 
-set n_var = $#var_set
+n_var=${#var_set[@]}
 
-set reg = 'Tropical_Pacific'
-set reg_name = 'Tropical-Pacific'
+reg='Tropical_Pacific'
+reg_name='Tropical-Pacific'
 
 
 # Read in list of seasons for which diagnostics are being computed
 source $log_dir/season_info.temp
-set n_seasons = $#begin_month_set
+n_seasons=${#begin_month_set[@]}
 
 
 # Generate plots for each field
-foreach k (`seq 1 $n_var`)
+k=0
+while [ $k -lt $n_var ]; do
 
-	set var           = $var_set[$k]
-	set interp_grid   = $interp_grid_set[$k]
-	set interp_method = $interp_method_set[$k]
+	var=${var_set[$k]}
+	interp_grid=${interp_grid_set[$k]}
+	interp_method=${interp_method_set[$k]}
 
 	echo	
 	echo $casename $var
 	echo
 
-	if ($ref_case == obs) then
-		set ref_casename = $interp_grid
-		set ref_interp_grid   = 0
-		set ref_interp_method = 0
+	if [ $ref_case == obs ]; then
+		ref_casename=$interp_grid
+		ref_interp_grid=0
+		ref_interp_method=0
 	else
-		set ref_casename = $ref_case
-		set ref_interp_grid   = $interp_grid
-		set ref_interp_method = $interp_method
-	endif
+		ref_casename=$ref_case
+		ref_interp_grid=$interp_grid
+		ref_interp_method=$interp_method
+	fi
 
-	foreach i (`seq 1 $n_seasons`)
-                set begin_month = $begin_month_set[$i]
-                set end_month   = $end_month_set[$i]
-                set season_name = $season_name_set[$i]
+	i=0
+	while [ $i -lt $n_seasons ]; do
+                begin_month=${begin_month_set[$i]}
+                end_month=${end_month_set[$i]}
+                season_name=${season_name_set[$i]}
 
 		python python/plot_meridional_avg_climo.py -d True --indir $scratch_dir \
 								-c $casename \
@@ -65,15 +67,21 @@ foreach k (`seq 1 $n_var`)
 								--reg $reg \
 								--reg_name $reg_name \
 								--plots_dir $plots_dir >& $log_dir/plot_meridional_avg_${reg}_${casename}_${var}_$season_name.log &
-	end
-end
+
+		i=$((i+1))
+	done
+
+	k=$((k+1))
+done
 
 
 echo
 echo Waiting for jobs to complete ...
-echo
 
 wait
+echo
+echo ... Done
+echo
 
  	
 

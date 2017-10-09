@@ -37,7 +37,7 @@ echo
 echo "condensing $field_name"
 echo
 
-set outfile = $scratch_dir/$casename.cam.h0.$field_name.$begin_yr-$end_yr.nc
+outfile=$scratch_dir/$casename.cam.h0.$field_name.$begin_yr-$end_yr.nc
 if [ -f $outfile ]; then
 	echo "file $outfile exists! Not condensing."
 else

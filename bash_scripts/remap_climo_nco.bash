@@ -52,7 +52,7 @@ if [ "$casename" != "obs" ]; then
 			-i $climo_file \
 			-m $regrid_wgt_file \
 			-O $scratch_dir \
-			-o $interp_climo_file >& $log_dir/remap_climo_${casename}_${var}_$season_name.log &
+			-o $interp_climo_file >& $log_dir/remap_climo_${casename}_${var}_${season_name}_years$begin_yr-$end_yr.log &
 
 	fi
 
