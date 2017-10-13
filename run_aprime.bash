@@ -175,11 +175,9 @@ fi
 # ** Reference case variables (similar to test_case variables) **
 export ref_case=obs
 if [ $machname == "nersc" ]; then
-  #export ref_archive_dir=$projdir/obs_for_diagnostics
-  export ref_archive_dir=/global/project/projectdirs/acme/salil/obs_time_series_for_diagnostics
+  export ref_archive_dir=$projdir/observations/Atm
 elif [ $machname == "olcf" ]; then
-#  export ref_archive_dir=/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
-  export ref_archive_dir=/lustre/atlas1/cli115/proj-shared/salil/obs_time_series_for_diagnostics
+  export ref_archive_dir=$projdir/observations/Atm
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_dir=/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostics
 elif [ $machname == "lanl" ]; then
