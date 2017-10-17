@@ -7,43 +7,39 @@
 # in the LICENSE file in the top level a-prime directory
 #
 
-# Creating scratch directories
+# Creating scratch, plots and logs directories
 if [ ! -d $output_base_dir ]; then
-  mkdir $output_base_dir
+  mkdir -p $output_base_dir
 fi
 if [ ! -d $test_scratch_dir ]; then
-  mkdir $test_scratch_dir
+  mkdir -p $test_scratch_dir
 fi
 
 test_scratch_dir_atm=$test_scratch_dir/atm
 if [ ! -d $test_scratch_dir_atm ]; then
-  mkdir $test_scratch_dir_atm
+  mkdir -p $test_scratch_dir_atm
 fi
 
-#if [ ! -d $ref_scratch_dir ] && [ $ref_case != "obs" ]; then
-#  mkdir $ref_scratch_dir
-#fi
 
 if [ ! -d $ref_scratch_dir ]; then
-  mkdir $ref_scratch_dir
+  mkdir -p $ref_scratch_dir
 fi
 
-#if [ "$ref_case" != "obs" ]; then
-  ref_scratch_dir_atm=$ref_scratch_dir/atm
-  if [ ! -d $ref_scratch_dir_atm ]; then
-    mkdir $ref_scratch_dir_atm
-  fi
-#fi
+ref_scratch_dir_atm=$ref_scratch_dir/atm
+if [ ! -d $ref_scratch_dir_atm ]; then
+  mkdir -p $ref_scratch_dir_atm
+fi
 
 if [ ! -d $plots_dir ]; then
-  mkdir $plots_dir
+  mkdir -p $plots_dir
 fi
 if [ ! -d $log_dir ]; then
-  mkdir $log_dir
+  mkdir -p $log_dir
 fi
 if [ ! -d $www_dir ]; then
   mkdir $www_dir
 fi
+
 
 # Placing case information in a file: $log_dir/case_info.temp for scripts to read
 echo "case_set=($test_casename $ref_case)" > $log_dir/case_info.temp

@@ -579,7 +579,6 @@ EOF
         <TABLE>
 EOF
 
-  echo ${var_grp_unique_set[@]}
   for grp in "${var_grp_unique_set[@]}"; do
 
         if [ $ref_case == obs ]; then

@@ -37,7 +37,10 @@ for grp in "${var_group_set[@]}"; do
 	i=$((i+1))
 done
 
-rm $outfile
+if [ -f $outfile ]; then 
+	rm $outfile
+fi
+
 echo 'var_grp_unique_set=(' "${var_grp_unique_set_file[@]}" ')' > $outfile
 echo 'grp_interp_grid_set=(' "${grp_interp_grid_set_file[@]}" ')' >> $outfile
 
