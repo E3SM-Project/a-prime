@@ -288,19 +288,23 @@ export batch_walltime="01:00:00" # HH:MM:SS
 # OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD
 # WORK, USER PREFERENCE BASED CHANGES)
 
+#set paths to scratch, logs and plots directories
+export test_scratch_dir=$output_base_dir/coupled_diagnostics_$test_casename/scratch
+export ref_scratch_dir=$output_base_dir/coupled_diagnostics_$ref_case/scratch
+export plots_dir_base=$output_base_dir/coupled_diagnostics_${test_casename}_vs_${ref_case}
+
 if [ $ref_case == "obs" ]; then
   export plots_dir_name=coupled_diagnostics_${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}
 else
   export plots_dir_name=coupled_diagnostics_${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}_years${ref_begin_yr_climo}-${ref_end_yr_climo}
 fi
+
 # User can set a custom name for the $plot_dir_name here, if the default (above) is not ideal 
 #export plots_dir_name=XXYYY
 
-# Set paths to scratch, logs and plots directories
-export test_scratch_dir=$output_base_dir/$plots_dir_name.scratch
-export ref_scratch_dir=$output_base_dir/$plots_dir_name.scratch
-export log_dir=$output_base_dir/$plots_dir_name.logs
-export plots_dir=$output_base_dir/$plots_dir_name
+export log_dir=$plots_dir_base/$plots_dir_name.logs
+export plots_dir=$plots_dir_base/$plots_dir_name
+
 
 # Set atm specific paths to mapping and data files locations
 export remap_files_dir=$projdir/mapping/maps
