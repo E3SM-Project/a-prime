@@ -29,8 +29,6 @@ begin_yr_climo=${begin_yr_climo_set[$case_no-1]}
 end_yr_climo=${end_yr_climo_set[$case_no-1]}
 begin_yr_ts=${begin_yr_ts_set[$case_no-1]}
 end_yr_ts=${end_yr_ts_set[$case_no-1]}
-begin_yr_enso_atm=${begin_yr_enso_atm_set[$case_no-1]}
-end_yr_enso_atm=${end_yr_enso_atm_set[$case_no-1]}
 begin_yr_climateIndex=${begin_yr_climateIndex_set[$case_no-1]}
 end_yr_climateIndex=${end_yr_climateIndex_set[$case_no-1]}
 
@@ -491,7 +489,7 @@ if [ $generate_atm_enso_diags -eq 1 ]; then
   <font color=red size=+1><b>ENSO Diagnostics (ATM)</b></font><br>
 
   <div style="text-align:left">
-  <font color=peru size=-1>$casename (Years: $begin_yr_enso_atm-$end_yr_enso_atm)</font><br>
+  <font color=peru size=-1>$casename (Years: $begin_yr_climateIndex-$end_yr_climateIndex)</font><br>
   <font color=peru size=-1>$ref_case_text_ts</font>
   </div>
 

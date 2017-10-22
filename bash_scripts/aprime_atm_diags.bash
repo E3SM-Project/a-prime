@@ -393,8 +393,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
 		archive_dir=${archive_dir_set[$j]}
 		scratch_dir=${scratch_dir_set[$j]}
 		short_term_archive=${short_term_archive_set[$j]}
-		begin_yr_climo=${begin_yr_enso_atm_set[$j]}
-		end_yr_climo=${end_yr_enso_atm_set[$j]}
+		begin_yr_climo=${begin_yr_climateIndex_set[$j]}
+		end_yr_climo=${end_yr_climateIndex_set[$j]}
 
 		condense_field_climo=${condense_field_enso_atm_set[$j]}
 		
@@ -428,8 +428,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	   casename="${case_set[$j]}"
 	   scratch_dir="${scratch_dir_set[$j]}"
 	   compute_climo=${compute_climo_enso_atm_set[$j]}
-	   begin_yr_climo=${begin_yr_enso_atm_set[$j]}
-	   end_yr_climo=${end_yr_enso_atm_set[$j]}
+	   begin_yr_climo=${begin_yr_climateIndex_set[$j]}
+	   end_yr_climo=${end_yr_climateIndex_set[$j]}
 
 	   if [ $compute_climo -eq 1 ]; then
 	     echo
@@ -457,8 +457,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	   scratch_dir="${scratch_dir_set[$j]}"
 	   native_res="${native_res_set[$j]}"
 	   remap_climo=${remap_climo_enso_atm_set[$j]}
-	   begin_yr_climo=${begin_yr_enso_atm_set[$j]}
-	   end_yr_climo=${end_yr_enso_atm_set[$j]}
+	   begin_yr_climo=${begin_yr_climateIndex_set[$j]}
+	   end_yr_climo=${end_yr_climateIndex_set[$j]}
 
 	   if [ $remap_climo -eq 1 ]; then
 	     echo
@@ -500,8 +500,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_climo=${begin_yr_enso_atm_set[$j]}
-                end_yr_climo=${end_yr_enso_atm_set[$j]}
+                begin_yr_climo=${begin_yr_climateIndex_set[$j]}
+                end_yr_climo=${end_yr_climateIndex_set[$j]}
 
                 bash_scripts/plot_tropical_pacific_meridional_avg.bash \
 						 $scratch_dir \
@@ -538,8 +538,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
                 archive_dir=${archive_dir_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
                 short_term_archive=${short_term_archive_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
 
                 condense_field_ts=${condense_field_enso_atm_set[$j]}
 
@@ -575,10 +575,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
                 native_res=${native_res_set[$j]}
-                remap_ts=${remap_ts_enso_atm_set[$j]}
+                remap_ts=${remap_ts_climateIndex_set[$j]}
 
                 if [ $remap_ts -eq 1 ]; then
                         echo
@@ -619,8 +619,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
                 casename=${case_set[$j]}
                 archive_dir=${archive_dir_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
 
                 if [ $casename != obs ]; then
                         archive_dir=$scratch_dir
@@ -645,8 +645,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
                 casename=${case_set[$j]}
                 archive_dir=${archive_dir_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
 
                 if [ $casename != obs ]; then
                         archive_dir=$scratch_dir
@@ -675,10 +675,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]} 
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]} 
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
  
                 bash_scripts/plot_multiple_index_same_plot.bash $scratch_dir \
                                                  $casename \
@@ -716,10 +716,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_enso_diags_time_series.bash $scratch_dir \
                                                  $casename \
@@ -745,10 +745,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_enso_seasonality.bash $scratch_dir \
                                                  $casename \
@@ -786,10 +786,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_enso_feedbacks.bash $scratch_dir \
                                                  $casename \
@@ -833,10 +833,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_enso_feedbacks.bash $scratch_dir \
                                                  $casename \
@@ -880,10 +880,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_regr_nino34_fields.bash $scratch_dir \
                                                  $casename \
@@ -917,10 +917,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_stddev.bash $scratch_dir \
                                            $casename \
@@ -959,10 +959,10 @@ if [ $generate_atm_enso_diags == 1 ]; then
         while [ $j -lt $n_test_cases ]; do
                 casename=${case_set[$j]}
                 scratch_dir=${scratch_dir_set[$j]}
-                begin_yr_ts=${begin_yr_enso_atm_set[$j]}
-                end_yr_ts=${end_yr_enso_atm_set[$j]}
-                ref_begin_yr_ts=${begin_yr_enso_atm_set[$n_cases-1]}
-                ref_end_yr_ts=${end_yr_enso_atm_set[$n_cases-1]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+                ref_begin_yr_ts=${begin_yr_climateIndex_set[$n_cases-1]}
+                ref_end_yr_ts=${end_yr_climateIndex_set[$n_cases-1]}
 
                 bash_scripts/plot_enso_evolution.bash $scratch_dir \
                                                  $casename \

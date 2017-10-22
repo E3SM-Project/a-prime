@@ -20,7 +20,6 @@ if [ ! -d $test_scratch_dir_atm ]; then
   mkdir -p $test_scratch_dir_atm
 fi
 
-
 if [ ! -d $ref_scratch_dir ]; then
   mkdir -p $ref_scratch_dir
 fi
@@ -37,9 +36,8 @@ if [ ! -d $log_dir ]; then
   mkdir -p $log_dir
 fi
 if [ ! -d $www_dir ]; then
-  mkdir $www_dir
+  mkdir -p $www_dir
 fi
-
 
 # Placing case information in a file: $log_dir/case_info.temp for scripts to read
 echo "case_set=($test_casename $ref_case)" > $log_dir/case_info.temp
@@ -50,10 +48,6 @@ echo "begin_yr_climo_set=($test_begin_yr_climo $ref_begin_yr_climo)" >> $log_dir
 echo "end_yr_climo_set=($test_end_yr_climo $ref_end_yr_climo)" >> $log_dir/case_info.temp
 echo "begin_yr_ts_set=($test_begin_yr_ts $ref_begin_yr_ts)" >> $log_dir/case_info.temp
 echo "end_yr_ts_set=($test_end_yr_ts $ref_end_yr_ts)" >> $log_dir/case_info.temp
-
-echo "begin_yr_enso_atm_set=($test_begin_yr_enso_atm $ref_begin_yr_enso_atm)" >> $log_dir/case_info.temp
-echo "end_yr_enso_atm_set=($test_end_yr_enso_atm $ref_end_yr_enso_atm)" >> $log_dir/case_info.temp
-
 echo "begin_yr_climateIndex_set=($test_begin_yr_climateIndex_ts $ref_begin_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 echo "end_yr_climateIndex_set=($test_end_yr_climateIndex_ts $ref_end_yr_climateIndex_ts)" >> $log_dir/case_info.temp
 
@@ -70,7 +64,6 @@ if [ "$ref_case" == "obs" ]; then
   echo "compute_climo_enso_atm_set=($test_compute_climo_enso_atm 0)" >> $log_dir/case_info.temp
   echo "remap_climo_enso_atm_set=($test_remap_climo_enso_atm 0)" >> $log_dir/case_info.temp
   echo "remap_ts_enso_atm_set=($test_remap_ts_enso_atm 0)" >> $log_dir/case_info.temp
-
 else
   echo "condense_field_climo_set=($test_condense_field_climo $ref_condense_field_climo)" >> $log_dir/case_info.temp
   echo "condense_field_ts_set=($test_condense_field_ts $ref_condense_field_ts)" >> $log_dir/case_info.temp
