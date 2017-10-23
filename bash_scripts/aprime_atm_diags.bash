@@ -578,7 +578,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
                 begin_yr_ts=${begin_yr_climateIndex_set[$j]}
                 end_yr_ts=${end_yr_climateIndex_set[$j]}
                 native_res=${native_res_set[$j]}
-                remap_ts=${remap_ts_climateIndex_set[$j]}
+                remap_ts=${remap_ts_enso_atm_set[$j]}
 
                 if [ $remap_ts -eq 1 ]; then
                         echo

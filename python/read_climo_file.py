@@ -34,19 +34,22 @@ def read_climo_file (indir, \
 
 	try:
 		f = Dataset(file_name, "r")
-		field = f.variables[field_name]
-		lat = f.variables['lat']
-		lon = f.variables['lon']
+		field_temp = f.variables[field_name]
+		lat = f.variables['lat'][:]
+		lon = f.variables['lon'][:]
 	
 		try:
-			area = f.variables['area']
+			area = f.variables['area'][:]
 		except:
-			gw = f.variables['gw']
+			gw = f.variables['gw'][:]
 
 		try:
-			units = field.units
+			units = field_temp.units
 		except AttributeError:
-			units = field.lunits
+			units = field_temp.lunits
+	
+		field = field_temp[:]
+		f.close()
 		
 	except:
 	
@@ -79,13 +82,13 @@ def read_climo_file (indir, \
 			if i == 0:
 				field_list = [field_temp[:]]			
 				units = field_temp.units
-				lat = f.variables['lat']
-				lon = f.variables['lon']
+				lat = f.variables['lat'][:]
+				lon = f.variables['lon'][:]
 
 				try:
-					area = f.variables['area']
+					area = f.variables['area'][:]
 				except:
-					gw = f.variables['gw']
+					gw = f.variables['gw'][:]
 
 			else:
 				field_list.append(field_temp[:])
@@ -186,12 +189,12 @@ def read_climo_file (indir, \
 	    field_in = field_in * 86400.0 * 1000.0
 	    units = 'mm/day'
 
-	if field_name[0:2] == 'TS' and field.units == 'K':
+	if field_name[0:2] == 'TS' and units == 'K':
 	    print 'A temperature field in K units! Changing units from K to C!...'
 	    field_in = field_in - 273.15
 	    units = 'C'
 
-	if field_name[0:3] == 'SST' and field.units == 'K':
+	if field_name[0:3] == 'SST' and units == 'K':
 	    print 'A temperature field in K units! Changing units from K to C!...'
 	    field_in = field_in - 273.15
 	    units = 'C'
