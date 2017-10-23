@@ -88,8 +88,8 @@ export output_base_dir=/dir/to/analysis/output
 #  Case Name (NB: $test_casename will be appended to $test_archive_dir)
 export test_casename=casename
 #  Root directory pointing to model data. If test_short_term_archive=0,
-#  $test_casename/run will be appended to test_archive_dir. If 
-# test_short_term_archive=1, $test_casename/archive/modelcomponent/hist
+#  $test_casename/run will be appended to test_archive_dir. If
+#  test_short_term_archive=1, $test_casename/archive/modelcomponent/hist
 #  will instead be appended.
 export test_archive_dir=/dir/to/data
 #  Short-term archive option
@@ -172,7 +172,7 @@ if [ $machname == "nersc" ]; then
 elif [ $machname == "olcf" ]; then
   export ref_archive_dir=$projdir/observations/Atm
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export ref_archive_dir=/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostics
+  export ref_archive_dir=$projdir/diagnostics/observations/Atm
 elif [ $machname == "lanl" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 fi
