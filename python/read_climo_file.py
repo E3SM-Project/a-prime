@@ -159,7 +159,7 @@ def read_climo_file (indir, \
 	#Mulitdimensional indexing with numpy require indexes to be multidimensional arrays
 	#Used here only for derived variables like RESTOM
 
-	if type(field) == numpy.ndarray:
+	if isinstance(field, numpy.ndarray):
 		if field.ndim == 2:
 			field_in = field[lat_index_reg[:, None],lon_index_reg[None, :]] 
 		if field.ndim == 3:
@@ -176,7 +176,7 @@ def read_climo_file (indir, \
 			field_in = field[0,lat_index_reg,lon_index_reg] 
 
 
-	if type(area) == numpy.ndarray:
+	if isinstance(area, numpy.ndarray):
 		area_reg = area[lat_index_reg[:, None],lon_index_reg[None, :]]
 	else:
 		area_reg = area[lat_index_reg,lon_index_reg]
