@@ -33,11 +33,14 @@ def check_env(envVarName):
     return os.environ[envVarName].lower() in ['1', 't', 'true']
 
 
-inFileName = 'python/MPAS-Analysis/config.default'
+inFileName = 'python/MPAS-Analysis/mpas_analysis/config.default'
 outFileName = os.environ['config_file']
 
 config = ConfigParser.RawConfigParser()
 config.read(inFileName)
+
+# Turn off generation of MPAS-Analysis html page by default
+add_config_option(config, 'html', 'generate', 'False')
 
 add_config_option(config, 'runs', 'mainRunName',
                   os.environ['test_casename'])
@@ -102,7 +105,10 @@ for field in ['sst', 'sss', 'mld']:
 if check_env('generate_seaice_trends'):
     generate.append('timeSeriesSeaIceAreaVol')
 if check_env('generate_seaice_climo'):
-    generate.append('climatologyMapSeaIceConcThick')
+    generate.append('climatologyMapSeaIceConcNH')
+    generate.append('climatologyMapSeaIceConcSH')
+    generate.append('climatologyMapSeaIceThickNH')
+    generate.append('climatologyMapSeaIceThickSH')
 
 generateString = ', '.join(["'{}'".format(element)
                             for element in generate])
@@ -159,6 +165,8 @@ if check_env('run_batch_script'):
                       os.environ['mpas_analysis_tasks'])
     add_config_option(config, 'execute', 'commandPrefix',
                       os.environ['command_prefix'])
+add_config_option(config, 'execute', 'ncclimoParallelMode',
+                  os.environ['ncclimoParallelMode'])
 
 filePointer = open(outFileName, 'w')
 config.write(filePointer)

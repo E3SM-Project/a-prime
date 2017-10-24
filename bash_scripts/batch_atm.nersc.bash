@@ -27,7 +27,7 @@ exitCode=`sacct --jobs=$SLURM_JOB_ID --format=ExitCode | awk '{if (NR==3) printf
 if [ $exitCode -eq 0 ]; then
   # Update www/plots directory with newly generated plots
   cp -u $plots_dir/* $www_dir/$plots_dir_name
-  #chmod a+r $www_dir/$plots_dir_name/*
+  chmod -R ga+rX $www_dir/$plots_dir_name
 
   echo
   echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"

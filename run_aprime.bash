@@ -252,9 +252,13 @@ export generate_html=1
 #     here is 10. The user can decide to reduce mpas_analysis_tasks accordingly, if asking to compute
 #     a reduced set of ocn/ice diagnostics. Finally, the user can set the walltime (default is 1hr
 #     for atm and 1hr for ocn/ice diags, which is fine to compute ~20 year climatology at low-resolution).
+#   Finally, choose whether to run ncclimo in parallel mode. In that case, set ncclimoParallelMode to
+#   "bck", and nclimo will launch 12 parallel tasks on a single node to compute 12 monthly
+#   climatologies. Otherwise, leave ncclimoParallelMode="serial".
 export run_batch_script=false
 export mpas_analysis_tasks=10
 export batch_walltime="01:00:00" # HH:MM:SS
+export ncclimoParallelMode="bck"
 ###############################################################################################
 
 ########################################################################
@@ -330,7 +334,6 @@ export coupled_diags_home=$PWD
 export uniqueID=`date +%Y-%m-%d_%H%M%S`
 
 # Check on www_dir, permissions included
-chmod -R ga+rX $www_dir
 # Create www_dir if it does not exist, purge it if it does
 if [ ! -d $www_dir/$plots_dir_name ]; then
   mkdir $www_dir/$plots_dir_name
@@ -504,6 +507,8 @@ if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
 							$www_dir
      fi
   done
+  chmod ga+rX $www_dir
+  chmod -R ga+rX $www_dir/$plots_dir_name
 else
   echo
   echo "Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!"
