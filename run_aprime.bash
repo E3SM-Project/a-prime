@@ -88,8 +88,8 @@ export output_base_dir=/dir/to/analysis/output
 #  Case Name (NB: $test_casename will be appended to $test_archive_dir)
 export test_casename=casename
 #  Root directory pointing to model data. If test_short_term_archive=0,
-#  $test_casename/run will be appended to test_archive_dir. If 
-# test_short_term_archive=1, $test_casename/archive/modelcomponent/hist
+#  $test_casename/run will be appended to test_archive_dir. If
+#  test_short_term_archive=1, $test_casename/archive/modelcomponent/hist
 #  will instead be appended.
 export test_archive_dir=/dir/to/data
 #  Short-term archive option
@@ -109,10 +109,10 @@ export test_end_yr_climo=40
 #  Year start/end for time series
 export test_begin_yr_ts=1
 export test_end_yr_ts=30
-#  Year start/end for ocean Nino3.4 index diagnostics (1-9999 loads in the full
-#  available time series)
+#  Year start/end for ocean Nino3.4 index diagnostics (both ocn/ice and
+#  atm diagnostics)
 export test_begin_yr_climateIndex_ts=1
-export test_end_yr_climateIndex_ts=9999
+export test_end_yr_climateIndex_ts=50
 
 #  Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #  If no pre-processing is done (climatology, remapping), all the switches below should be 1
@@ -126,6 +126,10 @@ export test_remap_climo=1
 export test_condense_field_climo=1
 export test_condense_field_ts=1
 export test_remap_ts=1
+export test_compute_climo_enso_atm=1
+export test_condense_field_enso_atm=1
+export test_remap_climo_enso_atm=1
+export test_remap_ts_enso_atm=1
 
 # In the following we define some machine specific variables (such as
 # projdir or the location of observational data) that the user is 
@@ -164,11 +168,11 @@ fi
 # ** Reference case variables (similar to test_case variables) **
 export ref_case=obs
 if [ $machname == "nersc" ]; then
-  export ref_archive_dir=$projdir/obs_for_diagnostics
+  export ref_archive_dir=$projdir/observations/Atm
 elif [ $machname == "olcf" ]; then
-  export ref_archive_dir=/lustre/atlas1/cli900/world-shared/obs_for_diagnostics
+  export ref_archive_dir=$projdir/observations/Atm
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export ref_archive_dir=/space2/ACME_obs_data/acme-repo/acme/obs_for_diagnostics
+  export ref_archive_dir=$projdir/diagnostics/observations/Atm
 elif [ $machname == "lanl" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 fi
@@ -201,16 +205,22 @@ export ref_begin_yr_climo=95
 export ref_end_yr_climo=100
 export ref_begin_yr_ts=95
 export ref_end_yr_ts=100
-export ref_begin_yr_climateIndex_ts=1
-export ref_end_yr_climateIndex_ts=9999
+# NB: if ref_case=obs then the ENSO obs analysis begin year and end year should be set to 1979 and 2006:
+export ref_begin_yr_climateIndex_ts=1979
+export ref_end_yr_climateIndex_ts=2006
 export ref_compute_climo=1
 export ref_remap_climo=1
 export ref_condense_field_climo=1
 export ref_condense_field_ts=1
 export ref_remap_ts=1
+export ref_compute_climo_enso_atm=1
+export ref_remap_climo_enso_atm=1
+export ref_condense_field_enso_atm=1
+export ref_remap_ts_enso_atm=1
 
 # Select sets of diagnostics to generate (False = 0, True = 1)
 export generate_atm_diags=1
+export generate_atm_enso_diags=1
 export generate_ocnice_diags=1
 
 # The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
@@ -252,19 +262,19 @@ export batch_walltime="01:00:00" # HH:MM:SS
 # OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD
 # WORK, USER PREFERENCE BASED CHANGES)
 
+# Set paths to scratch, plots and logs directories
+export test_scratch_dir=$output_base_dir/coupled_diagnostics/$test_casename.scratch
+export ref_scratch_dir=$output_base_dir/coupled_diagnostics/$ref_case.scratch
+export plots_base_dir=$output_base_dir/coupled_diagnostics/${test_casename}_vs_${ref_case}
 if [ $ref_case == "obs" ]; then
-  export plots_dir_name=coupled_diagnostics_${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}
+  export plots_dir_name=${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}
 else
-  export plots_dir_name=coupled_diagnostics_${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}_years${ref_begin_yr_climo}-${ref_end_yr_climo}
+  export plots_dir_name=${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}_years${ref_begin_yr_climo}-${ref_end_yr_climo}
 fi
-# User can set a custom name for the $plot_dir_name here, if the default (above) is not ideal 
-#export plots_dir_name=XXYYY
-
-# Set paths to scratch, logs and plots directories
-export test_scratch_dir=$output_base_dir/$plots_dir_name.scratch
-export ref_scratch_dir=$output_base_dir/$plots_dir_name.scratch
-export log_dir=$output_base_dir/$plots_dir_name.logs
-export plots_dir=$output_base_dir/$plots_dir_name
+# User can set a custom name for the $plots_dir_name here, if the default (above) is not ideal 
+#export plots_dir_name=XXXX
+export plots_dir=$plots_base_dir/$plots_dir_name
+export log_dir=$plots_dir.logs
 
 # Set atm specific paths to mapping and data files locations
 export remap_files_dir=$projdir/mapping/maps
@@ -359,7 +369,7 @@ fi
 if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ ${HOSTNAME:0:4} == "rhea" ]; then
   export mpasAutocloseFileLimitFraction=0.02
 else
-  export mpasAutocloseFileLimitFraction=0.5 # default value
+  export mpasAutocloseFileLimitFraction=0.2 # default value
 fi
 
 # PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
@@ -500,5 +510,5 @@ else
   echo
 fi
 
-# COPY THIS RUN SCRIPT TO THE $plots_dir FOR PROVENANCE
+# COPY THIS RUN SCRIPT TO THE $log_dir FOR PROVENANCE
 cp $0 $log_dir/run_aprime_$uniqueID.bash

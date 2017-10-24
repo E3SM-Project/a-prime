@@ -10,8 +10,9 @@
 scratch_dir=$1
 casename=$2
 begin_yr=$3
-ref_scratch_dir=$4
-ref_case=$5
+end_yr=$4
+ref_scratch_dir=$5
+ref_case=$6
 
 # Read in variable list for plotting climatologies  diagnostics
 if [ "$ref_case" == "obs" ]; then
@@ -21,6 +22,9 @@ else
 fi
 
 n_var=${#var_set[@]}
+
+regs=('global' 'NH_high_lats' 'NH_mid_lats' 'tropics' 'SH_mid_lats' 'SH_high_lats')
+names=('Global' '90N-50N' '50N-20N' '20N-20S' '20S-50S' '50S-90S')
 
 # Generate plots for each field
 k=0
@@ -48,6 +52,7 @@ while [ $k -lt $n_var ]; do
 			-c $casename \
 			-f $var \
 			--begin_yr $begin_yr \
+			--end_yr $end_yr \
 			--interp_grid $interp_grid \
 			--interp_method $interp_method \
 			--ref_case_dir $ref_scratch_dir \
@@ -57,6 +62,8 @@ while [ $k -lt $n_var ]; do
 			--begin_month 0 \
 			--end_month 11 \
 			--aggregate 1 \
+			--regs ${regs[@]} \
+			--names ${names[@]} \
 			--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_$var.log &
 
    k=$((k+1))
@@ -64,6 +71,8 @@ done
 
 echo
 echo "Waiting for jobs to complete ..."
-echo
 
 wait
+
+echo "...Done."
+echo

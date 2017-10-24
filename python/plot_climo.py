@@ -101,7 +101,7 @@ print
 print 'Reading climo file for case: ', casename
 print
  
-field, lat, lon, units = read_climo_file(indir = indir, \
+field, lat, lon, area, units = read_climo_file(indir = indir, \
 					 casename = casename, \
 					 season = season, \
 					 field_name = field_name, \
@@ -115,7 +115,7 @@ print
 print 'Reading climo file for case: ', ref_case
 print
 
-field_ref_case, lat, lon, units = read_climo_file(indir = ref_case_dir, \
+field_ref_case, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
 						 casename = ref_case, \
 						 season = season, \
 						 field_name = field_name, \
@@ -129,11 +129,11 @@ field_ref_case, lat, lon, units = read_climo_file(indir = ref_case_dir, \
 
 field_max = numpy.max(field[:])
 field_min = numpy.min(field[:])
-field_avg = get_reg_area_avg(field, lat, lon)
+field_avg = get_reg_area_avg(field, lat, lon, area)
 
 field_ref_case_max = numpy.max(field_ref_case[:])
 field_ref_case_min = numpy.min(field_ref_case[:])
-field_ref_case_avg = get_reg_area_avg(field_ref_case, lat, lon)
+field_ref_case_avg = get_reg_area_avg(field_ref_case, lat, lon, area)
 
 
 #Computing levels using mean and standard deviation
@@ -215,7 +215,7 @@ ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 #Computing levels for diff plot using mean and standard deviation
 field_diff      = field[:, :] - field_ref_case[:, :]
 field_diff_mean = field_avg - field_ref_case_avg
-field_diff_rmse = get_reg_area_avg_rmse(field_diff, lat, lon)
+field_diff_rmse = get_reg_area_avg_rmse(field_diff, lat, lon, area)
 field_diff_min  = numpy.min(field_diff)
 field_diff_max  = numpy.max(field_diff)
 

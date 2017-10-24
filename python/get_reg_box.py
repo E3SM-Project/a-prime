@@ -6,6 +6,7 @@
 # in the LICENSE file in the top level a-prime directory
 #
 def get_reg_box(reg):
+
 	if reg == "global":
 		lat_ll, lat_ul, lon_ll, lon_ul = -90, 90, 0, 360
 
@@ -30,6 +31,26 @@ def get_reg_box(reg):
 	if reg == "NH_high_lats":
 		lat_ll, lat_ul, lon_ll, lon_ul = 50, 90, 0, 360
 
+	if reg == "Nino3":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 210, 270
+
+	if reg == "Nino3.4":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 190, 240
+
+	if reg == "Nino4":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 160, 210
+
+	if reg == "Tropical_Pacific":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 160, 270
+		
+	if reg == "Greater_Tropical_Pacific":
+		lat_ll, lat_ul, lon_ll, lon_ul = -30, 30, 120, 290
+
+	if reg == "EPAC":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 230, 280
+
+	if reg == "INDO":
+		lat_ll, lat_ul, lon_ll, lon_ul = -5, 5, 90, 140
 
 	return (lat_ll, lat_ul, lon_ll, lon_ul)
 

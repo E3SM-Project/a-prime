@@ -30,7 +30,7 @@ def get_reg_avg_climo (	  indir,
 
 	season = get_season_name(begin_month, end_month)
 
-	field, lat_reg, lon_reg, units_out = read_climo_file(
+	field, lat_reg, lon_reg, area_reg, units_out = read_climo_file(
 						 indir = indir,
 						 casename = casename,
 						 field_name = field_name,
@@ -46,6 +46,7 @@ def get_reg_avg_climo (	  indir,
 	area_average = get_reg_area_avg(field = field,
 					lat = lat_reg,
 					lon = lon_reg,
+					area_wgts = area_reg,
 					debug = True)
 
 	a, n_months_season = get_season_months_index(begin_month, end_month)

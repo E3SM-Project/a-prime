@@ -45,3 +45,5 @@ done
 echo "var_set=(${var_set[@]})" > $outfile
 echo "interp_grid_set=(${interp_grid_set[@]})" >> $outfile
 echo "interp_method_set=(${interp_method_set[@]})" >> $outfile
+
+chmod a+x $outfile

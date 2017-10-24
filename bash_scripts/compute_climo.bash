@@ -37,13 +37,22 @@ if [ "$casename" != "obs" ]; then
 	end_month=${end_month_set[$ns]}
 	season_name="${season_name_set[$ns]}"
 
-	python python/create_climatology.py --indir $scratch_dir \
-					    -c $casename \
-				  	    -f $var \
-					    --begin_month $begin_month \
-					    --end_month $end_month \
-					    --begin_yr $begin_yr \
-					    --end_yr $end_yr >& $log_dir/climo_${casename}_${var}_$season_name.log &
+	outfile=$scratch_dir/${casename}_${season_name}_climo.$var.$begin_yr-$end_yr.nc
+
+	if [ -f $outfile ]; then 
+		echo "file $outfile exists! Not computing climatology."
+	else
+
+		python python/create_climatology.py --indir $scratch_dir \
+						    -c $casename \
+						    -f $var \
+						    --begin_month $begin_month \
+						    --end_month $end_month \
+						    --begin_yr $begin_yr \
+						    --end_yr $end_yr >& $log_dir/climo_${casename}_${var}_${season_name}_years$begin_yr-$end_yr.log &
+
+	fi
+
         ns=$((ns+1))
      done
      i=$((i+1))
@@ -52,6 +61,7 @@ fi
 
 echo
 echo "Waiting for jobs to complete ..."
-echo
 
 wait
+echo "...Done."
+echo

@@ -31,12 +31,21 @@ i=0
 while [ $i -lt ${#var_set[@]} ]; do
    var="${var_set[$i]}"
    echo "$var"
+
+   outfile=$scratch_dir/$casename.cam.h0.$var.$begin_yr-$end_yr.nc
+
+   if [ -f $outfile ]; then
+	echo "file $outfile exists! Not condensing."
+   else
+
    ./bash_scripts/condense_field.bash $archive_dir \
                                       $scratch_dir \
                                       $casename \
                                       $var \
                                       $begin_yr \
-                                      $end_yr >& $log_dir/condense_field_${casename}_$var.log &
+                                      $end_yr >& $log_dir/condense_field_${casename}_$var.$begin_yr-$end_yr.log &
+   fi
+
    i=$((i+1))
 done
 

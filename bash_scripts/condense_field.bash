@@ -37,12 +37,18 @@ echo
 echo "condensing $field_name"
 echo
 
-ncrcat -O -v date,time,lat,lon,area,$field_name ${file_list[@]} $scratch_dir/$casename.cam.h0.$field_name.$begin_yr-$end_yr.nc
+outfile=$scratch_dir/$casename.cam.h0.$field_name.$begin_yr-$end_yr.nc
+if [ -f $outfile ]; then
+	echo "file $outfile exists! Not condensing."
+else
+	ncrcat -O -v date,time,lat,lon,area,$field_name ${file_list[@]} $outfile
 
-if [ $? -ne 0 ]; then
-  echo
-  echo "Could not condense $field_name into one file. Exiting!"
-  exit
+	if [ $? -ne 0 ]; then
+	  echo
+	  echo "Could not condense $field_name into one file. Exiting!"
+	  exit
+	fi
+
 fi
 
 cd -

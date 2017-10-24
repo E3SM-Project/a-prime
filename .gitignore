@@ -11,6 +11,8 @@ run_LLNL_*.csh
 run_LLNL.*.csh
 run_LANL_*.csh
 run_LANL.*.csh
+run_EDISON_*.csh
+run_EDISON.*.csh
 
 batch_atm.*.*.bash
 batch_ocnice.*.*.bash
@@ -25,3 +27,4 @@ aprime_ocnice_diags.e*
 *.pbs
 *#
 *.pyc
+*.swp

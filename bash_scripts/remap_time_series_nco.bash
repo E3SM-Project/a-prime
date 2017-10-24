@@ -35,13 +35,17 @@ if [ "$casename" != "obs" ]; then
      echo
 
      ts_file="${casename}.cam.h0.$var.$begin_yr-$end_yr.nc"
-     interp_ts_file="${casename}.cam.h0.${interp_grid}_$interp_method.$var.nc"
+     interp_ts_file="${casename}.cam.h0.${interp_grid}_$interp_method.$var.$begin_yr-$end_yr.nc"
 
-     ncremap -I $scratch_dir \
-	     -i $ts_file \
-	     -m $regrid_wgt_file \
-	     -O $scratch_dir \
-	     -o $interp_ts_file >& $log_dir/remap_time_series_${casename}_${var}.log &
+     if [ -f $interp_ts_file ]; then
+	echo "file $interp_ts_file exists! Not remapping"
+     else
+	     ncremap -I $scratch_dir \
+		     -i $ts_file \
+		     -m $regrid_wgt_file \
+		     -O $scratch_dir \
+		     -o $interp_ts_file >& $log_dir/remap_time_series_${casename}_${var}_years$begin_yr-$end_yr.log &
+     fi
 
      i=$((i+1))
   done
@@ -51,6 +55,8 @@ fi
 
 echo
 echo "Waiting for jobs to complete ..."
-echo
 
 wait
+echo "...Done."
+echo
+

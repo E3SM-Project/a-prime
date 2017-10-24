@@ -34,13 +34,22 @@ def read_climo_file (indir, \
 
 	try:
 		f = Dataset(file_name, "r")
-		field = f.variables[field_name]
-		lat = f.variables['lat']
-		lon = f.variables['lon']
+		field_temp = f.variables[field_name]
+		lat = f.variables['lat'][:]
+		lon = f.variables['lon'][:]
+	
 		try:
-			units = field.units
+			area = f.variables['area'][:]
+		except:
+			gw = f.variables['gw'][:]
+
+		try:
+			units = field_temp.units
 		except AttributeError:
-			units = field.lunits
+			units = field_temp.lunits
+	
+		field = field_temp[:]
+		f.close()
 		
 	except:
 	
@@ -73,10 +82,18 @@ def read_climo_file (indir, \
 			if i == 0:
 				field_list = [field_temp[:]]			
 				units = field_temp.units
-				lat = f.variables['lat']
-				lon = f.variables['lon']
+				lat = f.variables['lat'][:]
+				lon = f.variables['lon'][:]
+
+				try:
+					area = f.variables['area'][:]
+				except:
+					gw = f.variables['gw'][:]
+
 			else:
-				field_list = [field_list, field_temp[:]]
+				field_list.append(field_temp[:])
+			
+			f.close()
 	
 		print
 		print 'field_list length: ', len(field_list)
@@ -87,14 +104,30 @@ def read_climo_file (indir, \
 	print __name__, 'field.shape: ', field.shape
 	print field
 
-	#Getting the requested region
+
 	nlon = lon.shape[0]
 	nlat = lat.shape[0]
+
+
+	#Getting area tile from gw if "area" is not available in the climo file
+
+	if 'gw' in locals():
+		print __name__, 'Computing area weights from gw'
+
+		area_tile = numpy.tile(gw[:], (nlon))
+                area_transpose = numpy.reshape(area_tile, (nlon, nlat))
+
+                area = numpy.transpose(area_transpose)
+
+
+	#Getting the requested region
 
 	lat_ll, lat_ul, lon_ll, lon_ul = get_reg_box(reg) 
 
 	print
 	print __name__, 'lat_ll, lat_ul, lon_ll, lon_ul: ', lat_ll, lat_ul, lon_ll, lon_ul
+	print __name__, 'lat: ', lat
+	print __name__, 'type(lat[:]): ', type(lat[:])
 
 	lat_reg_boolean = numpy.logical_and(lat[:]>=lat_ll, lat[:]<=lat_ul)
 	lat_index_reg   = numpy.asarray(numpy.where(lat_reg_boolean))[0, :]
@@ -126,7 +159,7 @@ def read_climo_file (indir, \
 	#Mulitdimensional indexing with numpy require indexes to be multidimensional arrays
 	#Used here only for derived variables like RESTOM
 
-	if type(field) == numpy.ndarray:
+	if isinstance(field, numpy.ndarray):
 		if field.ndim == 2:
 			field_in = field[lat_index_reg[:, None],lon_index_reg[None, :]] 
 		if field.ndim == 3:
@@ -143,6 +176,31 @@ def read_climo_file (indir, \
 			field_in = field[0,lat_index_reg,lon_index_reg] 
 
 
+	if isinstance(area, numpy.ndarray):
+		area_reg = area[lat_index_reg[:, None],lon_index_reg[None, :]]
+	else:
+		area_reg = area[lat_index_reg,lon_index_reg]
+
+
 	print __name__, "field_in.shape: ", field_in.shape
 
-	return field_in, lat_reg, lon_reg, units		
+	if field_name[0:4] == 'PREC' and units == 'm/s':
+	    print 'A precipitation field in m/s units! Changing units from m/s to mm/day!...'
+	    field_in = field_in * 86400.0 * 1000.0
+	    units = 'mm/day'
+
+	if field_name[0:2] == 'TS' and units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
+	if field_name[0:3] == 'SST' and units == 'K':
+	    print 'A temperature field in K units! Changing units from K to C!...'
+	    field_in = field_in - 273.15
+	    units = 'C'
+
+	if field_name[0:3] == 'TAU' and casename != 'ERS':
+	    print 'Flipping sign of atm model wind stress values ...'
+	    field_in = -field_in
+
+	return field_in, lat_reg, lon_reg, area_reg, units		
