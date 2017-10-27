@@ -188,13 +188,17 @@ if [ $generate_ocnice_diags -eq 1 ]; then
   <font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
   </b></font>
 
+  <div style="text-align:left">
+  <font color=peru size=-1>$casename (Years: $begin_yr_ts-$end_yr_ts)</font><br>
+  </div>
+
   <hr noshade size=2 size="100%">
 
   <TABLE>
   <TR>
     <TH ALIGN=LEFT><A HREF="sst_global_${casename}.png">Global SST</a>
   <TR>
-    <TH ALIGN=LEFT><A HREF="ohc_global_${casename}.png">Global OHC</a>
+    <TH ALIGN=LEFT><A HREF="OHCAnomaly_global_${casename}.png">Global OHC</a>
   <TR>
     <TH ALIGN=LEFT><A HREF="iceAreaNH_${casename}.png">NH Ice Area</a>
   <TR>
@@ -318,6 +322,12 @@ if [ $generate_ocnice_diags -eq 1 ]; then
   <TD><BR>
   <hr noshade size=2 size="100%">
   <font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
+
+  <div style="text-align:left">
+  <font color=peru size=-1>$casename (Years: $begin_yr_climo-$end_yr_climo)</font><br>
+  <font color=peru size=-1>$ref_case_text</font>
+  </div>
+
   <hr noshade size=2 size="100%">
   <TABLE>
   <TR>
@@ -435,12 +445,17 @@ EOF
   cat >> index.html << EOF
   <hr noshade size=2 size="100%">
   <font color=red size=+1><b>Other OCN/ICE plots</b></font>
+
+  <div style="text-align:left">
+  <font color=peru size=-1>Time series/Trends for Years: $begin_yr_ts-$end_yr_ts</font><br>
+  <font color=peru size=-1>Climatologies for Years: $begin_yr_climo-$end_yr_climo</font><br>
+  <font color=peru size=-1>Nino3.4 diagnostics for Years: $begin_yr_climateIndex-$end_yr_climateIndex</font>
+  </div>
+
   <hr noshade size=2 size="100%">
   <TABLE>
   <TR>
     <TH ALIGN=LEFT><font color=green size=+1>Meridional Overturning Circulation (MOC)</font>
-  <TR>
-    <TH><BR>
   <TR>
     <TH ALIGN=LEFT><A HREF="mocGlobal_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MOC streamfunction</a> 
   <TR>
@@ -454,8 +469,6 @@ EOF
   <TR>
     <TH ALIGN=LEFT><font color=green size=+1>Meridional Heat Transport (MHT)</font>
   <TR>
-    <TH><BR>
-  <TR>
     <TH ALIGN=LEFT><A HREF="mht_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MHT</a> 
   <TR>
     <TD><BR>
@@ -464,21 +477,26 @@ EOF
   <TR>
     <TH ALIGN=LEFT><font color=green size=+1>Nino3.4 Index</font>
   <TR>
-    <TD><BR>
-  <TR>
     <TH ALIGN=LEFT><A HREF="NINO34_${casename}.png">Time series of Nino3.4 Index</a>
   <TR>
     <TH ALIGN=LEFT><A HREF="NINO34_spectra_${casename}.png">Nino3.4 Power Spectrum</a>
   <TR>
     <TH><BR>
+  <TR>
+    <TH><BR>
+  <TR>
+    <TH ALIGN=LEFT><font color=green size=+1>T, S, OHC anomaly trends with depth</font>
+  <TR>
+    <TH ALIGN=LEFT><A HREF="TAnomalyZ_global_${casename}.png">T anomaly vs depth/time</a>
+  <TR>
+    <TH ALIGN=LEFT><A HREF="SAnomalyZ_global_${casename}.png">S anomaly vs depth/time</a>
+  <TR>
+    <TH ALIGN=LEFT><A HREF="OHCAnomalyZ_global_${casename}.png">OHC anomaly vs depth/time</a>
   </TABLE>
 EOF
 fi
 
-
-
-
-#Generate ENSO diags section
+# Generate ENSO diags section
 
 if [ $generate_atm_enso_diags -eq 1 ]; then
 

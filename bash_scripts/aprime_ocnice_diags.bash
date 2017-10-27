@@ -29,4 +29,4 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-python python/MPAS-Analysis/run_analysis.py $config_file
+python python/MPAS-Analysis/run_mpas_analysis.py $config_file

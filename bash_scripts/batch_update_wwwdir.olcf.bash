@@ -20,6 +20,7 @@ cd $PBS_O_WORKDIR
 
 # Update www/plots directory with newly generated plots
 cp -u $plots_dir/* $www_dir/$plots_dir_name
+chmod -R ga+rX $www_dir/$plots_dir_name
 echo
 echo "Updated atm plots in website directory: $www_dir/$plots_dir_name"
 echo

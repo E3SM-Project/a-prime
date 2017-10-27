@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 ###Work in Progress: Plot meridional averages for different fields in the same plot.
 ###07/03/2017
 

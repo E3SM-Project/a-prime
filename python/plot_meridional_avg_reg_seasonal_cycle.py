@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 #Not ready yet (07/18/2017: Salil)
 
 import matplotlib as mpl

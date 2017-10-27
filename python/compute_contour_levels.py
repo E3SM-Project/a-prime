@@ -1,3 +1,10 @@
+#
+# Copyright (c) 2017, UT-BATTELLE, LLC
+# All rights reserved.
+# 
+# This software is released under the BSD license detailed
+# in the LICENSE file in the top level a-prime directory
+#
 import numpy
 from round_to_first import round_to_first
 from round_to_first_given_range import round_to_first_given_range
