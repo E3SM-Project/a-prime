@@ -1,11 +1,11 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
-#python script to plot wind stress vectors and magnitude over the oceans using 
+#python script to plot wind stress vectors and magnitude over the oceans using
 #CF variables TAUX and TAUY
 
 import matplotlib as mpl
@@ -26,58 +26,57 @@ from get_reg_area_avg_rmse import get_reg_area_avg_rmse
 from read_climo_file       import read_climo_file
 from optparse              import OptionParser
 
-if __name__ == "__main__":
-    parser = OptionParser(usage = "python %prog [options]")
+parser = OptionParser(usage = "python %prog [options]")
 
-    parser.add_option("--indir", dest = "indir",
-                        help = "filepath to directory model data")
+parser.add_option("--indir", dest = "indir",
+                    help = "filepath to directory model data")
 
-    parser.add_option("-c", "--casename", dest = "casename",
-                        help = "casename of the run")
+parser.add_option("-c", "--casename", dest = "casename",
+                    help = "casename of the run")
 
-    parser.add_option("-f", "--field_name", dest = "field_name",
-                        help = "variable name")
+parser.add_option("-f", "--field_name", dest = "field_name",
+                    help = "variable name")
 
-    parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
-                        help = "begin year")
+parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
+                    help = "begin year")
 
-    parser.add_option("--end_yr", dest = "end_yr", type = "int",
-                        help = "end year")
+parser.add_option("--end_yr", dest = "end_yr", type = "int",
+                    help = "end year")
 
-    parser.add_option("--begin_month", dest = "begin_month", type = "int",
-                        help = "begin_month", default = 0)
+parser.add_option("--begin_month", dest = "begin_month", type = "int",
+                    help = "begin_month", default = 0)
 
-    parser.add_option("--end_month", dest = "end_month", type = "int",
-                        help = "end_month", default = 11)
+parser.add_option("--end_month", dest = "end_month", type = "int",
+                    help = "end_month", default = 11)
 
-    parser.add_option("--interp_grid", dest = "interp_grid",
-                        help = "name of the interpolated grid of test case")
+parser.add_option("--interp_grid", dest = "interp_grid",
+                    help = "name of the interpolated grid of test case")
 
-    parser.add_option("--interp_method", dest = "interp_method",
-                        help = "method used for interpolating the test case e.g. conservative_mapping")
+parser.add_option("--interp_method", dest = "interp_method",
+                    help = "method used for interpolating the test case e.g. conservative_mapping")
 
-    parser.add_option("--ref_case_dir", dest = "ref_case_dir",
-                        help = "filepath to ref_case directory")
+parser.add_option("--ref_case_dir", dest = "ref_case_dir",
+                    help = "filepath to ref_case directory")
 
-    parser.add_option("--ref_case", dest = "ref_case",
-                        help = "reference casename")
+parser.add_option("--ref_case", dest = "ref_case",
+                    help = "reference casename")
 
-    parser.add_option("--ref_begin_yr", dest = "ref_begin_yr", type = "int",
-                        help = "ref_case begin year")
+parser.add_option("--ref_begin_yr", dest = "ref_begin_yr", type = "int",
+                    help = "ref_case begin year")
 
-    parser.add_option("--ref_end_yr", dest = "ref_end_yr", type = "int",
-                        help = "ref_case end year")
+parser.add_option("--ref_end_yr", dest = "ref_end_yr", type = "int",
+                    help = "ref_case end year")
 
-    parser.add_option("--ref_interp_grid", dest = "ref_interp_grid",
-                        help = "name of the interpolated grid of reference case")
+parser.add_option("--ref_interp_grid", dest = "ref_interp_grid",
+                    help = "name of the interpolated grid of reference case")
 
-    parser.add_option("--ref_interp_method", dest = "ref_interp_method",
-                        help = "method used for interpolating the reference case e.g. conservative_mapping")
+parser.add_option("--ref_interp_method", dest = "ref_interp_method",
+                    help = "method used for interpolating the reference case e.g. conservative_mapping")
 
-    parser.add_option("--plots_dir", dest = "plots_dir",
-                        help = "filepath to plots directory")
+parser.add_option("--plots_dir", dest = "plots_dir",
+                    help = "filepath to plots directory")
 
-    (options, args) = parser.parse_args()
+(options, args) = parser.parse_args()
 
 indir                   = options.indir
 casename                = options.casename
@@ -149,7 +148,7 @@ field_Y_plot      = numpy.ma.zeros((lat.shape[0], lon.shape[0]))
 field_Y_plot[:,:] = field_Y[:,:]
 field_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
 
-#Computing an approximation of field magnitude from monthly averages    
+#Computing an approximation of field magnitude from monthly averages
 field_XY = numpy.ma.sqrt(numpy.ma.power(field_X_plot, 2.0) + numpy.ma.power(field_Y_plot, 2.0))
 
 
@@ -189,7 +188,7 @@ field_ref_case_Y_plot[:,:] = field_ref_case_Y[:,:]
 if ref_case != 'ERS':
     field_ref_case_X_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
     field_ref_case_Y_plot.mask = numpy.where(field_mask[:,:] < 0.5, 1, 0)
-    
+
 #Computing an approximation of field magnitude
 field_ref_case_XY = numpy.ma.sqrt(numpy.ma.power(field_ref_case_X_plot, 2.0) + numpy.ma.power(field_ref_case_Y_plot, 2.0))
 
@@ -330,7 +329,7 @@ ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 mpl.rcParams['savefig.dpi']=300
 
 outfile = plots_dir + '/' + casename + '-' + ref_case + '_' \
-                   + field_name + '_climo_' + season + '.png' 
+                   + field_name + '_climo_' + season + '.png'
 
 plt.savefig(outfile)
 

@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -18,37 +18,37 @@ from get_season_name import get_season_name
 
 from optparse import OptionParser
 
-if __name__ == "__main__":
-    parser = OptionParser(usage = "python %prog [options]")
 
-    parser.add_option("--indir", dest = "indir",
-                        help = "filepath to directory model data")
+parser = OptionParser(usage = "python %prog [options]")
 
-    parser.add_option("-c", "--casename", dest = "casename",
-                        help = "casename of the run")
+parser.add_option("--indir", dest = "indir",
+                    help = "filepath to directory model data")
 
-    parser.add_option("-f", "--field_name", dest = "field_name",
-                        help = "variable name")
+parser.add_option("-c", "--casename", dest = "casename",
+                    help = "casename of the run")
 
-    parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
-                        help = "begin year")
+parser.add_option("-f", "--field_name", dest = "field_name",
+                    help = "variable name")
 
-    parser.add_option("--end_yr", dest = "end_yr", type = "int",
-                        help = "end year")
+parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
+                    help = "begin year")
 
-    parser.add_option("--begin_month", dest = "begin_month", type = "int",
-                        help = "begin_month", default = 0)
+parser.add_option("--end_yr", dest = "end_yr", type = "int",
+                    help = "end year")
 
-    parser.add_option("--end_month", dest = "end_month", type = "int",
-                        help = "end_month", default = 11)
+parser.add_option("--begin_month", dest = "begin_month", type = "int",
+                    help = "begin_month", default = 0)
 
-    parser.add_option("--GPCP_dir", dest = "GPCP_dir",
-                        help = "filepath to GPCP directory")
+parser.add_option("--end_month", dest = "end_month", type = "int",
+                    help = "end_month", default = 11)
 
-    parser.add_option("--plots_dir", dest = "plots_dir",
-                        help = "filepath to GPCP directory")
+parser.add_option("--GPCP_dir", dest = "GPCP_dir",
+                    help = "filepath to GPCP directory")
 
-    (options, args) = parser.parse_args()
+parser.add_option("--plots_dir", dest = "plots_dir",
+                    help = "filepath to GPCP directory")
+
+(options, args) = parser.parse_args()
 
 indir       = options.indir
 casename    = options.casename
@@ -119,7 +119,7 @@ print "Using GPCP file: ", file_GPCP
 
 f_GPCP = Dataset(file_GPCP, "r")
 
-field_GPCP = f_GPCP.variables[field_name] 
+field_GPCP = f_GPCP.variables[field_name]
 
 
 
@@ -156,7 +156,7 @@ c = m.contour(x, y, field_diff[:, :], clevs, cmpa = 'bwr', extend = 'both')
 mpl.rcParams['savefig.dpi']=300
 
 outfile = plots_dir + '/' + casename + '_' \
-                   + field_name + '_climo_GPCP_' + season + '.png' 
+                   + field_name + '_climo_GPCP_' + season + '.png'
 
 plt.savefig(outfile)
 

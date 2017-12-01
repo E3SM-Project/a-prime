@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -24,58 +24,57 @@ from get_reg_area_avg_rmse import get_reg_area_avg_rmse
 from read_climo_file       import read_climo_file
 from optparse            import OptionParser
 
-if __name__ == "__main__":
-    parser = OptionParser(usage = "python %prog [options]")
+parser = OptionParser(usage = "python %prog [options]")
 
-    parser.add_option("--indir", dest = "indir",
-                        help = "filepath to directory model data")
+parser.add_option("--indir", dest = "indir",
+                    help = "filepath to directory model data")
 
-    parser.add_option("-c", "--casename", dest = "casename",
-                        help = "casename of the run")
+parser.add_option("-c", "--casename", dest = "casename",
+                    help = "casename of the run")
 
-    parser.add_option("-f", "--field_name", dest = "field_name",
-                        help = "variable name")
+parser.add_option("-f", "--field_name", dest = "field_name",
+                    help = "variable name")
 
-    parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
-                        help = "begin year")
+parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
+                    help = "begin year")
 
-    parser.add_option("--end_yr", dest = "end_yr", type = "int",
-                        help = "end year")
+parser.add_option("--end_yr", dest = "end_yr", type = "int",
+                    help = "end year")
 
-    parser.add_option("--begin_month", dest = "begin_month", type = "int",
-                        help = "begin_month", default = 0)
+parser.add_option("--begin_month", dest = "begin_month", type = "int",
+                    help = "begin_month", default = 0)
 
-    parser.add_option("--end_month", dest = "end_month", type = "int",
-                        help = "end_month", default = 11)
+parser.add_option("--end_month", dest = "end_month", type = "int",
+                    help = "end_month", default = 11)
 
-    parser.add_option("--interp_grid", dest = "interp_grid",
-                        help = "name of the interpolated grid of test case")
+parser.add_option("--interp_grid", dest = "interp_grid",
+                    help = "name of the interpolated grid of test case")
 
-    parser.add_option("--interp_method", dest = "interp_method",
-                        help = "method used for interpolating the test case e.g. conservative_mapping")
+parser.add_option("--interp_method", dest = "interp_method",
+                    help = "method used for interpolating the test case e.g. conservative_mapping")
 
-    parser.add_option("--ref_case_dir", dest = "ref_case_dir",
-                        help = "filepath to ref_case directory")
+parser.add_option("--ref_case_dir", dest = "ref_case_dir",
+                    help = "filepath to ref_case directory")
 
-    parser.add_option("--ref_case", dest = "ref_case",
-                        help = "reference casename")
+parser.add_option("--ref_case", dest = "ref_case",
+                    help = "reference casename")
 
-    parser.add_option("--ref_begin_yr", dest = "ref_begin_yr", type = "int",
-                        help = "ref_case begin year")
+parser.add_option("--ref_begin_yr", dest = "ref_begin_yr", type = "int",
+                    help = "ref_case begin year")
 
-    parser.add_option("--ref_end_yr", dest = "ref_end_yr", type = "int",
-                        help = "ref_case end year")
+parser.add_option("--ref_end_yr", dest = "ref_end_yr", type = "int",
+                    help = "ref_case end year")
 
-    parser.add_option("--ref_interp_grid", dest = "ref_interp_grid",
-                        help = "name of the interpolated grid of reference case")
+parser.add_option("--ref_interp_grid", dest = "ref_interp_grid",
+                    help = "name of the interpolated grid of reference case")
 
-    parser.add_option("--ref_interp_method", dest = "ref_interp_method",
-                        help = "method used for interpolating the reference case e.g. conservative_mapping")
+parser.add_option("--ref_interp_method", dest = "ref_interp_method",
+                    help = "method used for interpolating the reference case e.g. conservative_mapping")
 
-    parser.add_option("--plots_dir", dest = "plots_dir",
-                        help = "filepath to plots directory")
+parser.add_option("--plots_dir", dest = "plots_dir",
+                    help = "filepath to plots directory")
 
-    (options, args) = parser.parse_args()
+(options, args) = parser.parse_args()
 
 indir                = options.indir
 casename            = options.casename
@@ -100,7 +99,7 @@ season = get_season_name(begin_month, end_month)
 print
 print 'Reading climo file for case: ', casename
 print
- 
+
 field, lat, lon, area, units = read_climo_file(indir = indir, \
                      casename = casename, \
                      season = season, \
@@ -123,7 +122,7 @@ field_ref_case, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
                          end_yr = ref_end_yr, \
                          interp_grid = ref_interp_grid, \
                          interp_method = ref_interp_method,
-                         reg = 'global') 
+                         reg = 'global')
 
 
 
@@ -260,7 +259,7 @@ ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 mpl.rcParams['savefig.dpi']=300
 
 outfile = plots_dir + '/' + casename + '-' + ref_case + '_' \
-                   + field_name + '_climo_' + season + '.png' 
+                   + field_name + '_climo_' + season + '.png'
 
 plt.savefig(outfile)
 

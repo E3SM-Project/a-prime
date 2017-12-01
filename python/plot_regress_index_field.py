@@ -30,109 +30,6 @@ from round_to_first import round_to_first
 from get_season_name import get_season_name
 import argparse
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(usage = "python %prog [options]")
-
-    parser.add_argument("-d", "--debug", dest = "debug", default = False,
-            help = "debug option to print some data")
-
-    parser.add_argument("--indir", dest = "indir", nargs = '+',
-                        help = "filepath to directory model data")
-
-    parser.add_argument("-c", "--casename", dest = "casename", nargs = '+',
-                        help = "casename of the run")
-
-    parser.add_argument("-f", "--field_name", dest = "field_name", nargs = '+',
-                        help = "variable name")
-
-    parser.add_argument("--interp_grid", dest = "interp_grid", nargs = '+',
-                        help = "variable name")
-
-    parser.add_argument("--interp_method", dest = "interp_method", nargs = '+',
-                        help = "method used for interpolating the test case e.g. conservative_mapping")
-
-    parser.add_argument("--ref_case_dir", dest = "ref_case_dir", nargs = '+',
-                        help = "filepath to ref_case directory")
-
-    parser.add_argument("--ref_case", dest = "ref_case", nargs = '+',
-                        help = "reference casename")
-
-    parser.add_argument("--ref_interp_grid", dest = "ref_interp_grid", nargs = '+',
-                        help = "name of the interpolated grid of reference case")
-
-    parser.add_argument("--ref_interp_method", dest = "ref_interp_method", nargs = '+',
-                        help = "method used for interpolating the reference case e.g. conservative_mapping")
-
-    parser.add_argument("--begin_yr", dest = "begin_yr", type = int,
-                        help = "begin year")
-
-    parser.add_argument("--end_yr", dest = "end_yr", type = int,
-                        help = "end year")
-
-    parser.add_argument("--ref_begin_yr", dest = "ref_begin_yr", type = int,
-                        help = "reference case begin year")
-
-    parser.add_argument("--ref_end_yr", dest = "ref_end_yr", type = int,
-                        help = "reference case end year")
-
-    parser.add_argument("--begin_month", dest = "begin_month", type = int, nargs = '+',
-                        help = "begin_month", default = 0)
-
-    parser.add_argument("--end_month", dest = "end_month", type = int, nargs = '+',
-                        help = "end_month", default = 11)
-
-    parser.add_argument("--aggregate", dest = "aggregate", type = int,
-                        help = "flag to aggregate data", default = 1)
-
-    parser.add_argument("--lag", dest = "lag", type = int,
-                        help = "lag for regression analysis", default = 0)
-
-    parser.add_argument("--no_ann", dest = "no_ann", type = int,
-                        help = "flag to remove annual cycle", default = 0)
-
-    parser.add_argument("--stdize", dest = "stdize", type = int,
-                        help = "flag to standardize index", default = 0)
-
-    parser.add_argument("--reg", dest = "reg", nargs = '+',
-                        help = "regions to be analyzed/plotted")
-
-    parser.add_argument("--reg_name", dest = "reg_name", nargs = '+',
-                        help = "names of regions to be placed in plots")
-
-    parser.add_argument("--plots_dir", dest = "plots_dir",
-                        help = "filepath to GPCP directory")
-
-    args = parser.parse_args()
-
-debug                = args.debug
-indir                = args.indir
-casename            = args.casename
-field_name            = args.field_name
-interp_grid            = args.interp_grid
-interp_method           = args.interp_method
-ref_case_dir            = args.ref_case_dir
-ref_case                = args.ref_case
-ref_interp_grid         = args.ref_interp_grid
-ref_interp_method       = args.ref_interp_method
-begin_yr            = args.begin_yr
-end_yr              = args.end_yr
-ref_begin_yr        = args.ref_begin_yr
-ref_end_yr          = args.ref_end_yr
-begin_month         = args.begin_month
-end_month           = args.end_month
-aggregate           = args.aggregate
-lag               = args.lag
-no_ann            = args.no_ann
-stdize            = args.stdize
-reg            = args.reg
-reg_name        = args.reg_name
-plots_dir           = args.plots_dir
-
-
-colors = ['b', 'g', 'r', 'c', 'm', 'y']
-
-x = mpl.get_backend()
-print 'backend: ', x
 
 def plot_regress_index_field (indir,
                casename,
@@ -358,25 +255,128 @@ def plot_regress_index_field (indir,
     plt.savefig(outfile)
 
 if __name__ == "__main__":
-    plot_regress_index_field (indir = indir,
-                   casename = casename,
-                               field_name = field_name,
-                   interp_grid = interp_grid,
-                   interp_method = interp_method,
-                   ref_case_dir = ref_case_dir,
-                   ref_case = ref_case,
-                   ref_interp_grid = ref_interp_grid,
-                   ref_interp_method = ref_interp_method,
-                               begin_yr = begin_yr,
-                               end_yr = end_yr,
-                   ref_begin_yr = ref_begin_yr,
-                   ref_end_yr = ref_end_yr,
-                               begin_month = begin_month,
-                               end_month = end_month,
-                               reg = reg,
-                   reg_name = reg_name,
-                   aggregate = aggregate,
-                   lag = lag,
-                   no_ann = no_ann,
-                   stdize = stdize,
-                               debug = debug)
+    parser = argparse.ArgumentParser(usage = "python %prog [options]")
+
+    parser.add_argument("-d", "--debug", dest = "debug", default = False,
+            help = "debug option to print some data")
+
+    parser.add_argument("--indir", dest = "indir", nargs = '+',
+                        help = "filepath to directory model data")
+
+    parser.add_argument("-c", "--casename", dest = "casename", nargs = '+',
+                        help = "casename of the run")
+
+    parser.add_argument("-f", "--field_name", dest = "field_name", nargs = '+',
+                        help = "variable name")
+
+    parser.add_argument("--interp_grid", dest = "interp_grid", nargs = '+',
+                        help = "variable name")
+
+    parser.add_argument("--interp_method", dest = "interp_method", nargs = '+',
+                        help = "method used for interpolating the test case e.g. conservative_mapping")
+
+    parser.add_argument("--ref_case_dir", dest = "ref_case_dir", nargs = '+',
+                        help = "filepath to ref_case directory")
+
+    parser.add_argument("--ref_case", dest = "ref_case", nargs = '+',
+                        help = "reference casename")
+
+    parser.add_argument("--ref_interp_grid", dest = "ref_interp_grid", nargs = '+',
+                        help = "name of the interpolated grid of reference case")
+
+    parser.add_argument("--ref_interp_method", dest = "ref_interp_method", nargs = '+',
+                        help = "method used for interpolating the reference case e.g. conservative_mapping")
+
+    parser.add_argument("--begin_yr", dest = "begin_yr", type = int,
+                        help = "begin year")
+
+    parser.add_argument("--end_yr", dest = "end_yr", type = int,
+                        help = "end year")
+
+    parser.add_argument("--ref_begin_yr", dest = "ref_begin_yr", type = int,
+                        help = "reference case begin year")
+
+    parser.add_argument("--ref_end_yr", dest = "ref_end_yr", type = int,
+                        help = "reference case end year")
+
+    parser.add_argument("--begin_month", dest = "begin_month", type = int, nargs = '+',
+                        help = "begin_month", default = 0)
+
+    parser.add_argument("--end_month", dest = "end_month", type = int, nargs = '+',
+                        help = "end_month", default = 11)
+
+    parser.add_argument("--aggregate", dest = "aggregate", type = int,
+                        help = "flag to aggregate data", default = 1)
+
+    parser.add_argument("--lag", dest = "lag", type = int,
+                        help = "lag for regression analysis", default = 0)
+
+    parser.add_argument("--no_ann", dest = "no_ann", type = int,
+                        help = "flag to remove annual cycle", default = 0)
+
+    parser.add_argument("--stdize", dest = "stdize", type = int,
+                        help = "flag to standardize index", default = 0)
+
+    parser.add_argument("--reg", dest = "reg", nargs = '+',
+                        help = "regions to be analyzed/plotted")
+
+    parser.add_argument("--reg_name", dest = "reg_name", nargs = '+',
+                        help = "names of regions to be placed in plots")
+
+    parser.add_argument("--plots_dir", dest = "plots_dir",
+                        help = "filepath to GPCP directory")
+
+    args = parser.parse_args()
+
+    debug                = args.debug
+    indir                = args.indir
+    casename             = args.casename
+    field_name           = args.field_name
+    interp_grid          = args.interp_grid
+    interp_method        = args.interp_method
+    ref_case_dir         = args.ref_case_dir
+    ref_case             = args.ref_case
+    ref_interp_grid      = args.ref_interp_grid
+    ref_interp_method    = args.ref_interp_method
+    begin_yr             = args.begin_yr
+    end_yr               = args.end_yr
+    ref_begin_yr         = args.ref_begin_yr
+    ref_end_yr           = args.ref_end_yr
+    begin_month          = args.begin_month
+    end_month            = args.end_month
+    aggregate            = args.aggregate
+    lag                  = args.lag
+    no_ann               = args.no_ann
+    stdize               = args.stdize
+    reg                  = args.reg
+    reg_name             = args.reg_name
+    plots_dir            = args.plots_dir
+
+
+    colors = ['b', 'g', 'r', 'c', 'm', 'y']
+
+    x = mpl.get_backend()
+    print 'backend: ', x
+
+    plot_regress_index_field(indir = indir,
+                             casename = casename,
+                             field_name = field_name,
+                             interp_grid = interp_grid,
+                             interp_method = interp_method,
+                             ref_case_dir = ref_case_dir,
+                             ref_case = ref_case,
+                             ref_interp_grid = ref_interp_grid,
+                             ref_interp_method = ref_interp_method,
+                             begin_yr = begin_yr,
+                             end_yr = end_yr,
+                             ref_begin_yr = ref_begin_yr,
+                             ref_end_yr = ref_end_yr,
+                             begin_month = begin_month,
+                             end_month = end_month,
+                             reg = reg,
+                             reg_name = reg_name,
+                             aggregate = aggregate,
+                             lag = lag,
+                             no_ann = no_ann,
+                             stdize = stdize,
+                             debug = debug)

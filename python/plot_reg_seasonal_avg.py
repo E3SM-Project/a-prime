@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -24,6 +24,39 @@ from aggregate_ts_weighted import aggregate_ts_weighted
 from get_reg_seasonal_avg import get_reg_seasonal_avg
 
 from optparse import OptionParser
+
+
+def plot_reg_seasonal_avg (casename,
+               field_name,
+               interp_grid,
+               begin_yr,
+               end_yr,
+               begin_month,
+               end_month,
+               reg,
+               aggregate,
+               debug = False):
+
+    area_seasonal_avg = get_reg_seasonal_avg (casename = casename,
+                  field_name = field_name,
+                  interp_grid = interp_grid,
+                  begin_yr = begin_yr,
+                  end_yr = end_yr,
+                  begin_month = begin_month,
+                  end_month = end_month,
+                  reg = reg,
+                  aggregate = aggregate,
+                  debug = debug)
+
+    print __name__, 'area_seasonal_avg.shape', area_seasonal_avg.shape
+
+    #plt.subplot(3,1,1)
+
+    plt.plot(area_seasonal_avg)
+
+    #mpl.rcParams['savefig.dpi']=300
+    plt.show()
+
 
 if __name__ == "__main__":
     parser = OptionParser(usage = "python %prog [options]")
@@ -55,48 +88,15 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
-debug        = options.debug
-casename    = options.casename
-field_name  = options.field_name
-begin_yr    = options.begin_yr
-end_yr      = options.end_yr
-begin_month = options.begin_month
-end_month   = options.end_month
-reg         = options.reg
+    debug        = options.debug
+    casename    = options.casename
+    field_name  = options.field_name
+    begin_yr    = options.begin_yr
+    end_yr      = options.end_yr
+    begin_month = options.begin_month
+    end_month   = options.end_month
+    reg         = options.reg
 
-def plot_reg_seasonal_avg (casename,
-               field_name,
-               interp_grid,
-               begin_yr,
-               end_yr,
-               begin_month,
-               end_month,
-               reg,
-               aggregate,
-               debug = False):
-
-    area_seasonal_avg = get_reg_seasonal_avg (casename = casename, 
-                  field_name = field_name,
-                  interp_grid = interp_grid,
-                  begin_yr = begin_yr,
-                  end_yr = end_yr,
-                  begin_month = begin_month,
-                  end_month = end_month,
-                  reg = reg,
-                  aggregate = aggregate,
-                  debug = debug)
-
-    print __name__, 'area_seasonal_avg.shape', area_seasonal_avg.shape
-
-    #plt.subplot(3,1,1)
-
-    plt.plot(area_seasonal_avg)
-
-    #mpl.rcParams['savefig.dpi']=300
-    plt.show()
-
-
-if __name__ == "__main__":
     plot_reg_seasonal_avg (casename = casename,
                                field_name = field_name,
                    interp_grid = interp_grid,
