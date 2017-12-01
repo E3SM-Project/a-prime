@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -64,9 +64,9 @@ if check_env('test_short_term_archive'):
 else:
     add_config_option(config, 'input', 'oceanHistorySubdirectory', 'run')
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'run')
-add_config_option(config, 'input', 'mpasMeshName', 
+add_config_option(config, 'input', 'mpasMeshName',
                   os.environ['test_mpas_mesh_name'])
-add_config_option(config, 'input', 'autocloseFileLimitFraction', 
+add_config_option(config, 'input', 'autocloseFileLimitFraction',
                   os.environ['mpasAutocloseFileLimitFraction'])
 
 add_config_option(config, 'output', 'baseDirectory',
@@ -136,7 +136,7 @@ add_config_option(config, 'index', 'endYear',
 add_config_option(config, 'oceanObservations', 'baseDirectory',
                   os.environ['obs_ocndir'])
 for field in ['sst', 'sss', 'mld', 'mht', 'nino']:
-    add_config_option(config, 'oceanObservations', 
+    add_config_option(config, 'oceanObservations',
                       '{}Subdirectory'.format(field),
                       os.environ['obs_{}dir'.format(field)])
 add_config_option(config, 'oceanObservations', 'climatologySubdirectory',
@@ -157,7 +157,7 @@ add_config_option(config, 'seaIceObservations', 'regriddedClimSubdirectory',
 add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_seaicedir'])
 
-add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles', 
+add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles',
                   os.environ['mpaso_regions_file'])
 
 if check_env('run_batch_script'):

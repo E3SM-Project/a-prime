@@ -21,8 +21,8 @@ from get_season_name       import get_season_name
 from round_to_first        import round_to_first
 from get_reg_area_avg      import get_reg_area_avg
 from get_reg_area_avg_rmse import get_reg_area_avg_rmse
-from read_climo_file	   import read_climo_file
-from optparse 		   import OptionParser
+from read_climo_file       import read_climo_file
+from optparse            import OptionParser
 
 if __name__ == "__main__":
     parser = OptionParser(usage = "python %prog [options]")
@@ -77,22 +77,22 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
-indir		        = options.indir
-casename	        = options.casename
-field_name	        = options.field_name
-begin_yr	        = options.begin_yr
-end_yr		        = options.end_yr
-begin_month	        = options.begin_month
-end_month	        = options.end_month
-interp_grid	        = options.interp_grid
-interp_method 	        = options.interp_method
-ref_case_dir   		= options.ref_case_dir
-ref_case   		= options.ref_case
-ref_begin_yr	        = options.ref_begin_yr
-ref_end_yr		= options.ref_end_yr
-ref_interp_grid     	= options.ref_interp_grid
-ref_interp_method   	= options.ref_interp_method
-plots_dir      		= options.plots_dir
+indir                = options.indir
+casename            = options.casename
+field_name            = options.field_name
+begin_yr            = options.begin_yr
+end_yr                = options.end_yr
+begin_month            = options.begin_month
+end_month            = options.end_month
+interp_grid            = options.interp_grid
+interp_method             = options.interp_method
+ref_case_dir           = options.ref_case_dir
+ref_case           = options.ref_case
+ref_begin_yr            = options.ref_begin_yr
+ref_end_yr        = options.ref_end_yr
+ref_interp_grid         = options.ref_interp_grid
+ref_interp_method       = options.ref_interp_method
+plots_dir              = options.plots_dir
 
 #Get filename
 season = get_season_name(begin_month, end_month)
@@ -102,28 +102,28 @@ print 'Reading climo file for case: ', casename
 print
  
 field, lat, lon, area, units = read_climo_file(indir = indir, \
-					 casename = casename, \
-					 season = season, \
-					 field_name = field_name, \
-					 begin_yr = begin_yr, \
-					 end_yr = end_yr, \
-					 interp_grid = interp_grid, \
-					 interp_method = interp_method, \
-					 reg = 'global')
+                     casename = casename, \
+                     season = season, \
+                     field_name = field_name, \
+                     begin_yr = begin_yr, \
+                     end_yr = end_yr, \
+                     interp_grid = interp_grid, \
+                     interp_method = interp_method, \
+                     reg = 'global')
 
 print
 print 'Reading climo file for case: ', ref_case
 print
 
 field_ref_case, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
-						 casename = ref_case, \
-						 season = season, \
-						 field_name = field_name, \
-						 begin_yr = ref_begin_yr, \
-						 end_yr = ref_end_yr, \
-						 interp_grid = ref_interp_grid, \
-						 interp_method = ref_interp_method,
-						 reg = 'global') 
+                         casename = ref_case, \
+                         season = season, \
+                         field_name = field_name, \
+                         begin_yr = ref_begin_yr, \
+                         end_yr = ref_end_yr, \
+                         interp_grid = ref_interp_grid, \
+                         interp_method = ref_interp_method,
+                         reg = 'global') 
 
 
 
@@ -244,7 +244,7 @@ c = m.contourf(x, y, field_diff[:, :], cmap = 'seismic', levels = levels_diff, e
 cb = m.colorbar()
 
 text_data = 'RMSE = ' + str(round(field_diff_rmse, 2))+ ', ' + \
-	    'mean bias = ' + str(round(field_diff_mean, 2))+ ', ' + \
+        'mean bias = ' + str(round(field_diff_mean, 2))+ ', ' + \
             'min = '  + str(round(field_diff_min, 2)) + ', ' + \
             'max = '  + str(round(field_diff_max, 2))
 

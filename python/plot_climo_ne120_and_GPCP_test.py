@@ -95,7 +95,7 @@ if field_name == 'PRECT':
 else:
     file_name = indir + '/' + casename + \
                 '.climo.' + str(begin_month) + '_' + str(end_month) + \
-	        '.GPCP_conservative_mapping.' + field_name + '.nc'
+            '.GPCP_conservative_mapping.' + field_name + '.nc'
 
     print "file_name: ", file_name
 
