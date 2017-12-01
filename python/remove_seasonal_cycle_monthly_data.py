@@ -30,5 +30,3 @@ def remove_seasonal_cycle_monthly_data(field, n_months_season = 12, debug = Fals
 
     return field_noann
 
-if __name__ == "__main__":
-        remove_seasonal_cycle_monthly_data(field, n_months_season)

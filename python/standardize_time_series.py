@@ -13,5 +13,3 @@ def standardize_time_series(field):
 
     return field_stddize
 
-if __name__ == "__main__":
-        standardize_time_series(field)

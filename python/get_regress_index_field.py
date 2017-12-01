@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -21,7 +21,7 @@ from remove_seasonal_cycle_monthly_data import remove_seasonal_cycle_monthly_dat
 from standardize_time_series import standardize_time_series
 from regress_index_field import regress_index_field
 from aggregate_time_series_data import aggregate_time_series_data
- 
+
 def get_regress_index_field (indir,
                casename,
                field_name,
@@ -88,9 +88,9 @@ def get_regress_index_field (indir,
 
         day_wgts = get_days_in_season_months(begin_month[0], end_month[0])
         if debug: print __name__, 'day_wgts: ', day_wgts
-    
+
         field_seasonal_avg = aggregate_time_series_data(field, n_months_season, day_wgts)
-        
+
         field = field_seasonal_avg
 
 
@@ -103,20 +103,3 @@ def get_regress_index_field (indir,
 
     return regr_matrix, corr_matrix, t_test_matrix, lat_reg, lon_reg, units
 
-if __name__ == "__main__":
-    get_regress_index_field (indir = indir,
-                   casename = casename,
-                               field_name = field_name,
-                   interp_grid = interp_grid,
-                   interp_method = interp_method,
-                               begin_yr = begin_yr,
-                               end_yr = end_yr,
-                               begin_month = begin_month,
-                               end_month = end_month,
-                               reg = reg,
-                   reg_name = reg_name,
-                   aggregate = aggregate,
-                   lag = lag,
-                   no_ann = no_ann,
-                   stdize = stdize,
-                               debug = debug)
