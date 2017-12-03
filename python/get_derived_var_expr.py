@@ -32,7 +32,7 @@ def get_derived_var_expr (field_name):
     print
     print(field_name, 'derived from: ', var_expr.atoms(Symbol))
 
-    var_expr_numpy = lambdify(var_expr.atoms(Symbol), var_expr, "numpy")
+    var_expr_numpy = lambdify(var_expr.atoms(Symbol), var_expr, str("numpy"))
 
     return var_expr, var_expr_numpy
 
