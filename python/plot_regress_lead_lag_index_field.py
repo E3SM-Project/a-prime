@@ -58,8 +58,8 @@ def plot_regress_lead_lag_index_field (indir,
     print(__name__, 'casename: ', casename)
     print(__name__, 'field_name: ', field_name)
 
-    lags = range(-8, 12, 4)
-#    lags = range(-4, 4, 4)
+    lags = list(range(-8, 12, 4))
+#    lags = list(range(-4, 4, 4))
     n_lags = len(lags)
 
     for i, lag in enumerate(lags):
