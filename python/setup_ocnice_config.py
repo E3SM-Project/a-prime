@@ -23,7 +23,8 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import os
-import ConfigParser
+import six
+from six.moves.configparser import RawConfigParser
 
 
 def add_config_option(config, section, option, value):
@@ -39,7 +40,7 @@ def check_env(envVarName):
 inFileName = 'python/MPAS-Analysis/mpas_analysis/config.default'
 outFileName = os.environ['config_file']
 
-config = ConfigParser.RawConfigParser()
+config = RawConfigParser()
 config.read(inFileName)
 
 # Turn off generation of MPAS-Analysis html page by default
