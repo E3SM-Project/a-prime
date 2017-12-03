@@ -32,5 +32,5 @@ def get_season_name(begin_month, end_month):
         if begin_month == 0 and end_month == 11:
             season_name = 'ANN'
 
-    print 'season_name: ', season_name
+    print('season_name: ', season_name)
     return season_name

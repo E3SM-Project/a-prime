@@ -17,7 +17,8 @@ def get_reg_meridional_avg(field, area_wgts, debug = False):
 
     meridional_avg = numpy.sum(field * area_wgts, axis = -2)/numpy.sum(area_wgts, axis = -2)
 
-    print __name__, 'meridional_avg.shape: ', meridional_avg.shape
-    if debug: print __name__, 'area weighted meridional avg.: ', meridional_avg
+    print(__name__, 'meridional_avg.shape: ', meridional_avg.shape)
+    if debug:
+        print(__name__, 'area weighted meridional avg.: ', meridional_avg)
 
     return meridional_avg

@@ -26,11 +26,11 @@ def get_derived_var_expr (field_name):
         FLNS, FSNS, LHFLX, SHFLX = symbols('FLNS, FSNS, LHFLX, SHFLX')
         var_expr = FLNS - FSNS + LHFLX + SHFLX
     else:
-        print
-        print 'No derived variable list found for ', field_name
+        print()
+        print('No derived variable list found for ', field_name)
 
     print
-    print field_name, 'derived from: ', var_expr.atoms(Symbol)
+    print(field_name, 'derived from: ', var_expr.atoms(Symbol))
 
     var_expr_numpy = lambdify(var_expr.atoms(Symbol), var_expr, "numpy")
 

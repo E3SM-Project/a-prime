@@ -53,7 +53,7 @@ def plot_multiple_reg_seasonal_avg (indir,
 
 
     for i,reg in enumerate(regs):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                                   indir     = indir,
                                   casename     = casename,
@@ -100,14 +100,16 @@ def plot_multiple_reg_seasonal_avg (indir,
 
         ref_plot_ts[i, :] = numpy.tile(ref_area_seasonal_avg, area_seasonal_avg.shape[0])
 
-        if debug: print __name__, 'ref_plot_ts.shape ', ref_plot_ts.shape
+        if debug:
+            print(__name__, 'ref_plot_ts.shape ', ref_plot_ts.shape)
 
 
-        if debug: print __name__, 'plot_ts: ', plot_ts
+        if debug:
+            print(__name__, 'plot_ts: ', plot_ts)
 
     plot_ts_mean = numpy.mean(plot_ts, axis = 1)
 
-    print __name__, 'int(math.ceil(n_reg/2)):', int(math.ceil(n_reg/2))
+    print(__name__, 'int(math.ceil(n_reg/2)):', int(math.ceil(n_reg/2)))
 
     f, ax = plt.subplots(int(math.ceil(n_reg/2)), 2, sharex = True, figsize=(8.5,11))
 
@@ -130,7 +132,7 @@ def plot_multiple_reg_seasonal_avg (indir,
 
     for i,name in enumerate(names):
         j = numpy.unravel_index(i, ax.shape)
-        print __name__, 'i and unraveled index, j: ', i, j
+        print(__name__, 'i and unraveled index, j: ', i, j)
 
         min_plot = min(numpy.amin(plot_ts[i, :]), ref_plot_ts[i, 0])
         max_plot = max(numpy.amax(plot_ts[i, :]), ref_plot_ts[i, 0])
@@ -145,8 +147,8 @@ def plot_multiple_reg_seasonal_avg (indir,
 
         ax[j].axis([plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul])
 
-        print 'plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ', \
-            plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot
+        print('plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ',
+              plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot)
 
         if begin_month == 0 and end_month == 11 and aggregate == 0:
             bw   = 13
@@ -271,13 +273,13 @@ if __name__ == "__main__":
     #regs = ['global', 'NH_high_lats', 'NH_mid_lats', 'tropics', 'SH_mid_lats', 'SH_high_lats']
     #names = ['Global', '90N-50N', '50N-20N', '20N-20S', '20S-50S', '50S-90S']
 
-    print 'salil', regs
-    print 'salil', names
+    print('salil', regs)
+    print('salil', names)
 
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     plot_multiple_reg_seasonal_avg(indir = indir,
                                    casename = casename,

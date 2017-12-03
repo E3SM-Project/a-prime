@@ -58,7 +58,7 @@ def plot_multiple_index   (indir,
     n_reg = len(regs)
 
     for i,reg in enumerate(regs):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                                   indir     = indir,
                                   casename     = casename,
@@ -86,11 +86,12 @@ def plot_multiple_index   (indir,
             test_plot_ts[i, :] = area_seasonal_avg_stddize
 
 
-        if debug: print __name__, 'test_plot_ts: ', test_plot_ts
+        if debug:
+            print(__name__, 'test_plot_ts: ', test_plot_ts)
 
 
     for i,reg in enumerate(regs):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                                   indir     = ref_case_dir,
                                   casename     = ref_case,
@@ -118,7 +119,8 @@ def plot_multiple_index   (indir,
             ref_plot_ts[i, :] = area_seasonal_avg_stddize
 
 
-        if debug: print __name__, 'test_plot_ts: ', test_plot_ts
+        if debug:
+            print(__name__, 'test_plot_ts: ', test_plot_ts)
 
 
     f, ax = plt.subplots(n_reg, 2, figsize=(11,8.5))
@@ -149,8 +151,10 @@ def plot_multiple_index   (indir,
         else:
             plot_time = numpy.arange(0,nt)
 
-        if debug: print __name__, 'plot_time: ', plot_time
-        if debug: print __name__, 'plot_begin_yr: ', plot_begin_yr
+        if debug:
+            print(__name__, 'plot_time: ', plot_time)
+        if debug:
+            print(__name__, 'plot_begin_yr: ', plot_begin_yr)
 
         plot_ts_mean   = numpy.mean(plot_ts, axis = 1)
         plot_ts_stddev = numpy.std(plot_ts, axis = 1)
@@ -164,8 +168,8 @@ def plot_multiple_index   (indir,
 
             ax[i, k].axis([plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul])
 
-            print 'plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ', \
-                plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot
+            print('plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ',
+                  plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot)
 
             mean_line_plot = numpy.zeros(nt) + plot_ts_mean[i]
             mean_line, = ax[i, k].plot(plot_time, mean_line_plot, color = 'black', linewidth = 1.0, label = 'Mean')
@@ -336,13 +340,13 @@ if __name__ == "__main__":
     #regs = ['global', 'NH_high_lats', 'NH_mid_lats', 'tropics', 'SH_mid_lats', 'SH_high_lats']
     #names = ['Global', '90N-50N', '50N-20N', '20N-20S', '20S-50S', '50S-90S']
 
-    print 'salil', regs
-    print 'salil', names
+    print('salil', regs)
+    print('salil', names)
 
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     plot_multiple_index(indir = indir,
                         casename = casename,

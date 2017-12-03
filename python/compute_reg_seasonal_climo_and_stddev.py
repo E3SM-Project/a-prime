@@ -46,7 +46,8 @@ def compute_reg_seasonal_climo_and_stddev(indir,
     a, n_months_season = get_season_months_index(begin_month, end_month)
 
     day_wgts = get_days_in_season_months(begin_month, end_month)
-    if debug: print __name__, 'day_wgts: ', day_wgts
+    if debug:
+        print(__name__, 'day_wgts: ', day_wgts)
 
     seasonal_avg_ts = aggregate_time_series_data(    data = field,
                               aggregate_size = n_months_season,

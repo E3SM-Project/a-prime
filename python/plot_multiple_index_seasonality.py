@@ -59,7 +59,7 @@ def plot_multiple_index_seasonality   (indir,
     n_reg = len(regs)
 
     for i,reg in enumerate(regs):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                                   indir     = indir,
                                   casename     = casename,
@@ -81,19 +81,22 @@ def plot_multiple_index_seasonality   (indir,
 
         test_ts[i, :] = area_seasonal_avg
 
-        if debug: print __name__, 'test_stddev_ts.shape: ', test_stddev_ts.shape
-        if debug: print __name__, 'nyrs: ', nyrs
+        if debug:
+            print(__name__, 'test_stddev_ts.shape: ', test_stddev_ts.shape)
+        if debug:
+            print(__name__, 'nyrs: ', nyrs)
 
         for month in range(0, 12):
             j = numpy.arange(0,nyrs) * 12 + month
             test_stddev_ts[i, month] = numpy.std(test_ts[i, j])
 
 
-        if debug: print __name__, 'test_ts: ', test_ts
+        if debug:
+            print(__name__, 'test_ts: ', test_ts)
 
 
     for i,reg in enumerate(regs):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                                   indir     = ref_case_dir,
                                   casename     = ref_case,
@@ -120,7 +123,8 @@ def plot_multiple_index_seasonality   (indir,
             j = numpy.arange(0,nyrs) * 12 + month
             ref_stddev_ts[i, month] = numpy.std(ref_ts[i, j])
 
-        if debug: print __name__, 'ref_stddev_ts: ', ref_stddev_ts
+        if debug:
+            print(__name__, 'ref_stddev_ts: ', ref_stddev_ts)
 
 
     f, ax = plt.subplots(n_reg, 1, figsize=(4,8.5))
@@ -143,8 +147,8 @@ def plot_multiple_index_seasonality   (indir,
 
         ax[i].axis([plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul])
 
-        print 'plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul: ', \
-            plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul
+        print('plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul: ',
+              plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul)
 
 
         test_plot, = ax[i].plot(plot_time, test_stddev_ts[i, :], color = colors[i], linewidth = 2.0, label = casename)
@@ -293,13 +297,13 @@ if __name__ == "__main__":
     #regs = ['global', 'NH_high_lats', 'NH_mid_lats', 'tropics', 'SH_mid_lats', 'SH_high_lats']
     #names = ['Global', '90N-50N', '50N-20N', '20N-20S', '20S-50S', '50S-90S']
 
-    print 'salil', regs
-    print 'salil', names
+    print('salil', regs)
+    print('salil', names)
 
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     plot_multiple_index_seasonality(indir = indir,
                                     casename = casename,
