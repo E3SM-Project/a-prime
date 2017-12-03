@@ -5,6 +5,9 @@
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 import numpy
 
 def remove_seasonal_cycle_monthly_data(field, n_months_season = 12, debug = False):

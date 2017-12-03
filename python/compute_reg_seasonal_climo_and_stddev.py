@@ -1,10 +1,14 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import numpy
 from netCDF4 import Dataset
 
@@ -14,7 +18,7 @@ from get_days_in_season_months import get_days_in_season_months
 from aggregate_time_series_data import aggregate_time_series_data
 
 def compute_reg_seasonal_climo_and_stddev(indir,
-              casename, 
+              casename,
               field_name,
                   interp_grid,
               interp_method,

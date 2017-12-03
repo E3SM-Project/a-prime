@@ -8,6 +8,8 @@
 # to compute mean (aggregates) of time series data at different intervals,
 # for e.g. to compute annual mean from daily timeseries data.
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 import numpy
 
 def aggregate_time_series_data(data, aggregate_size, wgts, debug = False):

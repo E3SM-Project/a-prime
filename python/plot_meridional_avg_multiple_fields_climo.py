@@ -8,6 +8,8 @@
 ###Work in Progress: Plot meridional averages for different fields in the same plot.
 ###07/03/2017
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 import matplotlib as mpl
 #changing the default backend to agg to resolve contouring issue on rhea
 mpl.use('Agg')

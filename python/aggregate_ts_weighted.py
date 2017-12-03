@@ -1,14 +1,16 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 import numpy
 
 def aggregate_ts_weighted(ts, bw, wgts = 1, debug = False):
- 
+
     nt = ts.shape[0]
     n_agg_ts = nt/bw
 

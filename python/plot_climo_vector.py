@@ -8,6 +8,9 @@
 #python script to plot wind stress vectors and magnitude over the oceans using
 #CF variables TAUX and TAUY
 
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
+
 import matplotlib as mpl
 #changing the default backend to agg to resolve contouring issue on rhea
 mpl.use('Agg')

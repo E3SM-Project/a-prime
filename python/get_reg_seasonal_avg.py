@@ -1,10 +1,12 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 import numpy
 from netCDF4 import Dataset
 
@@ -15,7 +17,7 @@ from get_reg_area_avg import get_reg_area_avg
 from aggregate_ts_weighted import aggregate_ts_weighted
 
 def get_reg_seasonal_avg (indir,
-              casename, 
+              casename,
               field_name,
                   interp_grid,
               interp_method,

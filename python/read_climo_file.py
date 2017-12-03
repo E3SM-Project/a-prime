@@ -5,6 +5,9 @@
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
+
+from __future__ import absolute_import, division, print_function, \
+    unicode_literals
 from netCDF4 import Dataset
 from get_reg_box import get_reg_box
 from get_climo_filename import get_climo_filename
