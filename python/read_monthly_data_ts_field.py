@@ -63,7 +63,7 @@ def read_monthly_data_ts_field(indir,
     area = f.variables['area']
 
     nt = field.shape[0]
-    nyrs = nt/12
+    nyrs = nt // 12
 
 
     if end_month < begin_month:

@@ -15,7 +15,7 @@ def remove_seasonal_cycle_monthly_data(field, n_months_season = 12, debug = Fals
     ntime = field.shape[0]
     field_noann = field + numpy.nan
 
-    nyrs = ntime/n_months_season
+    nyrs = ntime // n_months_season
     yrs = numpy.arange(0, nyrs)
 
     if debug: print(__name__, 'ntime, nyrs, yrs, field.ndim: ', ntime, nyrs,

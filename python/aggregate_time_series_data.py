@@ -15,7 +15,7 @@ import numpy
 def aggregate_time_series_data(data, aggregate_size, wgts, debug = False):
     nt = data.shape[0]
 
-    n_aggregates = int(nt/aggregate_size)
+    n_aggregates = int(nt // aggregate_size)
 
     # concatenating tuples to create shape for aggregate_data
     agg_shape = (n_aggregates,) + data.shape[1:]

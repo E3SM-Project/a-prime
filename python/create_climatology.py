@@ -83,7 +83,7 @@ local_field = field[:,begin_index:end_index]
 
 print("file read!, time taken: ", str(time.clock()-t0))
 
-nyrs = ntime/12
+nyrs = ntime // 12
 clim_field = numpy.zeros((12, ncol))
 
 

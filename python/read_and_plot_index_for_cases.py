@@ -162,13 +162,13 @@ def read_and_plot_index_for_cases (indir,
 
         if begin_month == 0 and end_month == 11 and aggregate == 0:
             bw   = 13
-            wgts = numpy.ones(bw)/bw
-            nyrs = nt/n_months_season
+            wgts = numpy.ones(bw) // bw
+            nyrs = nt // n_months_season
 
 
             plot_ts_moving_avg = numpy.convolve(plot_ts, wgts, 'valid')
 
-            smooth_line, = ax[k].plot(plot_time[bw/2:-bw/2+1], plot_ts_moving_avg,
+            smooth_line, = ax[k].plot(plot_time[bw // 2:-bw // 2+1], plot_ts_moving_avg,
                             color = colors[i],
                             linewidth = 2.0,
                             label = 'Moving avg. (Bandwidth = ' + "%3d" % bw + ' months)')

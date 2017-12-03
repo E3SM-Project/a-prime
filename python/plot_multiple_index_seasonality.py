@@ -77,7 +77,7 @@ def plot_multiple_index_seasonality   (indir,
         if i == 0:
             test_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
             test_stddev_ts = numpy.zeros((n_reg, 12))
-            nyrs = area_seasonal_avg.shape[0]/12
+            nyrs = area_seasonal_avg.shape[0] // 12
 
         test_ts[i, :] = area_seasonal_avg
 
@@ -115,7 +115,7 @@ def plot_multiple_index_seasonality   (indir,
         if i == 0:
             ref_ts = numpy.zeros((n_reg, area_seasonal_avg.shape[0]))
             ref_stddev_ts = numpy.zeros((n_reg, 12))
-            nyrs = area_seasonal_avg.shape[0]/12
+            nyrs = area_seasonal_avg.shape[0] // 12
 
         ref_ts[i, :] = area_seasonal_avg
 

@@ -109,9 +109,9 @@ def plot_multiple_reg_seasonal_avg (indir,
 
     plot_ts_mean = numpy.mean(plot_ts, axis = 1)
 
-    print(__name__, 'int(math.ceil(n_reg/2)):', int(math.ceil(n_reg/2)))
+    print(__name__, 'int(math.ceil(n_reg/2)):', int(math.ceil(n_reg // 2)))
 
-    f, ax = plt.subplots(int(math.ceil(n_reg/2)), 2, sharex = True, figsize=(8.5,11))
+    f, ax = plt.subplots(int(math.ceil(n_reg // 2)), 2, sharex = True, figsize=(8.5,11))
 
     nt = area_seasonal_avg.shape[0]
 
@@ -152,12 +152,12 @@ def plot_multiple_reg_seasonal_avg (indir,
 
         if begin_month == 0 and end_month == 11 and aggregate == 0:
             bw   = 13
-            wgts = numpy.ones(bw)/bw
-            nyrs = nt/n_months_season
+            wgts = numpy.ones(bw) // bw
+            nyrs = nt // n_months_season
 
             plot_ts_moving_avg = numpy.convolve(plot_ts[i, :], wgts, 'valid')
 
-            ax[j].plot(plot_time[bw/2:-bw/2+1], plot_ts_moving_avg, color = colors[i], linewidth = 4.0)
+            ax[j].plot(plot_time[bw // 2:-bw // 2+1], plot_ts_moving_avg, color = colors[i], linewidth = 4.0)
             ax[j].plot(plot_time, plot_ts[i, :], color = colors[i], linewidth = 1.0)
             ax[j].plot(plot_time, ref_plot_ts[i, :], color = 'black', linewidth = 1.0)
             ax[j].set_xticks(numpy.arange(0, nt, 12))

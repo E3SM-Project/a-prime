@@ -12,7 +12,7 @@ import numpy
 def aggregate_ts_weighted(ts, bw, wgts = 1, debug = False):
 
     nt = ts.shape[0]
-    n_agg_ts = nt/bw
+    n_agg_ts = nt // bw
 
     if debug:
         print(__name__, 'nyrs_ts: ', n_agg_ts)
