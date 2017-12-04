@@ -9,7 +9,7 @@ import numpy
 
 def get_season_months_index(begin_month, end_month):
 
-	if end_month < begin_month:
+    if end_month < begin_month:
             n_months_season_yr1 = 12 - begin_month
             n_months_season_yr2 = end_month + 1
             n_months_season = n_months_season_yr1 + n_months_season_yr2
@@ -18,9 +18,9 @@ def get_season_months_index(begin_month, end_month):
             index_months[0:n_months_season_yr1] = numpy.arange(begin_month,12)
             index_months[n_months_season_yr1:n_months_season] = numpy.arange(0, end_month+1)
 
-	else:
+    else:
             n_months_season = end_month - begin_month + 1
             index_months = numpy.arange(begin_month, end_month+1)
 
 
-	return (index_months, n_months_season) 
+    return (index_months, n_months_season) 

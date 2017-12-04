@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -24,12 +24,12 @@ def aggregate_time_series_data(data, aggregate_size, wgts, debug = False):
     print "aggregate_data.shape: ", aggregate_data.shape
 
     if data.ndim == 1:
-	    for i in range(0, n_aggregates):
-		aggregate_data[i] = numpy.ma.average(data[i*aggregate_size:(i+1) * aggregate_size], axis = 0, weights = wgts)
-	
+        for i in range(0, n_aggregates):
+            aggregate_data[i] = numpy.ma.average(data[i*aggregate_size:(i+1) * aggregate_size], axis = 0, weights = wgts)
+
     else:
-	    for i in range(0, n_aggregates):
-		aggregate_data[i, ::] = numpy.ma.average(data[i*aggregate_size:(i+1) * aggregate_size, ::], axis = 0, weights = wgts)
+        for i in range(0, n_aggregates):
+            aggregate_data[i, ::] = numpy.ma.average(data[i*aggregate_size:(i+1) * aggregate_size, ::], axis = 0, weights = wgts)
 
     print "aggregate_data.shape: ", aggregate_data.shape
 

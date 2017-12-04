@@ -1,7 +1,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -19,31 +19,30 @@ from   optparse import OptionParser
 from get_season_name import get_season_name
 
 #Parse options
-if __name__ == "__main__":
-    parser = OptionParser(usage = "mpirun [options] python %prog [options]")
+parser = OptionParser(usage = "mpirun [options] python %prog [options]")
 
-    parser.add_option("--indir", dest = "indir",
-                        help = "archive directory path")
+parser.add_option("--indir", dest = "indir",
+                    help = "archive directory path")
 
-    parser.add_option("-c", "--casename", dest = "casename",
-                        help = "casename of the run")
+parser.add_option("-c", "--casename", dest = "casename",
+                    help = "casename of the run")
 
-    parser.add_option("-f", "--field_name", dest = "field_name",
-                        help = "variable name")
+parser.add_option("-f", "--field_name", dest = "field_name",
+                    help = "variable name")
 
-    parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
-                        help = "begin year")
+parser.add_option("--begin_yr", dest = "begin_yr", type = "int",
+                    help = "begin year")
 
-    parser.add_option("--end_yr", dest = "end_yr", type = "int",
-                        help = "end year")
+parser.add_option("--end_yr", dest = "end_yr", type = "int",
+                    help = "end year")
 
-    parser.add_option("--begin_month", dest = "begin_month", type = "int",
-                        help = "begin_month", default = 0)
+parser.add_option("--begin_month", dest = "begin_month", type = "int",
+                    help = "begin_month", default = 0)
 
-    parser.add_option("--end_month", dest = "end_month", type = "int",
-                        help = "end_month", default = 11)
+parser.add_option("--end_month", dest = "end_month", type = "int",
+                    help = "end_month", default = 11)
 
-    (options, args) = parser.parse_args()
+(options, args) = parser.parse_args()
 
 indir       = options.indir
 casename    = options.casename
@@ -57,7 +56,7 @@ end_month   = options.end_month
 #Get filename
 
 file_name = indir + '/' + casename + '.cam.h0.' + field_name + \
-		'.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
+        '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
 
 print "file_name: ", file_name
 
@@ -80,7 +79,7 @@ end_index = ncol
 
 local_field = field[:,begin_index:end_index]
 
-print "file read!, time taken: ", str(time.clock()-t0) 
+print "file read!, time taken: ", str(time.clock()-t0)
 
 nyrs = ntime/12
 clim_field = numpy.zeros((12, ncol))
@@ -115,14 +114,14 @@ else:
 
     seasonal_index[0:11-begin_month+1]       = numpy.arange(begin_month, 12)
     seasonal_index[11-begin_month+1:n_months]  = numpy.arange(0, end_month+1)
- 
+
 print "seasonal_index: ", seasonal_index
 print "seasonal_index.shape: ", seasonal_index.shape
 print "clim_field.shape: ", clim_field.shape
 
 weights = numpy.zeros((n_months))
 weights[:] = days_in_month[seasonal_index]
-print "weights: ", weights 
+print "weights: ", weights
 
 #Computing seasonal mean
 seasonal_clim[:] = numpy.average(clim_field[seasonal_index, :], axis = 0, weights = weights)
@@ -132,8 +131,8 @@ season = get_season_name(begin_month, end_month)
 #Writing netcdf file
 outfile = indir + '/'+ casename + '_' + season \
             + '_climo.' + field_name + \
-	    '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
- 
+        '.' + str(begin_yr) + '-' + str(end_yr) + '.nc'
+
 print "Writing ", outfile
 print ""
 
