@@ -8,9 +8,7 @@
 #
 
 #PBS -q batch
-# change number of nodes to change the number of parallel tasks
-# (anything between 1 and the total number of tasks to run)
-#PBS -l nodes=10
+#PBS -l nodes=1
 #PBS -l walltime=01:00:00
 #PBS -A cli115
 #PBS -N aprime_ocnice_diags

@@ -12,7 +12,6 @@ if [ ! -d $remap_files_dir ]; then
   echo "remap_files_dir $remap_files_dir does not exist! Please check." 
   echo "Exiting atmosphere diagnostics ..."
   echo 
-  echo
   exit 1
 fi
 
@@ -28,7 +27,6 @@ if [ ! -f $CERES_EBAF_regrid_wgt_file ]; then
   echo "CERES_EBAF_regid_wgt_file $CERES_EBAF_regrid_wgt_file does not exist! Please check."
   echo "Exiting atmosphere diagnostics ..."
   echo 
-  echo
   exit 1
 fi
 
@@ -36,7 +34,6 @@ if [ ! -f $ERS_regrid_wgt_file ]; then
   echo "ERS_regrid_wgt_file $ERS_regrid_wgt_file does not exist! Please check."
   echo "Exiting atmosphere diagnostics ..."
   echo 
-  echo
   exit 1
 fi
 
@@ -149,7 +146,7 @@ while [ $j -lt $n_cases ]; do
 
    if [ $compute_climo -eq 1 ]; then
      echo
-     echo "Submitting jobs to compute seasonal climatology for $casename"
+     echo "Computing seasonal climatology for $casename"
      echo "Log files in $log_dir/climo_$casename..."
      echo
      ./bash_scripts/compute_climo.bash $scratch_dir \
@@ -178,7 +175,7 @@ while [ $j -lt $n_cases ]; do
 
    if [ $remap_climo -eq 1 ]; then
      echo
-     echo "Submitting jobs to remap seasonal climatology files for $casename" 
+     echo "Remapping seasonal climatology files for $casename" 
      echo "Log files in $log_dir/remap_climo_$casename..."
      echo
      ./bash_scripts/remap_climo_nco.bash $scratch_dir \
@@ -198,7 +195,7 @@ echo
 
 # Plot climatologies and differences
 echo
-echo "Submitting jobs to plot seasonal climatology and differences"
+echo "Plotting seasonal climatology and differences"
 echo "Log files in $log_dir/plot_climo..."
 echo
 
@@ -313,7 +310,7 @@ while [ $j -lt $n_cases ]; do
 
    if [ $remap_ts -eq 1 ]; then
      echo
-     echo "Submitting jobs to interpolate time series files for $casename"
+     echo "Interpolating time series files for $casename"
      echo "Log files in $log_dir/remap_time_series_${casename}..."
      echo
      ./bash_scripts/remap_time_series_nco.bash $scratch_dir \
@@ -330,7 +327,7 @@ done
 
 # Plot trends for different regions
 echo
-echo "Submitting jobs to plot time series"
+echo "Plotting time series"
 echo "Log files in $log_dir/"
 echo
 
@@ -361,8 +358,6 @@ while [ $j -lt $n_test_cases ]; do
 
    j=$((j+1))
 done
-
-
 
 
 # ENSO DIAGS
@@ -433,7 +428,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
 	   if [ $compute_climo -eq 1 ]; then
 	     echo
-	     echo "Submitting jobs to compute seasonal climatology for $casename"
+	     echo "Computing seasonal climatology for $casename"
 	     echo "Log files in $log_dir/climo_$casename..."
 	     echo
 	     ./bash_scripts/compute_climo.bash $scratch_dir \
@@ -462,7 +457,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
 	   if [ $remap_climo -eq 1 ]; then
 	     echo
-	     echo "Submitting jobs to remap seasonal climatology files for $casename" 
+	     echo "Remapping seasonal climatology files for $casename" 
 	     echo "Log files in $log_dir/remap_climo_$casename..."
 	     echo
 	     ./bash_scripts/remap_climo_nco.bash $scratch_dir \
@@ -483,7 +478,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
         # ENSO Diags: Plot Meridional Average over the Tropical Pacific
         echo
         echo
-        echo Submitting jobs to plot meridional average over the Tropical Pacific
+        echo Plotting meridional average over the Tropical Pacific
         echo Log files in $log_dir/
         echo
 
@@ -582,7 +577,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
                 if [ $remap_ts -eq 1 ]; then
                         echo
-                        echo Submitting jobs to interpolate time series files for $casename
+                        echo Interpolating time series files for $casename
                         echo Log files in $log_dir/remap_time_series_${casename}...
                         echo
                         bash_scripts/remap_time_series_nco.bash $scratch_dir \
@@ -600,7 +595,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
         # ENSO Diags: Compute Nino and EQSOI indices
         echo
-        echo Submitting jobs to compute Nino and EQSOI index
+        echo Computing Nino and EQSOI index
         echo Log files in $log_dir/
         echo
 
@@ -665,7 +660,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
         # ENSO Diags: Plot Nino and EQSOI time series 
  
         echo 
-        echo Submitting job to plot Nino and EQSOI index 
+        echo Plotting Nino and EQSOI index 
         echo Log files in $log_dir/ 
         echo 
  
@@ -696,7 +691,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
         # ENSO Diags: Plot Nino3, Nino3.4 and Nino4 index time series
         echo
-        echo Submitting jobs to plot Nino3, Nino3.4 and Nino4 time series
+        echo Plotting Nino3, Nino3.4 and Nino4 time series
         echo Log files in $log_dir/
         echo
 
@@ -737,7 +732,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
         # ENSO Diags: Plot Nino3, Nino3.4 and Nino4 index seasonality
         echo
-        echo Submitting jobs to plot seasonality of Nino indices
+        echo Plotting seasonality of Nino indices
         echo Log files in $log_dir/
         echo
 
@@ -776,7 +771,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	split_yfit_x_0=0
 
         echo
-        echo Submitting jobs to plot Bjerkenes feedback
+        echo Plotting Bjerkenes feedback
         echo Log files in $log_dir/
         echo
 
@@ -823,7 +818,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	split_yfit_x_0=1
 
         echo
-        echo Submitting jobs to plot Nino3 heat flux-SST feedbacks
+        echo Plotting Nino3 heat flux-SST feedbacks
         echo Log files in $log_dir/
         echo
 
@@ -868,9 +863,8 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	field_reg='global'
 	field_reg_name='global'
 
-
         echo
-        echo Submitting jobs to plot regression of variables against the $index_reg index
+        echo Plotting regression of variables against the $index_reg index
         echo Log files in $log_dir/
         echo
 
@@ -907,7 +901,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
         #ENSO Diags: Plot std. dev. over the Tropical Pacific
         echo
-        echo Submitting jobs to plot std. dev. of fields over the Tropical Pacific
+        echo Plotting std. dev. of fields over the Tropical Pacific
         echo Log files in $log_dir/
 
         var_list_file=bash_scripts/var_list_enso_diags_time_series.bash
@@ -949,7 +943,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
 
         echo
-        echo Submitting jobs to plot ENSO evolution: Lead lag regression of TAUX and TS against the Nino3.4 index
+        echo Plotting ENSO evolution: Lead lag regression of TAUX and TS against the Nino3.4 index
         echo Log files in $log_dir/
         echo
 
@@ -984,8 +978,6 @@ if [ $generate_atm_enso_diags == 1 ]; then
 	done
 
 fi
-
-
 
 echo
 echo "Completed atmosphere diagnostics!"

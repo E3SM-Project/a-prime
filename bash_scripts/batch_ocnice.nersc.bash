@@ -8,9 +8,7 @@
 #
 
 #SBATCH --partition=regular
-# change number of nodes to change the number of parallel tasks
-# (anything between 1 and the total number of tasks to run)
-#SBATCH --nodes=10
+#SBATCH --nodes=1
 #SBATCH --time=01:00:00
 #SBATCH --account=acme
 #SBATCH --job-name=aprime_ocnice_diags
