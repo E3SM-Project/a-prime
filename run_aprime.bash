@@ -134,6 +134,10 @@ export test_remap_ts_enso_atm=1
 # In the following we define some machine specific variables (such as
 # projdir or the location of observational data) that the user is 
 # unlikely to have to modify in most cases
+# This regular expression is needed as anvil compute nodes are named
+# differently from the login node
+re='^[0-9]+$'
+
 if [ ${HOSTNAME:0:6} == "edison" ]; then
   export machname="nersc"
 elif [ ${HOSTNAME:0:4} == "rhea" ] || [ ${HOSTNAME:0:5} == "titan" ]; then
@@ -144,7 +148,7 @@ elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
 elif [ ${HOSTNAME:0:4} == "wolf" ]; then
   export machname="lanl"
-elif [ ${HOSTNAME:0:6} == "blogin" ]; then
+elif [ ${HOSTNAME:0:6} == "blogin" ] || [ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]; then
   export machname="anvil"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
