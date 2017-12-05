@@ -144,6 +144,8 @@ elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
 elif [ ${HOSTNAME:0:4} == "wolf" ]; then
   export machname="lanl"
+elif [ ${HOSTNAME:0:6} == "blogin" ]; then
+  export machname="anvil"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
@@ -163,6 +165,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   projdir=/usr/projects/climate/SHARED_CLIMATE
   export www_dir=$output_base_dir/www
+elif [ $machname == "anvil" ]; then
+  projdir=/lcrc/group/acme/lvanroe/APrime_Files
+  export www_dir=$output_base_dir/www
 fi
 
 # ** Reference case variables (similar to test_case variables) **
@@ -174,6 +179,8 @@ elif [ $machname == "olcf" ]; then
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_dir=$projdir/diagnostics/observations/Atm
 elif [ $machname == "lanl" ]; then
+  export ref_archive_dir=$projdir/obs_for_diagnostics
+elif [ $machname == "anvil" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 fi
 #export ref_case=casename
@@ -194,6 +201,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_v0_ocndir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "lanl" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "anvil" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -219,8 +229,8 @@ export ref_condense_field_enso_atm=1
 export ref_remap_ts_enso_atm=1
 
 # Select sets of diagnostics to generate (False = 0, True = 1)
-export generate_atm_diags=1
-export generate_atm_enso_diags=1
+export generate_atm_diags=0
+export generate_atm_enso_diags=0
 export generate_ocnice_diags=1
 
 # The following ocn/ice diagnostic switches are ignored if generate_ocnice_diags is set to 0
@@ -312,6 +322,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   export obs_ocndir=$projdir/observations
   export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "anvil" ]; then
+  export obs_ocndir=$projdir/observations/Ocean
+  export obs_seaicedir=$projdir/observations/SeaIce
 fi
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
@@ -336,7 +349,7 @@ export uniqueID=`date +%Y-%m-%d_%H%M%S`
 # Check on www_dir, permissions included
 # Create www_dir if it does not exist, purge it if it does
 if [ ! -d $www_dir/$plots_dir_name ]; then
-  mkdir $www_dir/$plots_dir_name
+  mkdir -p $www_dir/$plots_dir_name
 else
   rm -f $www_dir/$plots_dir_name/*
 fi
@@ -366,6 +379,9 @@ elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
   module load python/anaconda-2.7-climate
+elif [ $machname == "anvil" ]; then
+  unset LD_LIBRARY_PATH
+  soft add +acme-unified-1.1.1-x
 fi
 
 # The following is needed for rhea, aims4 and acme1
