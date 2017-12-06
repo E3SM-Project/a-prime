@@ -146,6 +146,8 @@ elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
 elif [ ${HOSTNAME:0:4} == "wolf" ]; then
   export machname="lanl"
+elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
+  export machname="anvil"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
@@ -165,6 +167,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   projdir=/usr/projects/climate/SHARED_CLIMATE
   export www_dir=$output_base_dir/www
+elif [ $machname == "anvil" ]; then
+  projdir=/lcrc/group/acme/lvanroe/APrime_Files
+  export www_dir=$output_base_dir/www
 fi
 
 # ** Reference case variables (similar to test_case variables) **
@@ -176,6 +181,8 @@ elif [ $machname == "olcf" ]; then
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_dir=$projdir/diagnostics/observations/Atm
 elif [ $machname == "lanl" ]; then
+  export ref_archive_dir=$projdir/obs_for_diagnostics
+elif [ $machname == "anvil" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 fi
 #export ref_case=casename
@@ -196,6 +203,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_v0_ocndir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "lanl" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "anvil" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -312,6 +322,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   export obs_ocndir=$projdir/observations
   export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "anvil" ]; then
+  export obs_ocndir=$projdir/observations/Ocean
+  export obs_seaicedir=$projdir/observations/SeaIce
 fi
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
@@ -366,6 +379,9 @@ elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
   module load python/anaconda-2.7-climate
+elif [ $machname == "anvil" ]; then
+  unset LD_LIBRARY_PATH
+  soft add +acme-unified-1.1.1-x
 fi
 
 # The following is needed to avoid the too-many-open-files problem
@@ -406,7 +422,7 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** $batch_script"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ ${HOSTNAME:0:5} == "titan" ]; then
+    elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
@@ -456,7 +472,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ $machname == "olcf" ]; then
+    elif [ $machname == "olcf" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
