@@ -50,6 +50,12 @@ if [ "$casename" != "obs" ]; then
 						    --end_month $end_month \
 						    --begin_yr $begin_yr \
 						    --end_yr $end_yr >& $log_dir/climo_${casename}_${var}_${season_name}_years$begin_yr-$end_yr.log &
+                exstatus=$?
+                if [ $exstatus -ne 0 ]; then
+                  echo
+                  echo "Failed computing climatologies for season $ns"
+                  exit 1
+                fi
 
 	fi
 

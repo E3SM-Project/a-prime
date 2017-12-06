@@ -74,10 +74,14 @@ for ((i=0; i<$n_index; i++)); do
 							--no_ann 1 \
 							--stdize 0 \
 							--write_netcdf 1 >& $log_dir/compute_index_${case}_$index_name.log &
+       exstatus=$?
+       if [ $exstatus -ne 0 ]; then
+         echo
+         echo "Failed computing Nino indeces"
+         exit 1
+       fi
 
 done
-
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -86,6 +90,3 @@ echo
 wait
 
 echo ...Done.
- 	
-
-

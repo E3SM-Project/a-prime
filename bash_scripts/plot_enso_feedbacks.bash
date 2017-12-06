@@ -94,9 +94,14 @@ for ((k=0; k<$n_var; k++)); do
 								--reg_name ${reg_name[@]} \
 								--split_yfit_x_0 $split_yfit_x_0 \
 								--plots_dir $plots_dir >& $log_dir/plot_enso_feedbacks_${casename}_${var}_vs_${index_reg_name}_$season_name.log &
+                exstatus=$?
+                if [ $exstatus -ne 0 ]; then
+                  echo
+                  echo "Failed plotting Nino regression plots for var=$var, season=$season_name"
+                  exit 1
+                fi
 	done
 done
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -105,7 +110,3 @@ echo
 wait
 echo ... Done.
 echo
- 	
-
-
-

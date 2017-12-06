@@ -472,7 +472,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ $machname == "olcf" ] || [ $machname == "anvil" ]; then
+    elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
@@ -529,7 +529,7 @@ if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
   chmod -R ga+rX $www_dir/$plots_dir_name
 else
   echo
-  echo "Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!"
+  echo "Neither atmospheric nor ocn/ice diagnostics were generated. HTML page also not generated!"
   echo
 fi
 
