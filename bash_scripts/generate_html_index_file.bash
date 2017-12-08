@@ -178,36 +178,53 @@ EOF
 fi
 
 if [ $generate_ocnice_diags -eq 1 ]; then
-  # Generating time series ocn/ice part of index.html file
-  cat >> index.html << EOF
-  <br>
-  <br>
-  </TABLE>
-  <hr noshade size=2 size="100%">
+  if [ $generate_ohc_trends -eq 1 ] || \
+     [ $generate_sst_trends -eq 1 ] || \
+     [ $generate_seaice_trends -eq 1 ]; then
+       
+    # Generating time series ocn/ice part of index.html file
+    cat >> index.html << EOF
+    <br>
+    <br>
+    </TABLE>
+    <hr noshade size=2 size="100%">
 
-  <font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
-  </b></font>
+    <font color=red size=+1><b>Time Series Plots: Global/Hemispheric means (OCN/ICE)</b></font>
+    </b></font>
 
-  <div style="text-align:left">
-  <font color=peru size=-1>$casename (Years: $begin_yr_ts-$end_yr_ts)</font><br>
-  </div>
+    <div style="text-align:left">
+    <font color=peru size=-1>$casename (Years: $begin_yr_ts-$end_yr_ts)</font><br>
+    </div>
 
-  <hr noshade size=2 size="100%">
+    <hr noshade size=2 size="100%">
 
-  <TABLE>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="sst_global_${casename}.png">Global SST</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="OHCAnomaly_global_${casename}.png">Global OHC</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="iceAreaNH_${casename}.png">NH Ice Area</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="iceAreaSH_${casename}.png">SH Ice Area</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="iceVolumeNH_${casename}.png">NH Ice Volume</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="iceVolumeSH_${casename}.png">SH Ice Volume</a>
+    <TABLE>
 EOF
+    if [ $generate_sst_trends -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><A HREF="sst_global_${casename}.png">Global SST</a>
+EOF
+    fi
+    if [ $generate_ohc_trends -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><A HREF="OHCAnomaly_global_${casename}.png">Global OHC</a>
+EOF
+    fi
+    if [ $generate_seaice_trends -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><A HREF="iceAreaNH_${casename}.png">NH Ice Area</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="iceAreaSH_${casename}.png">SH Ice Area</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="iceVolumeNH_${casename}.png">NH Ice Volume</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="iceVolumeSH_${casename}.png">SH Ice Volume</a>
+EOF
+    fi
+  fi
 fi
 
 
@@ -316,184 +333,226 @@ EOF
 fi
 
 if [ $generate_ocnice_diags -eq 1 ]; then
-  # Generating climatology (ocn/ice) part of index.html file
-  cat >> index.html << EOF
-  <TR>
-  <TD><BR>
-  <hr noshade size=2 size="100%">
-  <font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
-
-  <div style="text-align:left">
-  <font color=peru size=-1>$casename (Years: $begin_yr_climo-$end_yr_climo)</font><br>
-  <font color=peru size=-1>$ref_case_text</font>
-  </div>
-
-  <hr noshade size=2 size="100%">
-  <TABLE>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Global Ocean</font>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SST Hadley-NOAA-OI</font>
-    <TH>JFM
-    <TH>JAS
-    <TH>ANN
-  <TR>
-  <TH ALIGN=LEFT>SST
-  <TH><BR>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-  <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SSS Aquarius</font>
-    <TH>JFM
-    <TH>JAS
-    <TH>ANN
-  <TR>
-    <TH ALIGN=LEFT>SSS
-    <TH><BR>
-    <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>MLD Holte-Talley ARGO</font>
-    <TH>JFM
-    <TH>JAS
-    <TH>ANN
-  <TR>
-    <TH ALIGN=LEFT>MLD
-    <TH><BR>
-    <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere Sea-ice</font>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
-    <TH>JFM
-    <TH>JAS
-  <TR>
-    <TH ALIGN=LEFT>Ice Conc. 
-    <TD ALIGN=LEFT>Ice concentration
-    <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
-    <TH>JFM
-    <TH>JAS
-  <TR>
-    <TH ALIGN=LEFT>Ice Conc. 
-    <TD ALIGN=LEFT>Ice concentration
-    <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
-    <TH>FM
-    <TH>ON
-  <TR>
-    <TH ALIGN=LEFT>Ice Thick. 
-    <TD ALIGN=LEFT>Ice Thickness
-    <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere Sea-ice</font>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
-    <TH>DJF
-    <TH>JJA
-  <TR>
-    <TH ALIGN=LEFT>Ice Conc. 
-    <TD ALIGN=LEFT>Ice concentration
-    <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
-    <TH>DJF
-    <TH>JJA
-  <TR>
-    <TH ALIGN=LEFT>Ice Conc. 
-    <TD ALIGN=LEFT>Ice concentration
-    <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
-    <TH><BR>
-    <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
-    <TH>FM
-    <TH>ON
-  <TR>
-    <TH ALIGN=LEFT>Ice Thick. 
-    <TD ALIGN=LEFT>Ice Thickness
-    <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
-    <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
-  <TR>
+  if [ $generate_sst_climo -eq 1 ] || [ $generate_sss_climo -eq 1 ] || \
+     [ $generate_mld_climo -eq 1 ] || [ $generate_seaice_climo -eq 1 ]; then
+    # Generating climatology (ocn/ice) part of index.html file
+    cat >> index.html << EOF
+    <TR>
     <TD><BR>
-  </TABLE>
+    <hr noshade size=2 size="100%">
+    <font color=red size=+1><b>Climatology Plots (OCN/ICE)</b></font>
+
+    <div style="text-align:left">
+    <font color=peru size=-1>$casename (Years: $begin_yr_climo-$end_yr_climo)</font><br>
+    <font color=peru size=-1>$ref_case_text</font>
+    </div>
+
+    <hr noshade size=2 size="100%">
+    <TABLE>
+    <TR>
+      <TH ALIGN=LEFT><font color=green size=+1>Global Ocean</font>
 EOF
-
-  # Generating other ocn/ice part of index.html file
-  cat >> index.html << EOF
-  <hr noshade size=2 size="100%">
-  <font color=red size=+1><b>Other OCN/ICE plots</b></font>
-
-  <div style="text-align:left">
-  <font color=peru size=-1>Time series/Trends for Years: $begin_yr_ts-$end_yr_ts</font><br>
-  <font color=peru size=-1>Climatologies for Years: $begin_yr_climo-$end_yr_climo</font><br>
-  <font color=peru size=-1>Nino3.4 diagnostics for Years: $begin_yr_climateIndex-$end_yr_climateIndex</font>
-  </div>
-
-  <hr noshade size=2 size="100%">
-  <TABLE>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Meridional Overturning Circulation (MOC)</font>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="mocGlobal_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MOC streamfunction</a> 
-  <TR>
-    <TH ALIGN=LEFT><A HREF="mocAtlantic_${casename}_years${begin_yr}-${end_yr}.png">Atlantic Ocean MOC streamfunction</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="mocTimeseries_${casename}.png">Time series of Max Atlantic MOC at 26.5N</a>
-  <TR>
-    <TD><BR>
-  <TR>
-    <TD><BR>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Meridional Heat Transport (MHT)</font>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="mht_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MHT</a> 
-  <TR>
-    <TD><BR>
-  <TR>
-    <TD><BR>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>Nino3.4 Index</font>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="NINO34_${casename}.png">Time series of Nino3.4 Index</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="NINO34_spectra_${casename}.png">Nino3.4 Power Spectrum</a>
-  <TR>
-    <TH><BR>
-  <TR>
-    <TH><BR>
-  <TR>
-    <TH ALIGN=LEFT><font color=green size=+1>T, S, OHC anomaly trends with depth</font>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="TAnomalyZ_global_${casename}.png">T anomaly vs depth/time</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="SAnomalyZ_global_${casename}.png">S anomaly vs depth/time</a>
-  <TR>
-    <TH ALIGN=LEFT><A HREF="OHCAnomalyZ_global_${casename}.png">OHC anomaly vs depth/time</a>
-  </TABLE>
+    if [ $generate_sst_climo -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SST Hadley-NOAA-OI</font>
+        <TH>JFM
+        <TH>JAS
+        <TH>ANN
+      <TR>
+      <TH ALIGN=LEFT>SST
+      <TH><BR>
+      <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+      <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+      <TD ALIGN=LEFT><A HREF="sstHADOI_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
 EOF
+    fi
+    if [ $generate_sss_climo -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SSS Aquarius</font>
+        <TH>JFM
+        <TH>JAS
+        <TH>ANN
+      <TR>
+        <TH ALIGN=LEFT>SSS
+        <TH><BR>
+        <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="sssAquarius_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
+EOF
+    fi
+    if [ $generate_mld_climo -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>MLD Holte-Talley ARGO</font>
+        <TH>JFM
+        <TH>JAS
+        <TH>ANN
+      <TR>
+        <TH ALIGN=LEFT>MLD
+        <TH><BR>
+        <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="mldHolteTalleyARGO_${casename}_ANN_years${begin_yr}-${end_yr}.png">plot</a>
+EOF
+    fi
+    if [ $generate_seaice_climo -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH><BR>
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>Northern Hemisphere Sea-ice</font>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
+        <TH>JFM
+        <TH>JAS
+      <TR>
+        <TH ALIGN=LEFT>Ice Conc. 
+        <TD ALIGN=LEFT>Ice concentration
+        <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="iceconcNASATeamNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
+        <TH>JFM
+        <TH>JAS
+      <TR>
+        <TH ALIGN=LEFT>Ice Conc. 
+        <TD ALIGN=LEFT>Ice concentration
+        <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JFM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="iceconcBootstrapNH_${casename}_JAS_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
+        <TH>FM
+        <TH>ON
+      <TR>
+        <TH ALIGN=LEFT>Ice Thick. 
+        <TD ALIGN=LEFT>Ice Thickness
+        <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="icethickNH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TH><BR>
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>Southern Hemisphere Sea-ice</font>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SSM/I NASATeam</font>
+        <TH>DJF
+        <TH>JJA
+      <TR>
+        <TH ALIGN=LEFT>Ice Conc. 
+        <TD ALIGN=LEFT>Ice concentration
+        <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="iceconcNASATeamSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>SSM/I Bootstrap</font>
+        <TH>DJF
+        <TH>JJA
+      <TR>
+        <TH ALIGN=LEFT>Ice Conc. 
+        <TD ALIGN=LEFT>Ice concentration
+        <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_DJF_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="iceconcBootstrapSH_${casename}_JJA_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TH><BR>
+        <TH ALIGN=LEFT><font color=brown size=+1>ICESat</font>
+        <TH>FM
+        <TH>ON
+      <TR>
+        <TH ALIGN=LEFT>Ice Thick. 
+        <TD ALIGN=LEFT>Ice Thickness
+        <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_FM_years${begin_yr}-${end_yr}.png">plot</a>
+        <TD ALIGN=LEFT><A HREF="icethickSH_${casename}_ON_years${begin_yr}-${end_yr}.png">plot</a>
+      <TR>
+        <TD><BR>
+EOF
+    fi
+    cat >> index.html << EOF
+    </TABLE>
+EOF
+  fi
+
+  if [ $generate_moc -eq 1 ] || [ $generate_mht -eq 1 ] || \
+     [ $generate_nino34 -eq 1 ] || [ $generate_ohc_trends -eq 1 ]; then
+    # Generating other ocn/ice part of index.html file
+    cat >> index.html << EOF
+    <hr noshade size=2 size="100%">
+    <font color=red size=+1><b>Other OCN/ICE plots</b></font>
+
+    <div style="text-align:left">
+    <font color=peru size=-1>Time series/Trends for Years: $begin_yr_ts-$end_yr_ts</font><br>
+    <font color=peru size=-1>Climatologies for Years: $begin_yr_climo-$end_yr_climo</font><br>
+    <font color=peru size=-1>Nino3.4 diagnostics for Years: $begin_yr_climateIndex-$end_yr_climateIndex</font>
+    </div>
+
+    <hr noshade size=2 size="100%">
+    <TABLE>
+EOF
+    if [ $generate_moc -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>Meridional Overturning Circulation (MOC)</font>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="mocGlobal_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MOC streamfunction</a> 
+      <TR>
+        <TH ALIGN=LEFT><A HREF="mocAtlantic_${casename}_years${begin_yr}-${end_yr}.png">Atlantic Ocean MOC streamfunction</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="mocTimeseries_${casename}.png">Time series of Max Atlantic MOC at 26.5N</a>
+      <TR>
+        <TD><BR>
+      <TR>
+        <TD><BR>
+EOF
+    fi
+    if [ $generate_mht -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>Meridional Heat Transport (MHT)</font>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="mht_${casename}_years${begin_yr}-${end_yr}.png">Global Ocean MHT</a> 
+      <TR>
+        <TD><BR>
+      <TR>
+        <TD><BR>
+EOF
+    fi
+    if [ $generate_nino34 -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>Nino3.4 Index</font>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="NINO34_${casename}.png">Time series of Nino3.4 Index</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="NINO34_spectra_${casename}.png">Nino3.4 Power Spectrum</a>
+      <TR>
+        <TH><BR>
+      <TR>
+        <TH><BR>
+EOF
+    fi
+    if [ $generate_ohc_trends -eq 1 ]; then
+      cat >> index.html << EOF
+      <TR>
+        <TH ALIGN=LEFT><font color=green size=+1>T, S, OHC anomaly trends with depth</font>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="TAnomalyZ_global_${casename}.png">T anomaly vs depth/time</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="SAnomalyZ_global_${casename}.png">S anomaly vs depth/time</a>
+      <TR>
+        <TH ALIGN=LEFT><A HREF="OHCAnomalyZ_global_${casename}.png">OHC anomaly vs depth/time</a>
+EOF
+    fi
+    cat >> index.html << EOF
+    </TABLE>
+EOF
+  fi
 fi
 
 # Generate ENSO diags section

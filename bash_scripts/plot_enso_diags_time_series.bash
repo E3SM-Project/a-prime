@@ -17,7 +17,7 @@ ref_begin_yr=$7
 ref_end_yr=$8
 var_list_file=$9
 
-# Read in variable list for plotting climatologies  diagnostics
+# Read in variable list for plotting climatologies diagnostics
 source $var_list_file
 
 n_var=${#var_set[@]}
@@ -71,6 +71,12 @@ for ((k=0; k<$n_var; k++)); do
 							--no_ann 1 \
 							--stdize 0 \
 							--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_${var}_$index_set_name.log &
+        exstatus=$?
+        if [ $exstatus -ne 0 ]; then
+          echo
+          echo "Failed plotting Nino timeseries"
+          exit 1
+        fi
 
 done
 
@@ -80,7 +86,3 @@ echo Waiting for jobs to complete ...
 echo
 
 wait
-
- 	
-
-

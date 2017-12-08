@@ -21,7 +21,7 @@ fi
 source $var_set_file
 
 echo
-echo "Submitting jobs to condense $casename fields:"
+echo "Condensing $casename fields:"
 echo "${var_set[@]}"
 echo
 echo "Log files in $log_dir/condense_field_${casename}...log"

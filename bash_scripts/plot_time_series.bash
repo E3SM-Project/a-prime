@@ -65,6 +65,12 @@ while [ $k -lt $n_var ]; do
 			--regs ${regs[@]} \
 			--names ${names[@]} \
 			--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_$var.log &
+   exstatus=$?
+   if [ $exstatus -ne 0 ]; then
+     echo
+     echo "Failed plotting timeseries plots for var=$var"
+     exit 1
+   fi
 
    k=$((k+1))
 done

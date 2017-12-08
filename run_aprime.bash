@@ -30,6 +30,7 @@
 #            ref_case_v0: baseline ACME v0 case for comparsion to POP/CICE ocn/ice
 #                         (pre-processed diagnostics)
 #            generate_atm_diags: flag to produce atm diagnostics
+#            generate_atm_enso_diags: flag to produce additional, ENSO-related, atm diagnostics
 #            generate_ocnice_diags: flag to produce ocn/ice diagnostics
 #            run_batch_script: flag to submit to batch queue or not
 #       3. execute: ./run_aprime_$user.bash 
@@ -48,19 +49,20 @@
 #                   to 1 and choose begin_yr_ts, end_yr_ts to include only data
 #                   that have been short-term-archived).
 #               mpaso.rst.0002-01-01_00000.nc (or any other restart file)
+#               mpaso.hist.am.meridionalHeatTransport.0001-02-01.nc (or any mpaso.hist.am.meridionalHeatTransport file)
 #               streams.ocean
+#               mpas-o_in
 #       - mpas-cice files:
 #               mpascice.hist.am.timeSeriesStatsMonthly.*.nc
+#               mpascice.rst.0002-01-01_00000.nc (or any other mpas-cice restart file)
 #               streams.cice
+#               mpas-cice_in
 #
 # Meaning of acronyms/words used in variable names below:
 #	test:		 Test case
 #	ref:		 Reference case or 'obs'
 #	ts: 		 Time series; e.g. test_begin_yr_ts
-#       climateIndex_ts: Time series for climate indexes such as Nino3.4.
-#                        NB: if begin_yr_climateIndex_ts=1 and end_yr_climateIndex_ts=9999,
-#                        the climate index time series is computed over the full
-#                        available data set
+#       climateIndex_ts: Time series for climate indexes such as Nino3.4
 #	climo: 		 Climatology
 #	begin_yr: 	 Model year to start analysis 
 #	end_yr:		 Model year to end analysis
@@ -144,6 +146,8 @@ elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
 elif [ ${HOSTNAME:0:4} == "wolf" ]; then
   export machname="lanl"
+elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
+  export machname="anvil"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
@@ -163,6 +167,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   projdir=/usr/projects/climate/SHARED_CLIMATE
   export www_dir=$output_base_dir/www
+elif [ $machname == "anvil" ]; then
+  projdir=/lcrc/group/acme/lvanroe/APrime_Files
+  export www_dir=$output_base_dir/www
 fi
 
 # ** Reference case variables (similar to test_case variables) **
@@ -174,6 +181,8 @@ elif [ $machname == "olcf" ]; then
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_dir=$projdir/diagnostics/observations/Atm
 elif [ $machname == "lanl" ]; then
+  export ref_archive_dir=$projdir/obs_for_diagnostics
+elif [ $machname == "anvil" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 fi
 #export ref_case=casename
@@ -194,6 +203,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export ref_archive_v0_ocndir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "lanl" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "anvil" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -245,20 +257,18 @@ export generate_html=1
 #   If run_batch_script=false, aprime_atm_diags.bash and aprime_ocnice_diags.bash are called directly.
 #   If run_batch_script=true, aprime_atm_diags.bash and aprime_ocnice_diags.bash are called within
 #     a machine-specific batch script (one script for atm and one for ocn/ice diags). In this case,
-#     atmosphere diagnostics are run in background mode onto a single compute node. Ocean/ice
-#     diagnostics, on the other hand, grab a number of compute nodes set by 'mpas_analysis_tasks':
-#     each ocn/ice task is run on a different node. If all ocn/ice diagnostics are run (by activating
-#     all the 'generate' options above), the total number of tasks is equal to 10, hence the default
-#     here is 10. The user can decide to reduce mpas_analysis_tasks accordingly, if asking to compute
-#     a reduced set of ocn/ice diagnostics. Finally, the user can set the walltime (default is 1hr
-#     for atm and 1hr for ocn/ice diags, which is fine to compute ~20 year climatology at low-resolution).
-#   Finally, choose whether to run ncclimo in parallel mode. In that case, set ncclimoParallelMode to
-#   "bck", and nclimo will launch 12 parallel tasks on a single node to compute 12 monthly
-#   climatologies. Otherwise, leave ncclimoParallelMode="serial".
+#     both atmosphere and ocn/ice diagnostics are run in background mode onto a single compute node
+#     each, using a number of tasks equal to 'mpas_analysis_tasks'. We have determined that
+#     mpas_analysis_tasks=12 is a good choice for most systems, and therefore the user should
+#     NOT change this setting. Parameters that could be set by the user are instead:
+#     -) the walltime (default is 1hr for atm and 1hr for ocn/ice diags)
+#     -) whether to run ncclimo in parallel mode. In that case, set ncclimoParallelMode to
+#        "bck", and nclimo will launch 12 parallel tasks on a single node to compute 12 monthly
+#        climatologies. Otherwise, leave ncclimoParallelMode="serial".
 export run_batch_script=false
-export mpas_analysis_tasks=10
 export batch_walltime="01:00:00" # HH:MM:SS
 export ncclimoParallelMode="bck"
+export mpas_analysis_tasks=12
 ###############################################################################################
 
 ########################################################################
@@ -312,6 +322,9 @@ elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
 elif [ $machname == "lanl" ]; then
   export obs_ocndir=$projdir/observations
   export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "anvil" ]; then
+  export obs_ocndir=$projdir/observations/Ocean
+  export obs_seaicedir=$projdir/observations/SeaIce
 fi
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
@@ -336,7 +349,7 @@ export uniqueID=`date +%Y-%m-%d_%H%M%S`
 # Check on www_dir, permissions included
 # Create www_dir if it does not exist, purge it if it does
 if [ ! -d $www_dir/$plots_dir_name ]; then
-  mkdir $www_dir/$plots_dir_name
+  mkdir -p $www_dir/$plots_dir_name
 else
   rm -f $www_dir/$plots_dir_name/*
 fi
@@ -366,9 +379,16 @@ elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
   module load python/anaconda-2.7-climate
+elif [ $machname == "anvil" ]; then
+  unset LD_LIBRARY_PATH
+  soft add +acme-unified-1.1.1-x
 fi
 
-# The following is needed for rhea, aims4 and acme1
+# The following is needed to avoid the too-many-open-files problem
+# in xarray. Since we are mostly using ncrcat in MPAS-Analysis v0.6
+# and beyond, this will eventually become outdated (as per v0.6, we
+# are still using xarray 'open_mfdataset' to open pre-processed
+# model data).
 if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ ${HOSTNAME:0:4} == "rhea" ]; then
   export mpasAutocloseFileLimitFraction=0.02
 else
@@ -402,7 +422,7 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** $batch_script"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ ${HOSTNAME:0:5} == "titan" ]; then
+    elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
@@ -448,17 +468,15 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
-      sed -i 's@SBATCH --nodes=.*@SBATCH --nodes='$mpas_analysis_tasks'@' $batch_script
       echo
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ $machname == "olcf" ]; then
+    elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
-      sed -i 's@PBS -l nodes=.*@PBS -l nodes='$mpas_analysis_tasks'@' $batch_script
       sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
       sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
        ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
@@ -511,7 +529,7 @@ if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
   chmod -R ga+rX $www_dir/$plots_dir_name
 else
   echo
-  echo "Neither atmospheric nor ocn/ice diagnostics were successful. HTML page not generated!"
+  echo "Neither atmospheric nor ocn/ice diagnostics were generated. HTML page also not generated!"
   echo
 fi
 

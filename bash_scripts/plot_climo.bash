@@ -75,6 +75,12 @@ while [ $k -lt $n_var ]; do
 			--ref_interp_grid $ref_interp_grid \
 			--ref_interp_method $ref_interp_method \
 			--plots_dir $plots_dir >& $log_dir/plot_climo_$casename-$ref_casename.$var.$season_name.log &
+        exstatus=$?
+        if [ $exstatus -ne 0 ]; then
+          echo
+          echo "Failed plotting $var climatology"
+          exit 1
+        fi
 
       else
         python python/plot_climo.py \
@@ -94,6 +100,12 @@ while [ $k -lt $n_var ]; do
 			--ref_interp_grid $ref_interp_grid \
 			--ref_interp_method $ref_interp_method \
 			--plots_dir $plots_dir >& $log_dir/plot_climo_$casename-$ref_casename.$var.$season_name.log &
+        exstatus=$?
+        if [ $exstatus -ne 0 ]; then
+          echo
+          echo "Failed plotting $var climatology"
+          exit 1
+        fi
       fi
 
       ns=$((ns+1))

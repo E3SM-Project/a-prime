@@ -75,10 +75,14 @@ for ((k=0; k<$n_var; k++)); do
 			--ref_interp_grid $ref_interp_grid \
 			--ref_interp_method $ref_interp_method \
 			--plots_dir $plots_dir >& $log_dir/plot_stddev_${reg}_$casename-$ref_casename.$var.$season_name.log &
-
+                exstatus=$?
+                if [ $exstatus -ne 0 ]; then
+                  echo
+                  echo "Failed plotting Nino stddev plots for var=$var, season=$season_name"
+                  exit 1
+                fi
 	done
 done
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -87,7 +91,3 @@ echo
 wait
 echo ... Done.
 echo
- 
-	
-
-

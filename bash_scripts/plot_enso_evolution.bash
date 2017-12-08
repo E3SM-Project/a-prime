@@ -85,7 +85,12 @@ for ((k=0; k<$n_var; k++)); do
 							--reg ${reg[@]} \
 							--reg_name ${reg_name[@]} \
 							--plots_dir $plots_dir >& $log_dir/plot_regr_lead_lag_${casename}_${var}_vs_${index_reg_name}_$season_name.log &
-
+        exstatus=$?
+        if [ $exstatus -ne 0 ]; then
+          echo
+          echo "Failed plotting Nino regression plots for var=$var"
+          exit 1
+        fi
 done
 
 
@@ -96,7 +101,3 @@ echo
 wait
 echo ... Done.
 echo
- 	
-
-
-

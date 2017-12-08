@@ -74,13 +74,18 @@ while [ $k -lt $n_var ]; do
 								--reg $reg \
 								--reg_name $reg_name \
 								--plots_dir $plots_dir >& $log_dir/plot_meridional_avg_${reg}_${casename}_${var}_$season_name.log &
+                exstatus=$?
+                if [ $exstatus -ne 0 ]; then
+                  echo
+                  echo "Failed plotting Nino Tropical Pacific averages for var=$var, season=$season_name"
+                  exit 1
+                fi
 
 		i=$((i+1))
 	done
 
 	k=$((k+1))
 done
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -89,7 +94,3 @@ wait
 echo
 echo ... Done
 echo
-
- 	
-
-

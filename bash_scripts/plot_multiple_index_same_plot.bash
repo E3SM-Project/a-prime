@@ -84,6 +84,12 @@ python python/plot_multiple_index_same_plot.py -d True --indir ${scratch_dir_ind
 						--no_ann 1 1\
 						--stdize 0 0\
 						--plots_dir $plots_dir >& $log_dir/plot_time_series_${casename}_$index_set_name.log &
+exstatus=$?
+if [ $exstatus -ne 0 ]; then
+  echo
+  echo "Failed plotting Nino indeces in the same plot"
+  exit 1
+fi
 
 
 

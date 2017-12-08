@@ -15,18 +15,15 @@ end_yr=$5
 var_list_file=$6
 
 
-
 # Read in variable list for plotting climatologies  diagnostics
-
 source $var_list_file
 
 n_var=${#var_set[@]}
- 
+
 index_set_name=EQSOI
 
 regs=('EPAC' 'INDO')
 names=('EPAC' 'INDO')
-
 
 # Compute indices
 for ((k=0; k<$n_var; k++)); do
@@ -64,9 +61,14 @@ for ((k=0; k<$n_var; k++)); do
 							--no_ann 1 \
 							--stdize 1 \
 							--write_netcdf 1 >& $log_dir/compute_index_${casename}_${var}_$index_set_name.log &
+       exstatus=$?
+       if [ $exstatus -ne 0 ]; then
+         echo
+         echo "Failed computing Nino eqsoi_index"
+         exit 1
+       fi
 
 done
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -75,7 +77,3 @@ echo
 wait
 echo ... Done.
 echo
-
- 	
-
-

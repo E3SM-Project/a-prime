@@ -72,9 +72,14 @@ for ((k=0; k<$n_var; k++)); do
 							--no_ann 1 \
 							--stdize 0 \
 							--plots_dir $plots_dir >& $log_dir/plot_seasonality_${casename}_${var}_$index_set_name.log &
+        exstatus=$?
+        if [ $exstatus -ne 0 ]; then
+          echo
+          echo "Failed plotting Nino index seasonality for var=$var"
+          exit 1
+        fi
 
 done
-
 
 echo
 echo Waiting for jobs to complete ...
@@ -83,7 +88,3 @@ echo
 wait
 echo ... Done.
 echo
-
- 	
-
-
