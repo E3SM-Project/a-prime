@@ -263,7 +263,7 @@ export generate_html=1
 #     NOT change this setting. Parameters that could be set by the user are instead:
 #     -) the walltime (default is 1hr for atm and 1hr for ocn/ice diags)
 #     -) whether to run ncclimo in parallel mode. In that case, set ncclimoParallelMode to
-#        "bck", and nclimo will launch 12 parallel tasks on a single node to compute 12 monthly
+#        "bck", and ncclimo will launch 12 parallel tasks on a single node to compute 12 monthly
 #        climatologies. Otherwise, leave ncclimoParallelMode="serial".
 export run_batch_script=false
 export batch_walltime="01:00:00" # HH:MM:SS
@@ -341,7 +341,23 @@ export obs_icevolSH=none
 # PART III
 # USER SHOULD NOT NEED TO CHANGE ANYTHING HERE ONWARDS
 
-export coupled_diags_home=$PWD
+cat >_get_sys_prefix.py <<EOL
+import sys
+print(sys.prefix)
+EOL
+
+python_path=`python _get_sys_prefix.py`
+rm _get_sys_prefix.py
+export coupled_diags_home=$python_path/lib/a-prime
+
+echo $coupled_diags_home
+
+if [ ! -d "$coupled_diags_home" ]; then
+  echo "A-Prime appears not to be installed in the current python environment."
+  echo "Assuming it is available in the current working directory."
+  export coupled_diags_home=$PWD
+fi
+
 # unique ID to be used to name unique MPAS-Analysis confg files
 # and batch scripts
 export uniqueID=`date +%Y-%m-%d_%H%M%S`
