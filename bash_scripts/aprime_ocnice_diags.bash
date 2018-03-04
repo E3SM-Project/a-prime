@@ -10,7 +10,7 @@
 # GENERATE OCEAN DIAGNOSTICS
 
 export config_file="$log_dir/config.ocnice.$uniqueID"
-python python/setup_ocnice_config.py
+python ${coupled_diags_home}/python/setup_ocnice_config.py
 exstatus=$?
 if [ $exstatus -ne 0 ]; then
   echo
@@ -18,7 +18,9 @@ if [ $exstatus -ne 0 ]; then
   exit 1
 fi
 
-python python/MPAS-Analysis/run_mpas_analysis.py $config_file
+# run_mpas_analysis should be in the user's path if the mpas_analysis conda
+# package has been installed correctly
+run_mpas_analysis $config_file
 exstatus=$?
 if [ $exstatus -ne 0 ]; then
   echo

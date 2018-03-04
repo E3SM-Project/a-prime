@@ -103,9 +103,9 @@ EOF
 
   # Generating time series part of index.html file
   if [ "$ref_case" == "obs" ]; then
-    source $coupled_diags_home/bash_scripts/var_list_time_series_model_vs_obs.bash
+    source ${coupled_diags_home}/bash_scripts/var_list_time_series_model_vs_obs.bash
   else
-    source $coupled_diags_home/bash_scripts/var_list_time_series_model_vs_model.bash
+    source ${coupled_diags_home}/bash_scripts/var_list_time_series_model_vs_model.bash
   fi
 
   var_grp_unique_set=()
@@ -248,9 +248,9 @@ if [ $generate_atm_diags -eq 1 ]; then
 EOF
 
   if [ "$ref_case" == "obs" ]; then
-    source $coupled_diags_home/bash_scripts/var_list_climo_model_vs_obs.bash
+    source ${coupled_diags_home}/bash_scripts/var_list_climo_model_vs_obs.bash
   else
-    source $coupled_diags_home/bash_scripts/var_list_climo_model_vs_model.bash
+    source ${coupled_diags_home}/bash_scripts/var_list_climo_model_vs_model.bash
   fi
 
   var_grp_unique_set=()
@@ -615,9 +615,9 @@ EOF
 
 
   if [ $ref_case == obs ]; then
-        source $coupled_diags_home/bash_scripts/var_list_enso_diags_climo.bash
+        source ${coupled_diags_home}/bash_scripts/var_list_enso_diags_climo.bash
   else
-        source $coupled_diags_home/bash_scripts/var_list_enso_diags_model_vs_model.bash
+        source ${coupled_diags_home}/bash_scripts/var_list_enso_diags_model_vs_model.bash
   fi
 
   var_grp_unique_set=()
@@ -709,12 +709,12 @@ EOF
 
 # Generating index.html section for Bjerkenes feedbacks plots
 
-  var_list_file=$coupled_diags_home/bash_scripts/var_list_enso_diags_bjerknes_feedback.bash
+  var_list_file=${coupled_diags_home}/bash_scripts/var_list_enso_diags_bjerknes_feedback.bash
   source $var_list_file
 
   temp_unique_grp_list_file=$log_dir/temp_unique_grp_list_file.bash
 
-  bash $coupled_diags_home/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
+  bash ${coupled_diags_home}/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
 
   source $temp_unique_grp_list_file
 
@@ -783,12 +783,12 @@ EOF
 
 # Generating index.html section for ENSO heat flux-SST feedbacks plots
 
-  var_list_file=$coupled_diags_home/bash_scripts/var_list_enso_diags_heat_flux-sst_feedbacks.bash
+  var_list_file=${coupled_diags_home}/bash_scripts/var_list_enso_diags_heat_flux-sst_feedbacks.bash
   source $var_list_file
 
   temp_unique_grp_list_file=$log_dir/temp_unique_grp_list_file.bash
 
-  bash $coupled_diags_home/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
+  bash ${coupled_diags_home}/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
 
   source $temp_unique_grp_list_file
 
@@ -857,12 +857,12 @@ EOF
 
 # Generating index.html section for std. dev. and ENSO Evolution Plots
 
-  var_list_file=$coupled_diags_home/bash_scripts/var_list_enso_diags_time_series.bash
+  var_list_file=${coupled_diags_home}/bash_scripts/var_list_enso_diags_time_series.bash
   source $var_list_file
 
   temp_unique_grp_list_file=$log_dir/temp_unique_grp_list_file.bash
 
-  bash $coupled_diags_home/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
+  bash ${coupled_diags_home}/bash_scripts/generate_unique_group_list.bash $var_list_file $temp_unique_grp_list_file
 
   source $temp_unique_grp_list_file
 

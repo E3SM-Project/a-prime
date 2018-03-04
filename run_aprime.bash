@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2017, UT-BATTELLE, LLC
 # All rights reserved.
-# 
+#
 # This software is released under the BSD license detailed
 # in the LICENSE file in the top level a-prime directory
 #
@@ -33,7 +33,7 @@
 #            generate_atm_enso_diags: flag to produce additional, ENSO-related, atm diagnostics
 #            generate_ocnice_diags: flag to produce ocn/ice diagnostics
 #            run_batch_script: flag to submit to batch queue or not
-#       3. execute: ./run_aprime_$user.bash 
+#       3. execute: ./run_aprime_$user.bash
 #
 # List of ACME output files that are needed for A-Prime to work:
 #       - atmosphere files:
@@ -64,7 +64,7 @@
 #	ts: 		 Time series; e.g. test_begin_yr_ts
 #       climateIndex_ts: Time series for climate indexes such as Nino3.4
 #	climo: 		 Climatology
-#	begin_yr: 	 Model year to start analysis 
+#	begin_yr: 	 Model year to start analysis
 #	end_yr:		 Model year to end analysis
 #       condense:        Create a new file for each variable with time series data
 #                        for that variable. This is used to create climatology (if
@@ -97,7 +97,7 @@ export test_archive_dir=/dir/to/data
 #  Short-term archive option
 export test_short_term_archive=0
 
-#  Atmosphere grid resolution name (e.g. ne30, ne60, ne120) 
+#  Atmosphere grid resolution name (e.g. ne30, ne60, ne120)
 export test_atm_res=ne30
 #  MPAS mesh name (e.g. oEC60to30v1, oEC60to30v3, oRRS18to6v3)
 #  NB: test_atm_res and test_mpas_mesh_name may change with a different choice
@@ -134,7 +134,7 @@ export test_remap_climo_enso_atm=1
 export test_remap_ts_enso_atm=1
 
 # In the following we define some machine specific variables (such as
-# projdir or the location of observational data) that the user is 
+# projdir or the location of observational data) that the user is
 # unlikely to have to modify in most cases
 if [ ${HOSTNAME:0:6} == "edison" ]; then
   export machname="nersc"
@@ -244,7 +244,7 @@ export generate_mld_climo=1
 export generate_mht=1
 # Setting MOC diagnostics to false by default, because of current (Sep 2017) problems in
 # running the MOC scripts on high-resolution MPAS data. The user can switch generate_moc=1
-# if analyzing low-resolution (EC60to30) MPAS output. 
+# if analyzing low-resolution (EC60to30) MPAS output.
 export generate_moc=0
 export generate_seaice_trends=1
 export generate_seaice_climo=1
@@ -285,7 +285,7 @@ if [ $ref_case == "obs" ]; then
 else
   export plots_dir_name=${test_casename}_years${test_begin_yr_climo}-${test_end_yr_climo}_vs_${ref_case}_years${ref_begin_yr_climo}-${ref_end_yr_climo}
 fi
-# User can set a custom name for the $plots_dir_name here, if the default (above) is not ideal 
+# User can set a custom name for the $plots_dir_name here, if the default (above) is not ideal
 #export plots_dir_name=XXXX
 export plots_dir=$plots_base_dir/$plots_dir_name
 export log_dir=$plots_dir.logs
@@ -302,7 +302,7 @@ export ERS_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-ERS.conservati
 export mpas_remapfile=$projdir/mpas_analysis/mapping/map_${test_mpas_mesh_name}_to_0.5x0.5degree_bilinear.nc
 #     MPAS-O region mask files containing masking information for the Atlantic basin
 #     needed for the MOC diagnostics.
-#     NB: this file, instead, *needs* to be present 
+#     NB: this file, instead, *needs* to be present
 if [ $machname == "lanl" ] || [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
   export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
 else
@@ -355,7 +355,7 @@ else
 fi
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
-source $MODULESHOME/init/bash  
+source $MODULESHOME/init/bash
 if [ $machname == "nersc" ]; then
   module unload python
   module unload python_base
@@ -396,12 +396,12 @@ else
 fi
 
 # PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
-./bash_scripts/setup.bash
+${coupled_diags_home}/bash_scripts/setup.bash
 
 # RUN DIAGNOSTICS
 if [ $generate_atm_diags -eq 1 ]; then
   if ! $run_batch_script; then
-    ./bash_scripts/aprime_atm_diags.bash
+    ${coupled_diags_home}/bash_scripts/aprime_atm_diags.bash
     atm_status=$?
     if [ $atm_status -eq 0 ]; then
       # Update www/plots directory with newly generated plots
@@ -414,7 +414,7 @@ if [ $generate_atm_diags -eq 1 ]; then
   else
     batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
     if [ $machname == "nersc" ]; then
-      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ${coupled_diags_home}/bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
       echo
@@ -424,12 +424,12 @@ if [ $generate_atm_diags -eq 1 ]; then
       sbatch $batch_script
     elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
-      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ${coupled_diags_home}/bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
       sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
       sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
       sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+       ${coupled_diags_home}/bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
       sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
       echo
       echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
@@ -452,7 +452,7 @@ fi
 
 if [ $generate_ocnice_diags -eq 1 ]; then
   if ! $run_batch_script; then
-    ./bash_scripts/aprime_ocnice_diags.bash
+    ${coupled_diags_home}/bash_scripts/aprime_ocnice_diags.bash
     ocnice_status=$?
     if [ $ocnice_status -eq 0 ]; then
       # Update www/plots directory with newly generated plots
@@ -465,7 +465,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
   else
     batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
     if [ $machname == "nersc" ]; then
-      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+      sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ${coupled_diags_home}/bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
       echo
@@ -474,12 +474,12 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       sbatch $batch_script
     elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
-      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+      sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ${coupled_diags_home}/bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
       sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
       sed 's@PBS -o .*@PBS -o '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+       ${coupled_diags_home}/bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
       sed -i 's@PBS -e .*@PBS -e '$log_dir'/aprime_update_wwwdir.e'$uniqueID'@' $update_wwwdir_script
       echo
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
@@ -514,13 +514,13 @@ echo $test_scratch_dir
 # GENERATE HTML PAGE IF ASKED
 if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
    [ $ocnice_status -eq 0 ] || [ $ocnice_status -eq -2 ]; then
-  source $log_dir/case_info.temp 
+  source $log_dir/case_info.temp
   n_cases=${#case_set[@]}
   n_test_cases=$((n_cases - 1))
 
   for j in `seq 1 $n_test_cases`; do
      if [ $generate_html -eq 1 ]; then
-	./bash_scripts/generate_html_index_file.bash	$j \
+	${coupled_diags_home}/bash_scripts/generate_html_index_file.bash	$j \
 							$plots_dir \
 							$www_dir
      fi
