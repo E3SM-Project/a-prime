@@ -209,7 +209,7 @@ EOF
     if [ $generate_ohc_trends -eq 1 ]; then
       cat >> index.html << EOF
       <TR>
-        <TH ALIGN=LEFT><A HREF="OHCAnomaly_global_${casename}.png">Global OHC</a>
+        <TH ALIGN=LEFT><A HREF="ohcAnomaly_global_${casename}.png">Global OHC</a>
 EOF
     fi
     if [ $generate_seaice_trends -eq 1 ]; then
@@ -546,7 +546,7 @@ EOF
       <TR>
         <TH ALIGN=LEFT><A HREF="SAnomalyZ_global_${casename}.png">S anomaly vs depth/time</a>
       <TR>
-        <TH ALIGN=LEFT><A HREF="OHCAnomalyZ_global_${casename}.png">OHC anomaly vs depth/time</a>
+        <TH ALIGN=LEFT><A HREF="ohcAnomalyZ_global_${casename}.png">OHC anomaly vs depth/time</a>
 EOF
     fi
     cat >> index.html << EOF
@@ -1077,7 +1077,7 @@ EOF
 
 cp -u $coupled_diags_home/images/acme-banner_1.jpg $www_dir/$plots_dir_name
 mv index.html $www_dir/$plots_dir_name
-chmod -R a+rx $www_dir/$plots_dir_name
+chmod -R a+rX $www_dir/$plots_dir_name
 
 echo
 echo "Standalone HTML file with links to coupled diagnostic plots generated!"
