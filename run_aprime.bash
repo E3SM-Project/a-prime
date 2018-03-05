@@ -341,6 +341,9 @@ export obs_icevolSH=none
 # PART III
 # USER SHOULD NOT NEED TO CHANGE ANYTHING HERE ONWARDS
 
+# Determine if a-prime is part of the anaconda environment. Assume it is local
+# if not
+
 cat >_get_sys_prefix.py <<EOL
 import sys
 print(sys.prefix)
@@ -348,9 +351,8 @@ EOL
 
 python_path=`python _get_sys_prefix.py`
 rm _get_sys_prefix.py
+echo "Anaconda environment is at: $python_path"
 export coupled_diags_home=$python_path/lib/a-prime
-
-echo $coupled_diags_home
 
 if [ ! -d "$coupled_diags_home" ]; then
   echo "A-Prime appears not to be installed in the current python environment."
@@ -368,36 +370,6 @@ if [ ! -d $www_dir/$plots_dir_name ]; then
   mkdir -p $www_dir/$plots_dir_name
 else
   rm -f $www_dir/$plots_dir_name/*
-fi
-
-# LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
-source $MODULESHOME/init/bash
-if [ $machname == "nersc" ]; then
-  module unload python
-  module unload python_base
-  module use /global/project/projectdirs/acme/software/modulefiles/all
-  module load python/anaconda-2.7-acme
-  export NCO_PATH_OVERRIDE=No
-elif [ $machname == "olcf" ]; then
-  module unload python
-  module use /ccs/proj/cli115/pwolfram/modulefiles/all
-  module load python/anaconda-2.7-acme
-  export NCO_PATH_OVERRIDE=No
-elif [ $machname == "acme1" ]; then
-  export PATH=/usr/local/anaconda2/bin:$PATH
-  source activate ACME_UNIFIED
-  export NCO_PATH_OVERRIDE=No
-elif [ $machname == "aims4" ]; then
-  export PATH=/usr/local/anaconda2/bin:$PATH
-  source activate ACME-UNIFIED
-  export NCO_PATH_OVERRIDE=No
-elif [ $machname == "lanl" ]; then
-  module unload python
-  module use $projdir/modulefiles/all
-  module load python/anaconda-2.7-climate
-elif [ $machname == "anvil" ]; then
-  unset LD_LIBRARY_PATH
-  soft add +acme-unified-1.1.1-x
 fi
 
 # The following is needed to avoid the too-many-open-files problem
