@@ -304,9 +304,9 @@ export mpas_remapfile=$projdir/mpas_analysis/mapping/map_${test_mpas_mesh_name}_
 #     needed for the MOC diagnostics.
 #     NB: this file, instead, *needs* to be present
 if [ $machname == "lanl" ] || [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export mpaso_regions_file=$projdir/mpas_analysis/region_masks/${test_mpas_mesh_name}_Atlantic_region_and_southern_transect.nc
+  export mpaso_regions_dir=$projdir/mpas_analysis/region_masks/
 else
-  export mpaso_regions_file=$projdir/mapping/grids/${test_mpas_mesh_name}_SingleRegionAtlanticWTransportTransects_masks.nc
+  export mpaso_regions_dir=$projdir/mapping/grids/
 fi
 
 # Set ocn/ice specific paths to data file names and locations

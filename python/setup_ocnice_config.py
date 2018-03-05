@@ -157,8 +157,8 @@ add_config_option(config, 'seaIceObservations', 'regriddedClimSubdirectory',
 add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_seaicedir'])
 
-add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles',
-                  os.environ['mpaso_regions_file'])
+add_config_option(config, 'regions', 'regionMaskDirectory',
+                  os.environ['mpaso_regions_dir'])
 
 if check_env('run_batch_script'):
     add_config_option(config, 'execute', 'parallelTaskCount',
