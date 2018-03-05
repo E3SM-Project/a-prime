@@ -8,6 +8,8 @@
 
 mkdir -p $PREFIX/lib/a-prime
 cp $SRC_DIR/run_aprime.bash $PREFIX/lib/a-prime/run_aprime.bash
+mkdir -p $PREFIX/bin
+cp $SRC_DIR/python/get_aprime_template $PREFIX/bin/get_aprime_template
 
 for subdir in bash_scripts images python
 do
