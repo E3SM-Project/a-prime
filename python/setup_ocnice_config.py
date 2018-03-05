@@ -88,7 +88,9 @@ add_config_option(config, 'output', 'timeSeriesSubdirectory',
 
 generate = []
 if check_env('generate_ohc_trends'):
-    generate.append('timeSeriesOHC')
+    generate.append('timeSeriesOHCAnomaly')
+    generate.append('timeSeriesTemperatureAnomaly')
+    generate.append('timeSeriesSalinityAnomaly')
 if check_env('generate_sst_trends'):
     generate.append('timeSeriesSST')
 if check_env('generate_nino34'):
