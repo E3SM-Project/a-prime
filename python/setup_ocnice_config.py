@@ -152,6 +152,10 @@ add_config_option(config, 'oceanObservations', 'climatologySubdirectory',
                   '{}/clim/obs/'.format(scratchDir))
 add_config_option(config, 'oceanObservations', 'remappedClimSubdirectory',
                   '{}/clim/obs/remapped'.format(scratchDir))
+add_config_option(config, 'oceanObservations', 'sstClimatologyStartYear',
+                  os.environ['sstObs_begin_yr'])
+add_config_option(config, 'oceanObservations', 'sstClimatologyEndYear',
+                  os.environ['sstObs_end_yr'])
 
 add_config_option(config, 'oceanPreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_ocndir'])

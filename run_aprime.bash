@@ -113,8 +113,8 @@ export test_begin_yr_ts=1
 export test_end_yr_ts=30
 #  Year start/end for ocean Nino3.4 index diagnostics (both ocn/ice and
 #  atm diagnostics)
-export test_begin_yr_climateIndex_ts=480
-export test_end_yr_climateIndex_ts=500
+export test_begin_yr_climateIndex_ts=1
+export test_end_yr_climateIndex_ts=50
 
 #  Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #  If no pre-processing is done (climatology, remapping), all the switches below should be 1
@@ -148,6 +148,8 @@ elif [ ${HOSTNAME:0:4} == "wolf" ]; then
   export machname="lanl"
 elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
   export machname="anvil"
+elif [ ${HOSTNAME:0:5} == "theta" ]; then
+  export machname="theta"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
@@ -170,6 +172,9 @@ elif [ $machname == "lanl" ]; then
 elif [ $machname == "anvil" ]; then
   projdir=/lcrc/group/acme/lvanroe/APrime_Files
   export www_dir=$output_base_dir/www
+elif [ $machname == "theta" ]; then
+  projdir=/projects/ClimateEnergy_2
+  export www_dir=$projdir/www/$USER
 fi
 
 # ** Reference case variables (similar to test_case variables) **
@@ -184,7 +189,14 @@ elif [ $machname == "lanl" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
 elif [ $machname == "anvil" ]; then
   export ref_archive_dir=$projdir/obs_for_diagnostics
+elif [ $machname == "theta" ]; then
+  export ref_archive_dir=$projdir/observations/Atm
 fi
+# Set begin_yr, end_yr of SST observations to be used to compute
+# obs climatologies to compare with the model results. Choose
+# 1870-1900 for pre-industrial runs, or 1950-2011 for present-day runs.
+export sstObs_begin_yr=1870
+export sstObs_end_yr=1900
 #export ref_case=casename
 #export ref_archive_dir=dir/to/refcase_data	# $ref_case will be appended to this
 export ref_short_term_archive=0
@@ -206,6 +218,9 @@ elif [ $machname == "lanl" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "anvil" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "theta" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -314,6 +329,9 @@ elif [ $machname == "lanl" ]; then
 elif [ $machname == "anvil" ]; then
   export obs_ocndir=$projdir/observations/Ocean
   export obs_seaicedir=$projdir/observations/SeaIce
+elif [ $machname == "theta" ]; then
+  export obs_ocndir=$projdir/observations/Ocean
+  export obs_seaicedir=$projdir/observations/SeaIce
 fi
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
@@ -379,6 +397,9 @@ elif [ $machname == "lanl" ]; then
 elif [ $machname == "anvil" ]; then
   unset LD_LIBRARY_PATH
   soft add +e3sm-unified-1.1.3-nox
+elif [ $machname == "theta" ]; then
+  module use $projdir/software/modulefiles/all
+  module load e3sm-unified/1.1.3
 fi
 
 # The following is needed to avoid the too-many-open-files problem
