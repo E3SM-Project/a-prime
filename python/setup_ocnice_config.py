@@ -88,8 +88,6 @@ add_config_option(config, 'output', 'mpasClimatologySubdirectory',
                   '{}/clim/mpas/'.format(scratchDir))
 add_config_option(config, 'output', 'timeSeriesSubdirectory',
                   '{}/timeseries/'.format(scratchDir))
-add_config_option(config, 'output', 'timeCacheSubdirectory',
-                  '{}/timecache/'.format(scratchDir))
 
 generate = []
 if check_env('generate_ohc_trends'):

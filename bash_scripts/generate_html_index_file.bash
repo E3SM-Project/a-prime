@@ -7,7 +7,7 @@
 # in the LICENSE file in the top level a-prime directory
 #
 #
-# calling sequence: ./generate_html_index_file.csh casename plots_dir www_dir
+# calling sequence: ./generate_html_index_file.csh casename plots_dir
 #
 
 if [ $# -eq 0 ]; then
@@ -15,7 +15,6 @@ if [ $# -eq 0 ]; then
 else
   case_no=$1
   plots_dir=$2
-  www_dir=$3
 fi
 
 # Reading case information from file
@@ -54,16 +53,12 @@ fi
 
 if [ $machname == "nersc" ]; then
   www_link="http://portal.nersc.gov/project/acme/$USER/$plots_dir_name"
-  mpas_www_link="http://portal.nersc.gov/project/acme/$USER/$mpas_www_link"
 elif [ $machname == "olcf" ]; then
   www_link="http://projects.olcf.ornl.gov/acme/$USER/$plots_dir_name"
-  mpas_www_link="http://projects.olcf.ornl.gov/acme/$USER/$mpas_www_link"
 elif  [ $machname == "aims4" ]; then
   www_link="https://aims4.llnl.gov/$USER/$plots_dir_name"
-  mpas_www_link="https://aims4.llnl.gov/$USER/$mpas_www_link"
 elif [ $machname == "acme1" ]; then
   www_link="https://acme-viewer.llnl.gov/$USER/$plots_dir_name"
-  mpas_www_link="https://acme-viewer.llnl.gov/$USER/$mpas_www_link"
 else
   www_link=""
 fi
@@ -99,25 +94,14 @@ ${casename}<br>(Climatological years: $begin_yr_climo-$end_yr_climo) vs. $ref_ca
 EOF
 
 if [ $generate_ocnice_diags -eq 1 ]; then
-  if [ $www_link != "" ]; then
-    cat >> index.html << EOF
-    <br>
-    <hr noshade size=2 size="100%">
-    <br>
-    <br>
-    <font color=red size=+1.5><b>Click <a href=$mpas_www_link>here</a> to view full MPAS-Analysis results (only ocn/sea-ice trends are still shown below)</b></font><br>
-    </div>
+  cat >> index.html << EOF
+  <br>
+  <hr noshade size=2 size="100%">
+  <br>
+  <br>
+  <font color=red size=+1.5><b>Click <a href=$mpas_www_link>here</a> to view full MPAS-Analysis results (only ocn/sea-ice trends are still shown below)</b></font><br>
+  </div>
 EOF
-  else
-    cat >> index.html << EOF
-    <br>
-    <hr noshade size=2 size="100%">
-    <br>
-    <br>
-    <font color=red size=+1.5><b>Full MPAS-Analysis results are available in $mpas_www_dir (only ocn/sea-ice trends are still shown below)</b></font><br>
-    </div>
-EOF
-  fi
 fi
 
 if [ $generate_atm_diags -eq 1 ]; then
@@ -246,7 +230,7 @@ EOF
     if [ $generate_ohc_trends -eq 1 ]; then
       cat >> index.html << EOF
       <TR>
-        <TH ALIGN=LEFT><A HREF="OHCAnomaly_global_${casename}.png">Global OHC</a>
+        <TH ALIGN=LEFT><A HREF="ohcAnomaly_global_${casename}.png">Global OHC</a>
 EOF
     fi
     if [ $generate_seaice_trends -eq 1 ]; then
@@ -898,9 +882,10 @@ echo "Standalone HTML file with links to coupled diagnostic plots generated!"
 echo "$plots_dir/index.html"
 echo
 
-if [ $www_link == "" ]; then
+if [ -z $www_link ]; then
   echo "Viewable link not available..."
   echo "Machine $machname either not supported for that or online shared space not available for it"
+  echo "Option: transfer the whole $www_dir/$plots_dir_name to nersc and view it through the NERSC web portal"
 else
   echo "Viewable at: $www_link"
 fi

@@ -7,9 +7,9 @@
 # in the LICENSE file in the top level a-prime directory
 #
 #
-# Template driver script to generate A-Prime coupled diagnostics on ACME machines
-#  (Supported machines/HPC centers as of June 2017 are: Edison, OLCF, aims4/acme1
-#   and LANL)
+# Template driver script to generate A-Prime coupled diagnostics on E3SM machines
+#  (Supported machines/HPC centers as of June 2018 are: Edison/Cori, Rhea/Titan,
+#   Blues/Anvil, Theta, aims4/acme1, and LANL)
 #
 # Basic usage (also see README for specific instructions on running on different machines):
 #       1. copy this template to something like run_aprime_$user.bash
@@ -39,7 +39,7 @@
 #       - atmosphere files:
 #              *.cam.h0.*.nc
 #       - mpas-o files:
-#               mpaso.hist.am.timeSeriesStatsMonthly.*.nc (Note: since OHC
+#              *.mpaso.hist.am.timeSeriesStatsMonthly.*.nc (Note: since OHC
 #                   anomalies are computed wrt the first year of the simulation,
 #                   if OHC diagnostics is activated, the analysis will need the
 #                   first full year of mpaso.hist.am.timeSeriesStatsMonthly.*.nc
@@ -48,15 +48,17 @@
 #                   used in the run to analyze: in that case, set short_term_archive
 #                   to 1 and choose begin_yr_ts, end_yr_ts to include only data
 #                   that have been short-term-archived).
-#               mpaso.rst.0002-01-01_00000.nc (or any other restart file)
-#               mpaso.hist.am.meridionalHeatTransport.0001-02-01.nc (or any mpaso.hist.am.meridionalHeatTransport file)
+#               *.mpaso.rst.0002-01-01_00000.nc (or any other restart file)
 #               streams.ocean
 #               mpas-o_in
-#       - mpas-cice files:
-#               mpascice.hist.am.timeSeriesStatsMonthly.*.nc
-#               mpascice.rst.0002-01-01_00000.nc (or any other mpas-cice restart file)
-#               streams.cice
-#               mpas-cice_in
+#       - mpas-seaice files: (note the name change from mpas-cice. As of May 2018,
+#                             we are supporting *both* mpas-cice and mpas-seaice
+#                             names, since many E3SM-v1 simulations were run with the
+#                             old name)
+#               *.mpassi.hist.am.timeSeriesStatsMonthly.*.nc (or mpascice.hist.am.timeSeriesStatsMonthly.*.nc)
+#               *.mpassi.rst.0002-01-01_00000.nc (or mpascice.rst.0002-01-01_00000.nc or any other mpas-seaice restart file)
+#               streams.seaice (or streams.cice)
+#               mpas-seaice (or mpas-cice_in)
 #
 # Meaning of acronyms/words used in variable names below:
 #	test:		 Test case
@@ -361,8 +363,8 @@ else
   rm -f $www_dir/$plots_dir_name/*.png
 fi
 # Check on MPAS-Analysis www_dir: create it if it does not exist, purge it if it does
-export mpas_www_link=$plots_dir_name/mpas-analysis
-export mpas_www_dir=$www_dir/$mpas_www_link
+export mpas_www_link=./mpas-analysis
+export mpas_www_dir=$www_dir/$plots_dir_name/$mpas_www_link
 if [ ! -d $mpas_www_dir ]; then
   mkdir -p $mpas_www_dir
 else
@@ -413,15 +415,15 @@ else
   export mpasAutocloseFileLimitFraction=0.2 # default value
 fi
 
-if [ -f $test_archive_dir/$test_casename/run/mpas-cice_in ]; then
-  export seaIce_namelist_file=mpas-cice_in
-else
+if [ -f $test_archive_dir/$test_casename/run/mpas-seaice_in ]; then
   export seaIce_namelist_file=mpas-seaice_in
-fi
-if [ -f $test_archive_dir/$test_casename/run/streams.cice ]; then
-  export seaIce_streams_file=streams.cice
 else
+  export seaIce_namelist_file=mpas-cice_in
+fi
+if [ -f $test_archive_dir/$test_casename/run/streams.seaice ]; then
   export seaIce_streams_file=streams.seaice
+else
+  export seaIce_streams_file=streams.cice
 fi
 
 # PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
@@ -550,8 +552,7 @@ if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
   for j in `seq 1 $n_test_cases`; do
      if [ $generate_html -eq 1 ]; then
 	./bash_scripts/generate_html_index_file.bash	$j \
-							$plots_dir \
-							$www_dir
+							$plots_dir
      fi
   done
   chmod ga+rX $www_dir
