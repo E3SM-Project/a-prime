@@ -113,8 +113,8 @@ export test_begin_yr_ts=1
 export test_end_yr_ts=30
 #  Year start/end for ocean Nino3.4 index diagnostics (both ocn/ice and
 #  atm diagnostics)
-export test_begin_yr_climateIndex_ts=1
-export test_end_yr_climateIndex_ts=50
+export test_begin_yr_climateIndex_ts=480
+export test_end_yr_climateIndex_ts=500
 
 #  Atmosphere switches (True(1)/False(0)) to condense variables, compute climos, remap climos and condensed time series file
 #  If no pre-processing is done (climatology, remapping), all the switches below should be 1
@@ -336,22 +336,14 @@ export coupled_diags_home=$PWD
 # and batch scripts
 export uniqueID=`date +%Y-%m-%d_%H%M%S`
 
-# Check on www_dir, permissions included
-# Create www_dir if it does not exist, purge it if it does
+# Check on www_dir: create it if it does not exist, purge it if it does
 if [ ! -d $www_dir/$plots_dir_name ]; then
   mkdir -p $www_dir/$plots_dir_name
 else
-  rm -f $www_dir/$plots_dir_name/*
+  rm -f $www_dir/$plots_dir_name/*.png
 fi
-# Check on MPAS-Analysis www_dir, permissions included
-# Create it if it does not exist, purge it if it does
-export mpas_www_link=mpas-analysis # mpas_www_link is used by generate_html to define
-                                   # the html link to the MPAS-Analysis web interface
-if [ ! -d $www_dir/$mpas_www_link ]; then
-  mkdir -p $www_dir/$mpas_www_link
-  chmod -R ga+rX $www_dir/$mpas_www_link
-fi
-export mpas_www_link=$mpas_www_link/$plots_dir_name
+# Check on MPAS-Analysis www_dir: create it if it does not exist, purge it if it does
+export mpas_www_link=$plots_dir_name/mpas-analysis
 export mpas_www_dir=$www_dir/$mpas_www_link
 if [ ! -d $mpas_www_dir ]; then
   mkdir -p $mpas_www_dir
@@ -366,18 +358,20 @@ if [ $machname == "nersc" ]; then
   module unload python_base
   module use /global/project/projectdirs/acme/software/modulefiles/all
   module load e3sm-unified/1.1.3
-  #export NCO_PATH_OVERRIDE=No
+  export NCO_PATH_OVERRIDE=No
 elif [ $machname == "olcf" ]; then
   module unload python
   module use /ccs/proj/cli115/software/modulefiles/all
   module load e3sm-unified/1.1.3
-  #export NCO_PATH_OVERRIDE=No
+  export NCO_PATH_OVERRIDE=No
 elif [ $machname == "acme1" ]; then
   module use /usr/local/e3sm_unified/modulefiles
   module load e3sm-unified/1.1.3-py2-nox
+  export NCO_PATH_OVERRIDE=No
 elif [ $machname == "aims4" ]; then
   module use /usr/local/e3sm_unified/modulefiles
   module load e3sm-unified/1.1.3-py2-nox
+  export NCO_PATH_OVERRIDE=No
 elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
@@ -396,6 +390,17 @@ if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ ${HOSTNAME:0:4} == 
   export mpasAutocloseFileLimitFraction=0.02
 else
   export mpasAutocloseFileLimitFraction=0.2 # default value
+fi
+
+if [ -f $test_archive_dir/$test_casename/run/mpas-cice_in ]; then
+  export seaIce_namelist_file=mpas-cice_in
+else
+  export seaIce_namelist_file=mpas-seaice_in
+fi
+if [ -f $test_archive_dir/$test_casename/run/streams.cice ]; then
+  export seaIce_streams_file=streams.cice
+else
+  export seaIce_streams_file=streams.seaice
 fi
 
 # PUT THE PROVIDED CASE INFORMATION IN CSH ARRAYS TO FACILITATE READING BY OTHER SCRIPTS
@@ -530,7 +535,6 @@ if [ $atm_status -eq 0 ]    || [ $atm_status -eq -2 ]   ||
   done
   chmod ga+rX $www_dir
   chmod -R ga+rX $www_dir/$plots_dir_name
-  chmod -R ga+rX $mpas_www_dir
 else
   echo
   echo "Neither atmospheric nor ocn/ice diagnostics were generated. HTML page also not generated!"

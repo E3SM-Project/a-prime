@@ -50,12 +50,15 @@ add_config_option(config, 'runs', 'preprocessedReferenceRunName',
 baseDir = '{}/{}'.format(os.environ['test_archive_dir'],
                          os.environ['test_casename'])
 
+seaIceNamelistFileName = '{}{}'.format('run/', os.environ['seaIce_namelist_file'])
+seaIceStreamsFileName = '{}{}'.format('run/', os.environ['seaIce_streams_file'])
+
 add_config_option(config, 'input', 'baseDirectory', baseDir)
 add_config_option(config, 'input', 'runSubdirectory', 'run')
 add_config_option(config, 'input', 'oceanNamelistFileName', 'run/mpas-o_in')
 add_config_option(config, 'input', 'oceanStreamsFileName', 'run/streams.ocean')
-add_config_option(config, 'input', 'seaIceNamelistFileName', 'run/mpas-cice_in')
-add_config_option(config, 'input', 'seaIceStreamsFileName', 'run/streams.cice')
+add_config_option(config, 'input', 'seaIceNamelistFileName', seaIceNamelistFileName)
+add_config_option(config, 'input', 'seaIceStreamsFileName', seaIceStreamsFileName)
 if check_env('test_short_term_archive'):
     add_config_option(config, 'input', 'oceanHistorySubdirectory', 'archive/ocn/hist')
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'archive/ice/hist')
