@@ -16,7 +16,7 @@ Xylar Asay-Davis
 
 Modified
 --------
-2017/03/31
+2018/05/02
 '''
 
 import os
@@ -39,8 +39,8 @@ outFileName = os.environ['config_file']
 config = ConfigParser.RawConfigParser()
 config.read(inFileName)
 
-# Turn off generation of MPAS-Analysis html page by default
-add_config_option(config, 'html', 'generate', 'False')
+# Turn on generation of MPAS-Analysis html page by default
+add_config_option(config, 'html', 'generate', 'True')
 
 add_config_option(config, 'runs', 'mainRunName',
                   os.environ['test_casename'])
@@ -50,14 +50,15 @@ add_config_option(config, 'runs', 'preprocessedReferenceRunName',
 baseDir = '{}/{}'.format(os.environ['test_archive_dir'],
                          os.environ['test_casename'])
 
-scratchDir = os.environ['test_scratch_dir']
+seaIceNamelistFileName = '{}{}'.format('run/', os.environ['seaIce_namelist_file'])
+seaIceStreamsFileName = '{}{}'.format('run/', os.environ['seaIce_streams_file'])
 
 add_config_option(config, 'input', 'baseDirectory', baseDir)
 add_config_option(config, 'input', 'runSubdirectory', 'run')
 add_config_option(config, 'input', 'oceanNamelistFileName', 'run/mpas-o_in')
 add_config_option(config, 'input', 'oceanStreamsFileName', 'run/streams.ocean')
-add_config_option(config, 'input', 'seaIceNamelistFileName', 'run/mpas-cice_in')
-add_config_option(config, 'input', 'seaIceStreamsFileName', 'run/streams.cice')
+add_config_option(config, 'input', 'seaIceNamelistFileName', seaIceNamelistFileName)
+add_config_option(config, 'input', 'seaIceStreamsFileName', seaIceStreamsFileName)
 if check_env('test_short_term_archive'):
     add_config_option(config, 'input', 'oceanHistorySubdirectory', 'archive/ocn/hist')
     add_config_option(config, 'input', 'seaIceHistorySubdirectory', 'archive/ice/hist')
@@ -69,8 +70,12 @@ add_config_option(config, 'input', 'mpasMeshName',
 add_config_option(config, 'input', 'autocloseFileLimitFraction',
                   os.environ['mpasAutocloseFileLimitFraction'])
 
+scratchDir = os.environ['test_scratch_dir']
+
 add_config_option(config, 'output', 'baseDirectory',
                   os.environ['output_base_dir'])
+add_config_option(config, 'output', 'htmlSubdirectory',
+                  os.environ['mpas_www_dir'])
 add_config_option(config, 'output', 'scratchSubdirectory',
                   os.environ['test_scratch_dir'])
 add_config_option(config, 'output', 'plotsSubdirectory',
@@ -81,14 +86,14 @@ add_config_option(config, 'output', 'mappingSubdirectory',
                   '{}/mapping'.format(scratchDir))
 add_config_option(config, 'output', 'mpasClimatologySubdirectory',
                   '{}/clim/mpas/'.format(scratchDir))
-add_config_option(config, 'output', 'mpasRegriddedClimSubdirectory',
-                  '{}/clim/mpas/regridded'.format(scratchDir))
 add_config_option(config, 'output', 'timeSeriesSubdirectory',
-                  '{}/timeSeries/'.format(scratchDir))
+                  '{}/timeseries/'.format(scratchDir))
 
 generate = []
 if check_env('generate_ohc_trends'):
-    generate.append('timeSeriesOHC')
+    generate.append('timeSeriesOHCAnomaly')
+    generate.append('timeSeriesTemperatureAnomaly')
+    generate.append('timeSeriesSalinityAnomaly')
 if check_env('generate_sst_trends'):
     generate.append('timeSeriesSST')
 if check_env('generate_nino34'):
@@ -101,6 +106,10 @@ if check_env('generate_moc'):
 for field in ['sst', 'sss', 'mld']:
     if check_env('generate_{}_climo'.format(field)):
         generate.append('climatologyMap{}'.format(field.upper()))
+
+for field in ['ArgoTemperature', 'ArgoSalinity']:
+    if check_env('generate_{}_climo'.format(field)):
+        generate.append('climatologyMap{}'.format(field))
 
 if check_env('generate_seaice_trends'):
     generate.append('timeSeriesSeaIceAreaVol')
@@ -120,8 +129,6 @@ add_config_option(config, 'climatology', 'startYear',
                   os.environ['test_begin_yr_climo'])
 add_config_option(config, 'climatology', 'endYear',
                   os.environ['test_end_yr_climo'])
-add_config_option(config, 'climatology', 'mpasMappingFile',
-                  os.environ['mpas_remapfile'])
 
 add_config_option(config, 'timeSeries', 'startYear',
                   os.environ['test_begin_yr_ts'])
@@ -135,14 +142,18 @@ add_config_option(config, 'index', 'endYear',
 
 add_config_option(config, 'oceanObservations', 'baseDirectory',
                   os.environ['obs_ocndir'])
-for field in ['sst', 'sss', 'mld', 'mht', 'nino']:
+for field in ['sst', 'sss', 'mld', 'mht', 'nino', 'argo']:
     add_config_option(config, 'oceanObservations',
                       '{}Subdirectory'.format(field),
                       os.environ['obs_{}dir'.format(field)])
 add_config_option(config, 'oceanObservations', 'climatologySubdirectory',
                   '{}/clim/obs/'.format(scratchDir))
-add_config_option(config, 'oceanObservations', 'regriddedClimSubdirectory',
-                  '{}/clim/obs/regridded'.format(scratchDir))
+add_config_option(config, 'oceanObservations', 'remappedClimSubdirectory',
+                  '{}/clim/obs/remapped'.format(scratchDir))
+add_config_option(config, 'oceanObservations', 'sstClimatologyStartYear',
+                  os.environ['sstObs_begin_yr'])
+add_config_option(config, 'oceanObservations', 'sstClimatologyEndYear',
+                  os.environ['sstObs_end_yr'])
 
 add_config_option(config, 'oceanPreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_ocndir'])
@@ -151,14 +162,11 @@ add_config_option(config, 'seaIceObservations', 'baseDirectory',
                   os.environ['obs_seaicedir'])
 add_config_option(config, 'seaIceObservations', 'climatologySubdirectory',
                   '{}/clim/obs/'.format(scratchDir))
-add_config_option(config, 'seaIceObservations', 'regriddedClimSubdirectory',
-                  '{}/clim/obs/regridded'.format(scratchDir))
+add_config_option(config, 'seaIceObservations', 'remappedClimSubdirectory',
+                  '{}/clim/obs/remapped'.format(scratchDir))
 
 add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_seaicedir'])
-
-add_config_option(config, 'streamfunctionMOC', 'regionMaskFiles',
-                  os.environ['mpaso_regions_file'])
 
 if check_env('run_batch_script'):
     add_config_option(config, 'execute', 'parallelTaskCount',
