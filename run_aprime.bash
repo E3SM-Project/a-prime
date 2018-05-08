@@ -50,7 +50,7 @@
 #                   that have been short-term-archived).
 #               *.mpaso.rst.0002-01-01_00000.nc (or any other restart file)
 #               streams.ocean
-#               mpas-o_in
+#               mpaso_in (or mpas-o_in)
 #       - mpas-seaice files: (note the name change from mpas-cice. As of May 2018,
 #                             we are supporting *both* mpas-cice and mpas-seaice
 #                             names, since many E3SM-v1 simulations were run with the
@@ -58,7 +58,7 @@
 #               *.mpassi.hist.am.timeSeriesStatsMonthly.*.nc (or mpascice.hist.am.timeSeriesStatsMonthly.*.nc)
 #               *.mpassi.rst.0002-01-01_00000.nc (or mpascice.rst.0002-01-01_00000.nc or any other mpas-seaice restart file)
 #               streams.seaice (or streams.cice)
-#               mpas-seaice (or mpas-cice_in)
+#               mpassi_in (or mpas-cice_in)
 #
 # Meaning of acronyms/words used in variable names below:
 #	test:		 Test case
@@ -415,8 +415,16 @@ else
   export mpasAutocloseFileLimitFraction=0.2 # default value
 fi
 
-if [ -f $test_archive_dir/$test_casename/run/mpas-seaice_in ]; then
-  export seaIce_namelist_file=mpas-seaice_in
+# Take into account changes in mpas namelist and streams file names
+# (Note: this will eventually be removed, but for now, May 2018, we
+#  need to remain backward compatible).
+if [ -f $test_archive_dir/$test_casename/run/mpaso_in ]; then
+  export seaIce_namelist_file=mpaso_in
+else
+  export seaIce_namelist_file=mpas-o_in
+fi
+if [ -f $test_archive_dir/$test_casename/run/mpassi_in ]; then
+  export seaIce_namelist_file=mpassi_in
 else
   export seaIce_namelist_file=mpas-cice_in
 fi
