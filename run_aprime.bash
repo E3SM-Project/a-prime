@@ -12,8 +12,16 @@
 #   Blues/Anvil, Theta, aims4/acme1, and LANL)
 #
 # Basic usage (also see README for specific instructions on running on different machines):
-#       1. copy this template to something like run_aprime_$user.bash
-#       2. open run_aprime_$user.bash and set user defined, case-specific variables
+#       0. If running on supported machines (see above) all necessary input
+#          files (such as mapping and mask files, and observation files) have
+#          already been saved in $projdir/diagnostics/. Therefore skip to step 1.
+#          On unsupported machines, retrieve the input files by running the following
+#          python script in the current directory:
+#          ./download_analysis_data.py -o path/to/input/data
+#          Then replace every instance of $projdir/diagnostics with path/to/input/data
+#          in step 2 below.
+#       1. Copy this template to something like run_aprime_$user.bash
+#       2. Open run_aprime_$user.bash and set user defined, case-specific variables
 #          These are the main variables that the user will likely have to modify
 #            (more documentation details can be found where variables are defined):
 #            output_base_dir: the base location where all output will go
@@ -25,17 +33,17 @@
 #            test_end_yr_climo: last year to analyze climatology
 #            test_begin_yr_ts: first year to create time series
 #            test_end_yr_ts: last year to create time series
-#            ref_case: baseline (ACME v1 and beyond) model case to compare
+#            ref_case: baseline (E3SM v1 and beyond) model case to compare
 #                      (or 'obs' for comparison with observation)
-#            ref_case_v0: baseline ACME v0 case for comparsion to POP/CICE ocn/ice
+#            ref_case_v0: baseline E3SM v0 case for comparsion to POP/CICE ocn/ice
 #                         (pre-processed diagnostics)
 #            generate_atm_diags: flag to produce atm diagnostics
 #            generate_atm_enso_diags: flag to produce additional, ENSO-related, atm diagnostics
 #            generate_ocnice_diags: flag to produce ocn/ice diagnostics
 #            run_batch_script: flag to submit to batch queue or not
-#       3. execute: ./run_aprime_$user.bash 
+#       3. Execute: ./run_aprime_$user.bash 
 #
-# List of ACME output files that are needed for A-Prime to work:
+# List of E3SM output files that are needed for A-Prime to work:
 #       - atmosphere files:
 #              *.cam.h0.*.nc
 #       - mpas-o files:
@@ -139,30 +147,34 @@ export test_remap_ts_enso_atm=1
 # projdir or the location of observational data) that the user is 
 # unlikely to have to modify in most cases
 if [ ${HOSTNAME:0:6} == "edison" ]; then
-  export machname="nersc"
-elif [ ${HOSTNAME:0:4} == "rhea" ] || [ ${HOSTNAME:0:5} == "titan" ]; then
-  export machname="olcf"
+  export machname="edison"
+elif [ ${HOSTNAME:0:4} == "cori" ]; then
+  export machname="cori"
+elif [ ${HOSTNAME:0:4} == "rhea" ]; then
+  export machname="rhea"
+elif [ ${HOSTNAME:0:5} == "titan" ]; then
+  export machname="titan"
 elif [ ${HOSTNAME:0:5} == "aims4" ]; then
   export machname="aims4"
 elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
-elif [ ${HOSTNAME:0:4} == "wolf" ]; then
+elif [ ${HOSTNAME:0:4} == "wolf" ] || [ ${HOSTNAME:0:7} == "grizzly" ]; then
   export machname="lanl"
 elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
   export machname="anvil"
-elif [ ${HOSTNAME:0:5} == "theta" ]; then
-  export machname="theta"
+elif [ ${HOSTNAME:0:6} == "cooley" ] || ([ ${HOSTNAME:0:2} == "cc" ] && [[ ${HOSTNAME:2:3} =~ [0-9] ]]); then
+  export machname="cooley"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
 fi
 # Define project and www directories
-if [ $machname == "nersc" ]; then
+if [ $machname == "edison" ] || [ $machname == "cori" ]; then
   # Project directory
   projdir=/global/project/projectdirs/acme
   # Location of website directory to host the webpage
   export www_dir=/global/project/projectdirs/acme/www/$USER
-elif [ $machname == "olcf" ]; then
+elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
   projdir=$PROJWORK/cli115
   export www_dir=/ccs/proj/cli115/www/$USER
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
@@ -172,28 +184,16 @@ elif [ $machname == "lanl" ]; then
   projdir=/usr/projects/climate/SHARED_CLIMATE
   export www_dir=$output_base_dir/www
 elif [ $machname == "anvil" ]; then
-  projdir=/lcrc/group/acme/lvanroe/APrime_Files
+  projdir=/lcrc/group/acme
   export www_dir=$output_base_dir/www
-elif [ $machname == "theta" ]; then
-  projdir=/projects/ClimateEnergy_2
+elif [ $machname == "cooley" ]; then
+  projdir=/lus/theta-fs0/projects/ClimateEnergy_2
   export www_dir=$projdir/www/$USER
 fi
 
 # ** Reference case variables (similar to test_case variables) **
 export ref_case=obs
-if [ $machname == "nersc" ]; then
-  export ref_archive_dir=$projdir/observations/Atm
-elif [ $machname == "olcf" ]; then
-  export ref_archive_dir=$projdir/observations/Atm
-elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export ref_archive_dir=$projdir/diagnostics/observations/Atm
-elif [ $machname == "lanl" ]; then
-  export ref_archive_dir=$projdir/obs_for_diagnostics
-elif [ $machname == "anvil" ]; then
-  export ref_archive_dir=$projdir/obs_for_diagnostics
-elif [ $machname == "theta" ]; then
-  export ref_archive_dir=$projdir/observations/Atm
-fi
+export ref_archive_dir=$projdir/diagnostics/observations/Atm
 # Set begin_yr, end_yr of SST observations to be used to compute
 # obs climatologies to compare with the model results. Choose
 # 1870-1900 for pre-industrial runs, or 1950-2011 for present-day runs.
@@ -203,14 +203,14 @@ export sstObs_end_yr=1900
 #export ref_archive_dir=dir/to/refcase_data	# $ref_case will be appended to this
 export ref_short_term_archive=0
 
-# ACMEv0 ref_case info for ocn/ice diags
-# ** IMPORTANT: the ACMEv0 model data MUST have been pre-processed.
+# E3SMv0 ref_case info for ocn/ice diags
+# ** IMPORTANT: the E3SMv0 model data MUST have been pre-processed.
 # ** IF THIS PRE_PROCESSED DATA IS NOT AVAILABLE, SET ref_case_v0=None **
 export ref_case_v0=B1850C5_ne30_v0.4
-if [ $machname == "nersc" ]; then
+if [ $machname == "edison" ] || [ $machname == "cori" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
-elif [ $machname == "olcf" ]; then
+elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
   export ref_archive_v0_ocndir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
@@ -220,9 +220,9 @@ elif [ $machname == "lanl" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "anvil" ]; then
-  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
-elif [ $machname == "theta" ]; then
+  export ref_archive_v0_ocndir=$projdir/lvanroe/APrime_Files/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/lvanroe/APrime_Files/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "cooley" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -264,7 +264,7 @@ export generate_mht=1
 # Setting MOC diagnostics to false by default, because of current (Sep 2017) problems in
 # running the MOC scripts on high-resolution MPAS data. The user can switch generate_moc=1
 # if analyzing low-resolution (EC60to30) MPAS output. 
-export generate_moc=0
+export generate_moc=1
 export generate_seaice_trends=1
 export generate_seaice_climo=1
 export generate_nino34=1
@@ -285,7 +285,7 @@ export generate_html=1
 #        "bck", and nclimo will launch 12 parallel tasks on a single node to compute 12 monthly
 #        climatologies. Otherwise, leave ncclimoParallelMode="serial".
 export run_batch_script=false
-export batch_walltime="01:00:00" # HH:MM:SS
+export batch_walltime="02:00:00" # HH:MM:SS
 export ncclimoParallelMode="bck"
 export mpas_analysis_tasks=12
 ###############################################################################################
@@ -294,6 +294,15 @@ export mpas_analysis_tasks=12
 # PART II
 # OTHER VARIABLES (NOT REQUIRED TO BE CHANGED BY THE USER - DEFAULTS SHOULD
 # WORK, USER PREFERENCE BASED CHANGES)
+
+# Choose whether to use MOC postprocessing script instead of reading in
+# online computed MOC (do the former for low resolution MPAS meshes that
+# use GM to parameterize eddies)
+if [ ${test_mpas_mesh_name} == "oEC60to30v3" ]; then
+  export useMOCpostprocessing=True
+else
+  export useMOCpostprocessing=False
+fi
 
 # Set paths to scratch, plots and logs directories
 export test_scratch_dir=$output_base_dir/coupled_diagnostics/$test_casename.scratch
@@ -310,31 +319,16 @@ export plots_dir=$plots_base_dir/$plots_dir_name
 export log_dir=$plots_dir.logs
 
 # Set atm specific paths to mapping and data files locations
-export remap_files_dir=$projdir/mapping/maps
-export GPCP_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-GPCP.conservative.wgts.nc
-export CERES_EBAF_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-CERES-EBAF.conservative.wgts.nc
-export ERS_regrid_wgt_file=$projdir/mapping/maps/$test_atm_res-to-ERS.conservative.wgts.nc
+export remap_files_dir=$projdir/diagnostics/a-prime/maps
+export GPCP_regrid_wgt_file=$projdir/diagnostics/a-prime/maps/$test_atm_res-to-GPCP.conservative.wgts.nc
+export CERES_EBAF_regrid_wgt_file=$projdir/diagnostics/a-prime/maps/$test_atm_res-to-CERES-EBAF.conservative.wgts.nc
+export ERS_regrid_wgt_file=$projdir/diagnostics/a-prime/maps/$test_atm_res-to-ERS.conservative.wgts.nc
 
-# Set ocn/ice specific paths to data file names and locations
-if [ $machname == "nersc" ]; then
-  export obs_ocndir=$projdir/observations/Ocean
-  export obs_seaicedir=$projdir/observations/SeaIce
-elif [ $machname == "olcf" ]; then
-  export obs_ocndir=$projdir/observations
-  export obs_seaicedir=$projdir/observations/SeaIce
-elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export obs_ocndir=$projdir/diagnostics/observations/Ocean
-  export obs_seaicedir=$projdir/diagnostics/observations/SeaIce
-elif [ $machname == "lanl" ]; then
-  export obs_ocndir=$projdir/observations
-  export obs_seaicedir=$projdir/observations/SeaIce
-elif [ $machname == "anvil" ]; then
-  export obs_ocndir=$projdir/observations/Ocean
-  export obs_seaicedir=$projdir/observations/SeaIce
-elif [ $machname == "theta" ]; then
-  export obs_ocndir=$projdir/observations/Ocean
-  export obs_seaicedir=$projdir/observations/SeaIce
-fi
+# Set ocn/ice specific paths to region mask and mapping files, and to observation files
+export mpas_mappingDirectory=$projdir/diagnostics/mpas_analysis/maps
+export mpas_regionMaskDirectory=$projdir/diagnostics/mpas_analysis/region_masks
+export obs_ocndir=$projdir/diagnostics/observations/Ocean
+export obs_seaicedir=$projdir/diagnostics/observations/SeaIce
 export obs_sstdir=$obs_ocndir/SST
 export obs_sssdir=$obs_ocndir/SSS
 export obs_mlddir=$obs_ocndir/MLD
@@ -373,35 +367,42 @@ fi
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
 source $MODULESHOME/init/bash  
-if [ $machname == "nersc" ]; then
+if [ $machname == "edison" ]; then
   module unload python
   module unload python_base
-  module use /global/project/projectdirs/acme/software/modulefiles/all
-  module load e3sm-unified/1.1.3
+  source /global/project/projectdirs/acme/software/anaconda_envs/edison/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
-elif [ $machname == "olcf" ]; then
+elif [ $machname == "cori" ]; then
   module unload python
-  module use /ccs/proj/cli115/software/modulefiles/all
-  module load e3sm-unified/1.1.3
+  module unload python_base
+  source /global/project/projectdirs/acme/software/anaconda_envs/cori/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
+  export NCO_PATH_OVERRIDE=No
+elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
+  module unload python
+  source /ccs/proj/cli115/software/anaconda_envs/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "acme1" ]; then
-  module use /usr/local/e3sm_unified/modulefiles
-  module load e3sm-unified/1.1.3-py2-nox
+  source /usr/local/e3sm_unified/envs/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "aims4" ]; then
-  module use /usr/local/e3sm_unified/modulefiles
-  module load e3sm-unified/1.1.3-py2-nox
+  source /usr/local/e3sm_unified/envs/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "lanl" ]; then
   module unload python
   module use $projdir/modulefiles/all
-  module load e3sm-unified/1.1.3
+  module load e3sm-unified/1.2.0
 elif [ $machname == "anvil" ]; then
+  source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
   unset LD_LIBRARY_PATH
-  soft add +e3sm-unified-1.1.3-nox
-elif [ $machname == "theta" ]; then
-  module use $projdir/software/modulefiles/all
-  module load e3sm-unified/1.1.3
+elif [ $machname == "cooley" ]; then
+  source /lus/theta-fs0/projects/ClimateEnergy_2/software/e3sm_unified/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
 fi
 
 # The following is needed to avoid the too-many-open-files problem
@@ -409,7 +410,7 @@ fi
 # and beyond, this will eventually become outdated (as per v0.6, we
 # are still using xarray 'open_mfdataset' to open pre-processed
 # model data).
-if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ ${HOSTNAME:0:4} == "rhea" ]; then
+if [ $machname == "aims4" ] || [ $machname == "acme1" ] || [ $machname == "rhea" ]; then
   export mpasAutocloseFileLimitFraction=0.02
 else
   export mpasAutocloseFileLimitFraction=0.2 # default value
@@ -419,9 +420,9 @@ fi
 # (Note: this will eventually be removed, but for now, May 2018, we
 #  need to remain backward compatible).
 if [ -f $test_archive_dir/$test_casename/run/mpaso_in ]; then
-  export seaIce_namelist_file=mpaso_in
+  export ocean_namelist_file=mpaso_in
 else
-  export seaIce_namelist_file=mpas-o_in
+  export ocean_namelist_file=mpas-o_in
 fi
 if [ -f $test_archive_dir/$test_casename/run/mpassi_in ]; then
   export seaIce_namelist_file=mpassi_in
@@ -452,7 +453,7 @@ if [ $generate_atm_diags -eq 1 ]; then
     fi
   else
     batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
-    if [ $machname == "nersc" ]; then
+    if [ $machname == "edison" ]; then
       sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
@@ -461,7 +462,7 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** $batch_script"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
+    elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
@@ -474,6 +475,18 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
       echo "**** jobID:"
       qsub $batch_script
+    elif [ $machname == "cooley" ]; then
+      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
+      sed 's@COBALT -t .*@COBALT -t '$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
+      sed -i 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+      sed 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+      echo
+      echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
+      echo "**** jobID:"
+      chmod +x $batch_script
+      qsub $batch_script sargs
     else
       echo
       echo "Batch jobs not supported on current machine"
@@ -503,7 +516,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
     fi
   else
     batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
-    if [ $machname == "nersc" ]; then
+    if [ $machname == "edison" ]; then
       sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script
@@ -511,7 +524,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
+    elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
@@ -524,10 +537,21 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       qsub $batch_script
+    elif [ $machname == "cooley" ]; then
+      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
+      sed 's@COBALT -t .*@COBALT -t '$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
+      sed -i 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
+      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
+      sed 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
+       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
+      echo
+      echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
+      echo "**** jobID:"
+      qsub $batch_script sargs
     else
       echo
       echo "Batch jobs not supported on current machine"
-      echo "Please set $run_batch_script to false"
+      echo "Please set 'run_batch_script' to false"
       echo
       exit
     fi

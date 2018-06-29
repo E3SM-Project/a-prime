@@ -13,10 +13,11 @@ file from MPAS-Analysis
 Authors
 -------
 Xylar Asay-Davis
+Milena Veneziani
 
 Modified
 --------
-2018/05/02
+2018/06/30
 '''
 
 import os
@@ -50,12 +51,13 @@ add_config_option(config, 'runs', 'preprocessedReferenceRunName',
 baseDir = '{}/{}'.format(os.environ['test_archive_dir'],
                          os.environ['test_casename'])
 
+oceanNamelistFileName = '{}{}'.format('run/', os.environ['ocean_namelist_file'])
 seaIceNamelistFileName = '{}{}'.format('run/', os.environ['seaIce_namelist_file'])
 seaIceStreamsFileName = '{}{}'.format('run/', os.environ['seaIce_streams_file'])
 
 add_config_option(config, 'input', 'baseDirectory', baseDir)
 add_config_option(config, 'input', 'runSubdirectory', 'run')
-add_config_option(config, 'input', 'oceanNamelistFileName', 'run/mpas-o_in')
+add_config_option(config, 'input', 'oceanNamelistFileName', oceanNamelistFileName)
 add_config_option(config, 'input', 'oceanStreamsFileName', 'run/streams.ocean')
 add_config_option(config, 'input', 'seaIceNamelistFileName', seaIceNamelistFileName)
 add_config_option(config, 'input', 'seaIceStreamsFileName', seaIceStreamsFileName)
@@ -69,6 +71,11 @@ add_config_option(config, 'input', 'mpasMeshName',
                   os.environ['test_mpas_mesh_name'])
 add_config_option(config, 'input', 'autocloseFileLimitFraction',
                   os.environ['mpasAutocloseFileLimitFraction'])
+add_config_option(config, 'input', 'mappingDirectory',
+                  os.environ['mpas_mappingDirectory'])
+
+add_config_option(config, 'regions', 'regionMaskDirectory',
+                  os.environ['mpas_regionMaskDirectory'])
 
 scratchDir = os.environ['test_scratch_dir']
 
@@ -139,6 +146,9 @@ add_config_option(config, 'index', 'startYear',
                   os.environ['test_begin_yr_climateIndex_ts'])
 add_config_option(config, 'index', 'endYear',
                   os.environ['test_end_yr_climateIndex_ts'])
+
+add_config_option(config, 'streamfunctionMOC', 'usePostprocessingScript',
+                  os.environ['useMOCpostprocessing'])
 
 add_config_option(config, 'oceanObservations', 'baseDirectory',
                   os.environ['obs_ocndir'])
