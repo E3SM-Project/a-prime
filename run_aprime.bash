@@ -261,9 +261,6 @@ export generate_mld_climo=1
 export generate_ArgoTemperature_climo=1
 export generate_ArgoSalinity_climo=1
 export generate_mht=1
-# Setting MOC diagnostics to false by default, because of current (Sep 2017) problems in
-# running the MOC scripts on high-resolution MPAS data. The user can switch generate_moc=1
-# if analyzing low-resolution (EC60to30) MPAS output. 
 export generate_moc=1
 export generate_seaice_trends=1
 export generate_seaice_climo=1
@@ -476,17 +473,15 @@ if [ $generate_atm_diags -eq 1 ]; then
       echo "**** jobID:"
       qsub $batch_script
     elif [ $machname == "cooley" ]; then
-      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@COBALT -t .*@COBALT -t '$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
-      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
-      sed 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
       echo
       echo "**** Submitting atm batch script: batch_atm.$machname.$uniqueID.bash"
       echo "**** jobID:"
-      chmod +x $batch_script
-      qsub $batch_script sargs
+      unset LD_PRELOAD
+      declare -xp > $log_dir/env4cooley
+      chmod +x $log_dir/env4cooley $batch_script
+      qsub --env log_dir=$log_dir $batch_script sargs
     else
       echo
       echo "Batch jobs not supported on current machine"
@@ -524,7 +519,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
       sbatch $batch_script
-    elif [ ${HOSTNAME:0:5} == "titan" ] || [ $machname == "anvil" ]; then
+    elif [ $machname == "titan" ] || [ $machname == "anvil" ]; then
       update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@PBS -l walltime=.*@PBS -l walltime='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@PBS -o .*@PBS -o '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
@@ -538,16 +533,15 @@ if [ $generate_ocnice_diags -eq 1 ]; then
       echo "**** jobID:"
       qsub $batch_script
     elif [ $machname == "cooley" ]; then
-      update_wwwdir_script="$log_dir/batch_update_wwwdir.$machname.$uniqueID.bash"
       sed 's@COBALT -t .*@COBALT -t '$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
-      sed -i 's@batch_script=.*@batch_script='$update_wwwdir_script'@' $batch_script
-      sed 's@COBALT -O .*@COBALT -O '$log_dir'/aprime_update_wwwdir.o'$uniqueID'@' \
-       ./bash_scripts/batch_update_wwwdir.$machname.bash > $update_wwwdir_script
       echo
       echo "**** Submitting ocn/ice batch script: batch_ocnice.$machname.$uniqueID.bash"
       echo "**** jobID:"
-      qsub $batch_script sargs
+      unset LD_PRELOAD
+      declare -xp > $log_dir/env4cooley
+      chmod +x $log_dir/env4cooley $batch_script
+      qsub --env log_dir=$log_dir $batch_script sargs
     else
       echo
       echo "Batch jobs not supported on current machine"

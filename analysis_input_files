@@ -20,7 +20,7 @@ a-prime/maps/ne120-to-COREv2.conservative.wgts.nc
 a-prime/maps/ne120-to-CPC.bilinear_mapping.wgts.nc
 a-prime/maps/ne120-to-NCEP2.conservative.wgts.nc
 a-prime/maps/ne120-to-HadOIBl.conservative.wgts.nc
-mpas_analysis/maps/map_oEC60to30v3_TO_0.5x0.5degree_blinear.nc
+mpas_analysis/maps/map_oEC60to30v3_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_sss_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_zos_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
 mpas_analysis/maps/map_obs_thetaArgo_1.0x1.0degree_to_0.5x0.5degree_bilinear.nc
