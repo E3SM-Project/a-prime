@@ -12,18 +12,23 @@
 #   Blues/Anvil, Theta, aims4/acme1, and LANL)
 #
 # Basic usage (also see README for specific instructions on running on different machines):
-#       0. If running on supported machines (see above) all necessary input
-#          files (such as mapping and mask files, and observation files) have
-#          already been saved in $projdir/diagnostics/. Therefore skip to step 1.
-#          On unsupported machines, retrieve the input files by running the following
-#          python script in the current directory:
-#          ./download_analysis_data.py -o path/to/input/data
-#          Then replace every instance of $projdir/diagnostics with path/to/input/data
-#          in step 2 below.
-#       1. Copy this template to something like run_aprime_$user.bash
-#       2. Open run_aprime_$user.bash and set user defined, case-specific variables
+#       1. Clone a-prime repository from github.com:
+#            git clone git@github.com:ACME-Climate/A-Prime a-prime
+#            cd a-prime
+#            git submodule update --init
+#       2. Download analysis input files
+#            If running on supported machines (see above) all necessary input
+#            files (such as mapping and mask files, and observation files) have
+#            already been saved in $projdir/diagnostics/. Therefore skip to step 3.
+#            On unsupported machines, retrieve the input files by running the following
+#            python script in the a-prime directory:
+#              ./download_analysis_data.py -o path/to/input/data
+#            Then replace every instance of $projdir/diagnostics with path/to/input/data
+#            in step 4 below.
+#       3. Copy this template to something like run_aprime_$user.bash
+#       4. Open run_aprime_$user.bash and set user defined, case-specific variables
 #          These are the main variables that the user will likely have to modify
-#            (more documentation details can be found where variables are defined):
+#          (more documentation details can be found where variables are defined):
 #            output_base_dir: the base location where all output will go
 #            test_casename: name of model case to analyze
 #            test_archive_dir: directory where test_casename data sits
@@ -41,7 +46,7 @@
 #            generate_atm_enso_diags: flag to produce additional, ENSO-related, atm diagnostics
 #            generate_ocnice_diags: flag to produce ocn/ice diagnostics
 #            run_batch_script: flag to submit to batch queue or not
-#       3. Execute: ./run_aprime_$user.bash 
+#       5. Execute: ./run_aprime_$user.bash 
 #
 # List of E3SM output files that are needed for A-Prime to work:
 #       - atmosphere files:
@@ -214,8 +219,8 @@ elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
   export ref_archive_v0_ocndir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/milena/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "aims4" ] || [ $machname == "acme1" ]; then
-  export ref_archive_v0_ocndir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
-  export ref_archive_v0_seaicedir=/space2/diagnostics/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "lanl" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
@@ -378,7 +383,7 @@ elif [ $machname == "cori" ]; then
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
   module unload python
-  source /ccs/proj/cli115/software/anaconda_envs/base/etc/profile.d/conda.sh
+  source /ccs/proj/cli900/sw/rhea/e3sm-unified/base/etc/profile.d/conda.sh
   conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "acme1" ]; then
@@ -391,8 +396,8 @@ elif [ $machname == "aims4" ]; then
   export NCO_PATH_OVERRIDE=No
 elif [ $machname == "lanl" ]; then
   module unload python
-  module use $projdir/modulefiles/all
-  module load e3sm-unified/1.2.0
+  source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base/etc/profile.d/conda.sh
+  conda activate e3sm_unified_1.2.0_py2.7_nox
 elif [ $machname == "anvil" ]; then
   source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
   conda activate e3sm_unified_1.2.0_py2.7_nox
