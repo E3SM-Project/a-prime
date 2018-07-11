@@ -46,6 +46,12 @@
 #            generate_atm_enso_diags: flag to produce additional, ENSO-related, atm diagnostics
 #            generate_ocnice_diags: flag to produce ocn/ice diagnostics
 #            run_batch_script: flag to submit to batch queue or not
+#            mpas_analysis_tasks: number of processors to use on a single node to run
+#                                 MPAS-Analysis diagnostics. A number different from 1
+#                                 is typically used when running batch jobs (run_batch_script=true)
+#                                 or on specific machines (like the workflow dedicated acme1/aims4
+#                                 LLNL machines) where batch jobs cannot be submitted and
+#                                 more intensive jobs are 'allowed' on the login nodes.
 #       5. Execute: ./run_aprime_$user.bash 
 #
 # List of E3SM output files that are needed for A-Prime to work:
@@ -294,9 +300,6 @@ if $run_batch_script || [ $machname == "acme1" ] || [ $machname == "aims4" ]; th
 else
   export mpas_analysis_tasks=1
 fi
-echo
-echo "Warning: MPAS-Analysis parallel tasks set to ${mpas_analysis_tasks}"
-echo
 ###############################################################################################
 
 ########################################################################
