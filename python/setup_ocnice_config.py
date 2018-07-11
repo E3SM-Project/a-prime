@@ -179,10 +179,10 @@ add_config_option(config, 'seaIcePreprocessedReference', 'baseDirectory',
                   os.environ['ref_archive_v0_seaicedir'])
 
 if check_env('run_batch_script'):
-    add_config_option(config, 'execute', 'parallelTaskCount',
-                      os.environ['mpas_analysis_tasks'])
     add_config_option(config, 'execute', 'commandPrefix',
                       os.environ['command_prefix'])
+add_config_option(config, 'execute', 'parallelTaskCount',
+                  os.environ['mpas_analysis_tasks'])
 add_config_option(config, 'execute', 'ncclimoParallelMode',
                   os.environ['ncclimoParallelMode'])
 

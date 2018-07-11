@@ -289,7 +289,14 @@ export generate_html=1
 export run_batch_script=false
 export batch_walltime="02:00:00" # HH:MM:SS
 export ncclimoParallelMode="bck"
-export mpas_analysis_tasks=12
+if $run_batch_script || [ $machname == "acme1" ] || [ $machname == "aims4" ]; then
+  export mpas_analysis_tasks=12
+else
+  export mpas_analysis_tasks=1
+fi
+echo
+echo "Warning: MPAS-Analysis parallel tasks set to ${mpas_analysis_tasks}"
+echo
 ###############################################################################################
 
 ########################################################################
