@@ -51,9 +51,9 @@ else
   ref_case_text_ts="$ref_case (Years: $ref_begin_yr_ts-$ref_end_yr_ts)"
 fi
 
-if [ $machname == "nersc" ]; then
+if [ $machname == "edison" ] || [ $machname == "cori" ]; then
   www_link="http://portal.nersc.gov/project/acme/$USER/$plots_dir_name"
-elif [ $machname == "olcf" ]; then
+elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
   www_link="http://projects.olcf.ornl.gov/acme/$USER/$plots_dir_name"
 elif  [ $machname == "aims4" ]; then
   www_link="https://aims4.llnl.gov/$USER/$plots_dir_name"
