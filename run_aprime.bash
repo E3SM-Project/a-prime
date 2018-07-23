@@ -379,31 +379,23 @@ fi
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
 source $MODULESHOME/init/bash  
-if [ $machname == "edison" ]; then
-  module unload python
-  module unload python_base
-  source /global/project/projectdirs/acme/software/anaconda_envs/edison/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
+if [ $machname == "edison" ] || [ $machname == "cori" ]; then
+  module unload python python/base e3sm-unified
+  module use /global/project/projectdirs/acme/software/modulefiles/all
+  module load e3sm-unified/1.2.0
   export NCO_PATH_OVERRIDE=No
-elif [ $machname == "cori" ]; then
-  module unload python
-  module unload python_base
-  source /global/project/projectdirs/acme/software/anaconda_envs/cori/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
-  export NCO_PATH_OVERRIDE=No
+  export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
-  module unload python
-  source /ccs/proj/cli900/sw/rhea/e3sm-unified/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
+  module unload python e3sm-unified
+  module use /ccs/proj/cli900/sw/rhea/modulefiles/all
+  module load e3sm-unified/1.2.0
   export NCO_PATH_OVERRIDE=No
-elif [ $machname == "acme1" ]; then
+  export HDF5_USE_FILE_LOCKING=FALSE
+elif [ $machname == "acme1" ] || [ $machname == "aims4" ]; then
   source /usr/local/e3sm_unified/envs/base/etc/profile.d/conda.sh
   conda activate e3sm_unified_1.2.0_py2.7_nox
   export NCO_PATH_OVERRIDE=No
-elif [ $machname == "aims4" ]; then
-  source /usr/local/e3sm_unified/envs/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
-  export NCO_PATH_OVERRIDE=No
+  export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "lanl" ]; then
   module unload python
   source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base/etc/profile.d/conda.sh
@@ -412,9 +404,11 @@ elif [ $machname == "anvil" ]; then
   source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
   conda activate e3sm_unified_1.2.0_py2.7_nox
   unset LD_LIBRARY_PATH
+  export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "cooley" ]; then
-  source /lus/theta-fs0/projects/ClimateEnergy_2/software/e3sm_unified/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
+  module use /lus/theta-fs0/projects/ccsm/acme/tools/modulefiles
+  module load e3sm-unified/1.2.0
+  export HDF5_USE_FILE_LOCKING=FALSE
 fi
 
 # The following is needed to avoid the too-many-open-files problem
