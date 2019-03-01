@@ -12,7 +12,9 @@ scratch_dir=$2
 casename=$3
 begin_yr=$4
 end_yr=$5
-var_list_file=$6
+begin_month=$6
+end_month=$7
+var_list_file=$8
 
 # Read in variable list for plotting climatologies  diagnostics
 source $var_list_file
@@ -66,14 +68,14 @@ for ((i=0; i<$n_index; i++)); do
 							--end_yr $end_yr \
 							--interp_grid $interp_grid \
 							--interp_method $interp_method \
-							--begin_month 0 \
-							--end_month 11 \
+							--begin_month $begin_month \
+							--end_month $end_month \
 							--aggregate 0 \
 							--reg ${reg[@]} \
 							--index_name ${index_name[@]} \
 							--no_ann 1 \
 							--stdize 0 \
-							--write_netcdf 1 >& $log_dir/compute_index_${case}_$index_name.log &
+							--write_netcdf 1 >& $log_dir/compute_index_${case}_${index_name}_${begin_month}_${end_month}.log &
        exstatus=$?
        if [ $exstatus -ne 0 ]; then
          echo

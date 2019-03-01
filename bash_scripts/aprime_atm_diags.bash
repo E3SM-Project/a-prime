@@ -621,12 +621,16 @@ if [ $generate_atm_enso_diags == 1 ]; then
                         archive_dir=$scratch_dir
                 fi
 
+		begin_month=0
+		end_month=11
 
                 bash_scripts/compute_indices.bash $archive_dir \
                                                   $scratch_dir \
                                                   $casename \
                                                   $begin_yr_ts \
                                                   $end_yr_ts \
+						  $begin_month \
+						  $end_month \
                                                   $var_list_file
 
 		j=$((j+1))
@@ -976,6 +980,54 @@ if [ $generate_atm_enso_diags == 1 ]; then
                 j=$((j+1))
        
 	done
+
+fi
+
+if [ $generate_extremes_diags == 1 ]; then
+
+        # ENSO Diags: Compute Nino indices for Nov.-Feb.
+        echo
+        echo Computing Nino index for Nov. - Feb.
+        echo Log files in $log_dir/
+        echo
+
+        ref_case=${case_set[$n_cases-1]}
+        ref_scratch_dir=${scratch_dir_set[$n_cases-1]}
+
+        echo Reference Case: $ref_case
+        echo
+
+        n_test_cases=$((n_cases-1))
+
+        var_list_file=bash_scripts/var_list_enso_diags_time_series.bash
+
+        j=0
+        while [ $j -lt $n_cases ]; do
+                casename=${case_set[$j]}
+                archive_dir=${archive_dir_set[$j]}
+                scratch_dir=${scratch_dir_set[$j]}
+                begin_yr_ts=${begin_yr_climateIndex_set[$j]}
+                end_yr_ts=${end_yr_climateIndex_set[$j]}
+
+                if [ $casename != obs ]; then
+                        archive_dir=$scratch_dir
+                fi
+
+                begin_month=10
+                end_month=1
+
+                bash_scripts/compute_indices.bash $archive_dir \
+                                                  $scratch_dir \
+                                                  $casename \
+                                                  $begin_yr_ts \
+                                                  $end_yr_ts \
+                                                  $begin_month \
+                                                  $end_month \
+                                                  $var_list_file
+
+                j=$((j+1))
+        done
+
 
 fi
 

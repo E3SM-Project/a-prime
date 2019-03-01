@@ -29,13 +29,13 @@ def get_index_filename (indir,
     season_text = season
 
     if aggregate == 1:
-        season_text = season + '_aggregated'
+        season_text = season_text + '_aggregated'
 
     if no_ann == 1:
-        season_text = season + '_no_anncyc'
+        season_text = season_text + '_no_anncyc'
     
     if stdize == 1:
-        season_text = season + '_stdized'
+        season_text = season_text + '_stdized'
 
     if interp_grid == '0':    
         outfile = indir + '/'+ casename + '_' + season_text + '.' + \
