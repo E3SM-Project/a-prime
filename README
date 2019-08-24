@@ -1,10 +1,10 @@
-Python based scripts to generate ACME Coupled Priority Metrics 
+Python based scripts to generate E3SM Coupled Priority Metrics 
 
 
 Basic pre-steps:
 
-   Clone ACME a-prime repository:
-     git clone https://github.com/ACME-Climate/a-prime
+   Clone E3SMM a-prime repository:
+     git clone https://github.com/E3SM-Project/a-prime
 
 About MPAS-Analysis:
 
@@ -24,7 +24,7 @@ About conda and other environment issues:
 
    The system is set up to load its own environment within the
    driver, therefore the user needs to do *nothing* in that sense.
-   The acme-unified conda environment specific for a particular
+   The e3sm-unified conda environment specific for a particular
    machine is loaded properly inside run_aprime, and that includes
    the updated version of nco.
 
