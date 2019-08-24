@@ -167,7 +167,7 @@ elif [ ${HOSTNAME:0:5} == "aims4" ]; then
   export machname="aims4"
 elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
-elif [ ${HOSTNAME:0:7} == "grizzly" ]; then
+elif [ ${HOSTNAME:0:5} == "gr-fe" ] || [ ${HOSTNAME:0:5} == "ba-fe" ]; then
   export machname="lanl"
 elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
   export machname="anvil"
