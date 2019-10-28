@@ -14,7 +14,8 @@ begin_yr=$4
 end_yr=$5
 begin_month=$6
 end_month=$7
-var_list_file=$8
+aggregate=$8
+var_list_file=$9
 
 # Read in variable list for plotting climatologies  diagnostics
 source $var_list_file
@@ -31,6 +32,13 @@ interp_grid_temp=(0 0 0)
 interp_method_temp=(0 0 0)
 
 n_index=${#index_names[@]}
+
+aggregate_txt=''
+
+if [ $aggregate == '1' ] 
+then
+	aggregate_txt='_aggregated'
+fi
 
 # Get grid information about the indices
 
@@ -70,12 +78,12 @@ for ((i=0; i<$n_index; i++)); do
 							--interp_method $interp_method \
 							--begin_month $begin_month \
 							--end_month $end_month \
-							--aggregate 0 \
+							--aggregate $aggregate \
 							--reg ${reg[@]} \
 							--index_name ${index_name[@]} \
 							--no_ann 1 \
 							--stdize 0 \
-							--write_netcdf 1 >& $log_dir/compute_index_${case}_${index_name}_${begin_month}_${end_month}.log &
+							--write_netcdf 1 >& $log_dir/compute_index_${case}_${index_name}_${begin_month}_${end_month}$aggregate_txt.log &
        exstatus=$?
        if [ $exstatus -ne 0 ]; then
          echo

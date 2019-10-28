@@ -623,6 +623,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
 
 		begin_month=0
 		end_month=11
+		aggregate=0
 
                 bash_scripts/compute_indices.bash $archive_dir \
                                                   $scratch_dir \
@@ -631,6 +632,7 @@ if [ $generate_atm_enso_diags == 1 ]; then
                                                   $end_yr_ts \
 						  $begin_month \
 						  $end_month \
+						  $aggregate \
                                                   $var_list_file
 
 		j=$((j+1))
@@ -1015,6 +1017,7 @@ if [ $generate_extremes_diags == 1 ]; then
 
                 begin_month=10
                 end_month=1
+		aggregate=0
 
                 bash_scripts/compute_indices.bash $archive_dir \
                                                   $scratch_dir \
@@ -1023,7 +1026,22 @@ if [ $generate_extremes_diags == 1 ]; then
                                                   $end_yr_ts \
                                                   $begin_month \
                                                   $end_month \
+						  $aggregate \
                                                   $var_list_file
+
+
+		aggregate=1
+
+                bash_scripts/compute_indices.bash $archive_dir \
+                                                  $scratch_dir \
+                                                  $casename \
+                                                  $begin_yr_ts \
+                                                  $end_yr_ts \
+                                                  $begin_month \
+                                                  $end_month \
+						  $aggregate \
+                                                  $var_list_file
+
 
                 j=$((j+1))
         done
