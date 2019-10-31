@@ -57,7 +57,7 @@ def read_and_plot_index_for_cases (indir,
 
     n_reg = len(regs)
 
-    print __name__, 'casename: ', casename
+    print(__name__, 'casename: ', casename)
     test_ts, units = read_index (      indir     = indir,
                       casename     = casename,
                       field_name     = field_name,
@@ -77,7 +77,7 @@ def read_and_plot_index_for_cases (indir,
         test_ts[i, :] = area_seasonal_avg_stddize
 
 
-        if debug: print __name__, 'test_ts: ', test_ts
+        if debug: print(__name__, 'test_ts: ', test_ts)
 
 
     test_plot_ts = test_ts
@@ -135,8 +135,8 @@ def read_and_plot_index_for_cases (indir,
         else:
             plot_time = numpy.arange(0,nt)
 
-        if debug: print __name__, 'plot_time: ', plot_time
-        if debug: print __name__, 'plot_begin_yr: ', plot_begin_yr
+        if debug: print(__name__, 'plot_time: ', plot_time)
+        if debug: print(__name__, 'plot_begin_yr: ', plot_begin_yr)
 
         plot_ts_mean   = numpy.mean(plot_ts)
         plot_ts_stddev = numpy.std(plot_ts)
@@ -149,8 +149,8 @@ def read_and_plot_index_for_cases (indir,
 
         ax[k].axis([plot_time[0],plot_time[-1], y_axis_ll, y_axis_ul])
 
-        print 'plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ', \
-            plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot
+        print('plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot: ', \
+            plot_time[0],plot_time[-1], 1.1*min_plot, 1.1*max_plot)
 
         mean_line_plot = numpy.zeros(nt) + plot_ts_mean
         mean_line, = ax[k].plot(plot_time, mean_line_plot, color = 'black', linewidth = 1.0, label = 'Mean')
@@ -158,12 +158,12 @@ def read_and_plot_index_for_cases (indir,
         if begin_month == 0 and end_month == 11 and aggregate == 0:
             bw   = 13
             wgts = numpy.ones(bw)/bw
-            nyrs = nt/n_months_season
+            nyrs = int(nt/n_months_season)
 
 
             plot_ts_moving_avg = numpy.convolve(plot_ts, wgts, 'valid')
 
-            smooth_line, = ax[k].plot(plot_time[bw/2:-bw/2+1], plot_ts_moving_avg,
+            smooth_line, = ax[k].plot(plot_time[int(bw/2):-int(bw/2)], plot_ts_moving_avg,
                             color = colors[i],
                             linewidth = 2.0,
                             label = 'Moving avg. (Bandwidth = ' + "%3d" % bw + ' months)')
@@ -323,7 +323,7 @@ if __name__ == "__main__":
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     read_and_plot_index_for_cases (indir = indir,
                    casename = casename,

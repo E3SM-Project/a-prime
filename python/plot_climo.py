@@ -96,9 +96,9 @@ plots_dir              = options.plots_dir
 #Get filename
 season = get_season_name(begin_month, end_month)
 
-print
-print 'Reading climo file for case: ', casename
-print
+print()
+print('Reading climo file for case: ', casename)
+print()
 
 field, lat, lon, area, units = read_climo_file(indir = indir, \
                      casename = casename, \
@@ -110,9 +110,9 @@ field, lat, lon, area, units = read_climo_file(indir = indir, \
                      interp_method = interp_method, \
                      reg = 'global')
 
-print
-print 'Reading climo file for case: ', ref_case
-print
+print()
+print('Reading climo file for case: ', ref_case)
+print()
 
 field_ref_case, lat, lon, area, units = read_climo_file(indir = ref_case_dir, \
                          casename = ref_case, \
@@ -155,13 +155,13 @@ min_plot      = round_to_first(min_plot_temp)
 
 levels = numpy.linspace(min_plot, max_plot, num = num)
 
-print
-print 'For climatology plots: '
-print 'mean, stddev, min_plot, max_plot ref_case: ', \
-        numpy.ma.mean(field_ref_case[:]), numpy.ma.std(field_ref_case[:]), min_plot, max_plot
-print 'min, max field: ', field_min, field_max
-print 'levels:', levels
-print
+print()
+print('For climatology plots: ')
+print('mean, stddev, min_plot, max_plot ref_case: ', \
+        numpy.ma.mean(field_ref_case[:]), numpy.ma.std(field_ref_case[:]), min_plot, max_plot)
+print('min, max field: ', field_min, field_max)
+print('levels:', levels)
+print()
 
 
 #Plot climotology
@@ -185,7 +185,7 @@ x, y = m(lons,lats)
 c = m.contourf(x, y, field[:, :], cmap = 'hot_r', levels = levels, extend = 'both')
 cb = m.colorbar(c)
 
-text_data = 'mean = ' + str(round(field_avg, 2)) + ', ' + \
+text_data = 'mean = ' + str(round(field_avg[0], 2)) + ', ' + \
                                'min = '  + str(round(field_min, 2)) + ', ' + \
                                'max = '  + str(round(field_max, 2))
 ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
@@ -204,7 +204,7 @@ m.drawcoastlines()
 c = m.contourf(x, y, field_ref_case[:, :], cmap = 'hot_r', levels = levels, extend = 'both')
 cb = m.colorbar(c)
 
-text_data = 'mean = ' + str(round(field_ref_case_avg, 2)) + ', ' + \
+text_data = 'mean = ' + str(round(field_ref_case_avg[0], 2)) + ', ' + \
             'min = '  + str(round(field_ref_case_min, 2)) + ', ' + \
             'max = '  + str(round(field_ref_case_max, 2))
 
@@ -213,7 +213,7 @@ ax.text(0, -100, text_data, transform = ax.transData, fontsize = 10)
 
 #Computing levels for diff plot using mean and standard deviation
 field_diff      = field[:, :] - field_ref_case[:, :]
-field_diff_mean = field_avg - field_ref_case_avg
+field_diff_mean = field_avg[0] - field_ref_case_avg[0]
 field_diff_rmse = get_reg_area_avg_rmse(field_diff, lat, lon, area)
 field_diff_min  = numpy.min(field_diff)
 field_diff_max  = numpy.max(field_diff)
@@ -222,12 +222,12 @@ num         = 11
 max_plot    = round_to_first(4.0 * numpy.ma.std(field_diff))
 levels_diff = numpy.linspace(-max_plot, max_plot, num = num)
 
-print
-print 'For difference plot: '
-print 'mean, stddev, max_plot: ', \
-        numpy.ma.mean(field_diff), numpy.ma.std(field_diff), max_plot
-print 'min, max: ', numpy.ma.min(field_diff), numpy.ma.max(field_diff)
-print 'contour levels: ', levels_diff
+print()
+print('For difference plot: ')
+print('mean, stddev, max_plot: ', \
+        numpy.ma.mean(field_diff), numpy.ma.std(field_diff), max_plot)
+print('min, max: ', numpy.ma.min(field_diff), numpy.ma.max(field_diff))
+print('contour levels: ', levels_diff)
 
 #Plot difference plot
 ax = f.add_subplot(3,1,3)
@@ -242,7 +242,7 @@ m.drawcoastlines()
 c = m.contourf(x, y, field_diff[:, :], cmap = 'seismic', levels = levels_diff, extend = 'both')
 cb = m.colorbar()
 
-text_data = 'RMSE = ' + str(round(field_diff_rmse, 2))+ ', ' + \
+text_data = 'RMSE = ' + str(round(field_diff_rmse[0], 2))+ ', ' + \
         'mean bias = ' + str(round(field_diff_mean, 2))+ ', ' + \
             'min = '  + str(round(field_diff_min, 2)) + ', ' + \
             'max = '  + str(round(field_diff_max, 2))

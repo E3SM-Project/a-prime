@@ -21,7 +21,7 @@ Modified
 '''
 
 import os
-import ConfigParser
+import configparser
 
 
 def add_config_option(config, section, option, value):
@@ -37,7 +37,7 @@ def check_env(envVarName):
 inFileName = 'python/MPAS-Analysis/mpas_analysis/config.default'
 outFileName = os.environ['config_file']
 
-config = ConfigParser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(inFileName)
 
 # Turn on generation of MPAS-Analysis html page by default

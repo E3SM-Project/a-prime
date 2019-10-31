@@ -20,7 +20,7 @@ def regress_index_field(index, field, lag = 0):
     t_test_matrix = numpy.ma.zeros((nlat, nlon)) 
     stderr_matrix = numpy.ma.zeros((nlat, nlon)) 
 
-    print __name__, 'type(field): ', type(field)
+    print(__name__, 'type(field): ', type(field))
 
     if numpy.ma.is_masked(field):
         regr_matrix.mask = field.mask[0, ::]
@@ -30,9 +30,9 @@ def regress_index_field(index, field, lag = 0):
         t_test_matrix.mask = field.mask[0, ::]
         stderr_matrix.mask = field.mask[0, ::]
         
-        print __name__, 'field.mask: ', field.mask
-        print __name__, 'field.mask.shape: ', field.mask.shape
-        print __name__, 'regr_matrix.mask: ', regr_matrix.mask
+        #print(__name__, 'field.mask: ', field.mask)
+        print(__name__, 'field.mask.shape: ', field.mask.shape)
+        #print(__name__, 'regr_matrix.mask: ', regr_matrix.mask)
 
 
     for i in range(0, nlon):
@@ -49,8 +49,8 @@ def regress_index_field(index, field, lag = 0):
     t_test_matrix[numpy.where(p_val_matrix < 0.05)] = 1 
 
     
-    print __name__, 'type(regr_matrix): ', type(regr_matrix)
-    print __name__, 'regr_matrix: ', regr_matrix
+    print(__name__, 'type(regr_matrix): ', type(regr_matrix))
+    #print(__name__, 'regr_matrix: ', regr_matrix)
 
     return regr_matrix, const_matrix, corr_matrix, t_test_matrix, stderr_matrix
 

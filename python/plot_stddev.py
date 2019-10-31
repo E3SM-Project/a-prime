@@ -106,9 +106,9 @@ debug            = options.debug
 #Get filename
 season = get_season_name(begin_month, end_month)
 
-print
-print 'Computing climo and inter-annual std. dev. for case: ', casename
-print
+print()
+print('Computing climo and inter-annual std. dev. for case: ', casename)
+print()
 
 field_mean, field_stddev, lat, lon, units = compute_reg_seasonal_climo_and_stddev(
                                 indir = indir,

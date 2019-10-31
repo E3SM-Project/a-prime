@@ -49,7 +49,7 @@ def plot_meridional_avg_multiple_fields_climo (indir,
 
 
     for i,field_name in enumerate(field_names):
-        print __name__, 'casename: ', casename
+        print(__name__, 'casename: ', casename)
         meridional_avg, lon_reg, units = get_reg_meridional_avg_climo (
                                   indir     = indir,
                                   casename     = casename,
@@ -98,10 +98,10 @@ def plot_meridional_avg_multiple_fields_climo (indir,
 
         ref_plot_field[i, :] = ref_meridional_avg
 
-        if debug: print __name__, 'ref_plot_field.shape ', ref_plot_field.shape
+        if debug: print(__name__, 'ref_plot_field.shape ', ref_plot_field.shape)
 
 
-        if debug: print __name__, 'plot_field: ', plot_field
+        if debug: print(__name__, 'plot_field: ', plot_field)
 
     plot_field_mean = numpy.mean(plot_field, axis = 1)
     ref_plot_field_mean = numpy.mean(ref_plot_field, axis = 1)
@@ -129,8 +129,8 @@ def plot_meridional_avg_multiple_fields_climo (indir,
 
         ax[i].axis([lon_reg[0],lon_reg[-1], y_axis_ll, y_axis_ul])
 
-        print 'lon_reg[0],lon_reg[-1], 1.1*min_plot, 1.1*max_plot: ', \
-            lon_reg[0],lon_reg[-1], 1.1*min_plot, 1.1*max_plot
+        print('lon_reg[0],lon_reg[-1], 1.1*min_plot, 1.1*max_plot: ', \
+            lon_reg[0],lon_reg[-1], 1.1*min_plot, 1.1*max_plot)
 
 
 
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     plot_meridional_avg_multiple_fields_climo(
             indir = indir,

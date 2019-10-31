@@ -390,7 +390,7 @@ if [ $machname == "cori" ]; then
   export NCO_PATH_OVERRIDE=No
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
-  source /ccs/proj/cli900/sw/rhea/e3sm-unified/load_latest_e3sm_unified_py2.7_nox.sh
+  source /ccs/proj/cli900/sw/rhea/e3sm-unified/load_latest_e3sm_unified.sh
   export NCO_PATH_OVERRIDE=No
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "acme1" ] || [ $machname == "aims4" ]; then

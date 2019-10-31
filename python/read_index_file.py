@@ -39,7 +39,7 @@ def read_index_file (      indir,
                                           stdize        = stdize,
                                           debug         = debug)
 
-    print __name__, 'file_name: ', file_name
+    print(__name__, 'file_name: ', file_name)
 
     #try:
     f = Dataset(file_name, "r")
@@ -48,8 +48,8 @@ def read_index_file (      indir,
     units = field.units
 
     field_in = field[:]
-    print field.shape
-    print field_in.shape
+    print(field.shape)
+    print(field_in.shape)
 
     #except:
 
