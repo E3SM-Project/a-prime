@@ -50,7 +50,7 @@ def get_reg_seasonal_avg (indir,
     a, n_months_season = get_season_months_index(begin_month, end_month)
 
     day_wgts = get_days_in_season_months(begin_month, end_month)
-    if debug: print __name__, 'day_wgts: ', day_wgts
+    if debug: print(__name__, 'day_wgts: ', day_wgts)
 
     if aggregate == 1:
         area_seasonal_avg = aggregate_ts_weighted(ts = area_average,

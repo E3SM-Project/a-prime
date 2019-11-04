@@ -13,7 +13,7 @@
 #
 # Basic usage (also see README for specific instructions on running on different machines):
 #       1. Clone a-prime repository from github.com:
-#            git clone git@github.com:ACME-Climate/A-Prime a-prime
+#            git clone git@github.com:E3SM-Project/a-prime
 #            cd a-prime
 #            git submodule update --init
 #       2. Download analysis input files
@@ -54,7 +54,7 @@
 #                                 more intensive jobs are 'allowed' on the login nodes.
 #       5. Execute: ./run_aprime_$user.bash 
 #
-# List of E3SM output files that are needed for A-Prime to work:
+# List of E3SM output files that are needed for a-prime to work:
 #       - atmosphere files:
 #              *.cam.h0.*.nc
 #       - mpas-o files:
@@ -157,9 +157,7 @@ export test_remap_ts_enso_atm=1
 # In the following we define some machine specific variables (such as
 # projdir or the location of observational data) that the user is 
 # unlikely to have to modify in most cases
-if [ ${HOSTNAME:0:6} == "edison" ]; then
-  export machname="edison"
-elif [ ${HOSTNAME:0:4} == "cori" ]; then
+if [ ${HOSTNAME:0:4} == "cori" ]; then
   export machname="cori"
 elif [ ${HOSTNAME:0:4} == "rhea" ]; then
   export machname="rhea"
@@ -169,18 +167,20 @@ elif [ ${HOSTNAME:0:5} == "aims4" ]; then
   export machname="aims4"
 elif [ ${HOSTNAME:0:5} == "acme1" ]; then
   export machname="acme1"
-elif [ ${HOSTNAME:0:4} == "wolf" ] || [ ${HOSTNAME:0:7} == "grizzly" ]; then
+elif [ ${HOSTNAME:0:5} == "gr-fe" ] || [ ${HOSTNAME:0:5} == "ba-fe" ]; then
   export machname="lanl"
 elif [ ${HOSTNAME:0:6} == "blogin" ] || ([ ${HOSTNAME:0:1} == "b" ] && [[ ${HOSTNAME:1:2} =~ [0-9] ]]); then
   export machname="anvil"
 elif [ ${HOSTNAME:0:6} == "cooley" ] || ([ ${HOSTNAME:0:2} == "cc" ] && [[ ${HOSTNAME:2:3} =~ [0-9] ]]); then
   export machname="cooley"
+elif [ ${HOSTNAME:0:5} == "compy" ]; then
+  export machname="compy"
 else
   echo "Unsupported host $HOSTNAME. Exiting."
   exit 1
 fi
 # Define project and www directories
-if [ $machname == "edison" ] || [ $machname == "cori" ]; then
+if [ $machname == "cori" ]; then
   # Project directory
   projdir=/global/project/projectdirs/acme
   # Location of website directory to host the webpage
@@ -200,6 +200,9 @@ elif [ $machname == "anvil" ]; then
 elif [ $machname == "cooley" ]; then
   projdir=/lus/theta-fs0/projects/ClimateEnergy_2
   export www_dir=$projdir/www/$USER
+elif [ $machname == "compy" ]; then
+  projdir=/compyfs
+  export www_dir=/compyfs/www/$USER
 fi
 
 # ** Reference case variables (similar to test_case variables) **
@@ -218,7 +221,7 @@ export ref_short_term_archive=0
 # ** IMPORTANT: the E3SMv0 model data MUST have been pre-processed.
 # ** IF THIS PRE_PROCESSED DATA IS NOT AVAILABLE, SET ref_case_v0=None **
 export ref_case_v0=B1850C5_ne30_v0.4
-if [ $machname == "edison" ] || [ $machname == "cori" ]; then
+if [ $machname == "cori" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
@@ -234,6 +237,9 @@ elif [ $machname == "anvil" ]; then
   export ref_archive_v0_ocndir=$projdir/lvanroe/APrime_Files/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/lvanroe/APrime_Files/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 elif [ $machname == "cooley" ]; then
+  export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
+  export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
+elif [ $machname == "compy" ]; then
   export ref_archive_v0_ocndir=$projdir/ACMEv0_lowres/${ref_case_v0}/ocn/postprocessing
   export ref_archive_v0_seaicedir=$projdir/ACMEv0_lowres/${ref_case_v0}/ice/postprocessing
 fi
@@ -379,16 +385,12 @@ fi
 
 # LOAD THE MACHINE-SPECIFIC ANACONDA-2.7 ENVIRONMENT
 source $MODULESHOME/init/bash  
-if [ $machname == "edison" ] || [ $machname == "cori" ]; then
-  module unload python python/base e3sm-unified
-  module use /global/project/projectdirs/acme/software/modulefiles/all
-  module load e3sm-unified/1.2.0
+if [ $machname == "cori" ]; then
+  source /global/project/projectdirs/acme/software/anaconda_envs/load_latest_e3sm_unified_py2.7.sh
   export NCO_PATH_OVERRIDE=No
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "rhea" ] || [ $machname == "titan" ]; then
-  module unload python e3sm-unified
-  module use /ccs/proj/cli900/sw/rhea/modulefiles/all
-  module load e3sm-unified/1.2.0
+  source /ccs/proj/cli900/sw/rhea/e3sm-unified/load_latest_e3sm_unified.sh
   export NCO_PATH_OVERRIDE=No
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "acme1" ] || [ $machname == "aims4" ]; then
@@ -397,17 +399,16 @@ elif [ $machname == "acme1" ] || [ $machname == "aims4" ]; then
   export NCO_PATH_OVERRIDE=No
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "lanl" ]; then
-  module unload python
-  source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
+  source /usr/projects/climate/SHARED_CLIMATE/anaconda_envs/load_latest_e3sm_unified_py2.7.sh
 elif [ $machname == "anvil" ]; then
-  source /lcrc/soft/climate/e3sm-unified/base/etc/profile.d/conda.sh
-  conda activate e3sm_unified_1.2.0_py2.7_nox
+  source /lcrc/soft/climate/e3sm-unified/load_latest_e3sm_unified_py2.7.sh
   unset LD_LIBRARY_PATH
   export HDF5_USE_FILE_LOCKING=FALSE
 elif [ $machname == "cooley" ]; then
-  module use /lus/theta-fs0/projects/ccsm/acme/tools/modulefiles
-  module load e3sm-unified/1.2.0
+  source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/load_latest_e3sm_unified_py2.7.sh
+  export HDF5_USE_FILE_LOCKING=FALSE
+elif [ $machname == "compy" ]; then
+  source /compyfs/software/e3sm-unified/load_latest_e3sm_unified_py2.7.sh
   export HDF5_USE_FILE_LOCKING=FALSE
 fi
 
@@ -459,7 +460,7 @@ if [ $generate_atm_diags -eq 1 ]; then
     fi
   else
     batch_script="$log_dir/batch_atm.$machname.$uniqueID.bash"
-    if [ $machname == "edison" ]; then
+    if [ $machname == "cori" ]; then
       sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_atm.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_atm_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_atm_diags.e'$uniqueID'@' $batch_script
@@ -520,7 +521,7 @@ if [ $generate_ocnice_diags -eq 1 ]; then
     fi
   else
     batch_script="$log_dir/batch_ocnice.$machname.$uniqueID.bash"
-    if [ $machname == "edison" ]; then
+    if [ $machname == "cori" ]; then
       sed 's@SBATCH --time=.*@SBATCH --time='$batch_walltime'@' ./bash_scripts/batch_ocnice.$machname.bash > $batch_script
       sed -i 's@SBATCH --output=.*@SBATCH --output='$log_dir'/aprime_ocnice_diags.o'$uniqueID'@' $batch_script
       sed -i 's@SBATCH --error=.*@SBATCH --error='$log_dir'/aprime_ocnice_diags.e'$uniqueID'@' $batch_script

@@ -48,7 +48,7 @@ def plot_reg_seasonal_avg (casename,
                   aggregate = aggregate,
                   debug = debug)
 
-    print __name__, 'area_seasonal_avg.shape', area_seasonal_avg.shape
+    print(__name__, 'area_seasonal_avg.shape', area_seasonal_avg.shape)
 
     #plt.subplot(3,1,1)
 

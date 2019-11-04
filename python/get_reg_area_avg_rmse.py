@@ -15,7 +15,7 @@ def get_reg_area_avg_rmse(field, lat, lon, area_wgts, debug = False):
     else:
         nt   = field.shape[0]
 
-    if debug: print __name__, 'nlon, nlat: ', nlon, nlat
+    if debug: print(__name__, 'nlon, nlat: ', nlon, nlat)
 
     area_average_rmse = numpy.zeros(nt)
 
@@ -25,8 +25,8 @@ def get_reg_area_avg_rmse(field, lat, lon, area_wgts, debug = False):
         for i in range(0,nt):
             area_average_rmse[i] = numpy.sqrt(numpy.sum(numpy.power(field[i, :, :], 2.0) * area_wgts[:, :])/numpy.sum(area_wgts))
 
-    print __name__, 'area_average_rmse.shape: ', area_average_rmse.shape
-    if debug: print __name__, 'area weighted total_field: ', area_average_rmse
+    print(__name__, 'area_average_rmse.shape: ', area_average_rmse.shape)
+    if debug: print(__name__, 'area weighted total_field: ', area_average_rmse)
 
 
 

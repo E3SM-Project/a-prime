@@ -49,8 +49,8 @@ def compute_index   (archive_dir,
                write_netcdf,
                debug = False):
 
-    print __name__, 'casename: ', casename
-    print __name__, 'reg: ', reg
+    print(__name__, 'casename: ', casename)
+    print(__name__, 'reg: ', reg)
     area_seasonal_avg, n_months_season, units = get_reg_seasonal_avg (
                               indir     = archive_dir,
                               casename     = casename,
@@ -104,8 +104,8 @@ def compute_index   (archive_dir,
                           debug         = debug)
 
 
-        print "Writing ", outfile
-        print ""
+        print("Writing ", outfile)
+        print("")
 
         f_write = Dataset(outfile, 'w', format = 'NETCDF4')
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
     x = mpl.get_backend()
-    print 'backend: ', x
+    print('backend: ', x)
 
     compute_index(archive_dir = archive_dir,
                   indir = indir,
